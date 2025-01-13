@@ -7,7 +7,12 @@
     <SpaRoot>..\raumidiscord.core.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:39888</SpaProxyServerUrl>
+    <ApplicationIcon>Resources\raumi.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\raumi.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.17.0" />

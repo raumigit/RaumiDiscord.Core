@@ -1,8 +1,8 @@
 ﻿using Discord.WebSocket;
 
-namespace RaumiDiscord.Core.Server.DiscordBot
+namespace RaumiDiscord.Core.Server.DiscordBot.Services
 {
-    public class VC_RtcRegion
+    public class VoicertcregionService
     {
 
         private static DiscordSocketClient? _client;
@@ -47,8 +47,15 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 {
                     properties.RTCRegion = region == "auto" ? null : region;
                 });
-
-                await message.Channel.SendMessageAsync($"チャンネル `{channel.Name}` のリージョンを `{region}` に変更しました。");
+                if (region== null)
+                {
+                    await message.Channel.SendMessageAsync($"チャンネル `{channel.Name}` のリージョンを`AUTO`に変更しました。");
+                }
+                else
+                {
+                    await message.Channel.SendMessageAsync($"チャンネル `{channel.Name}` のリージョンを `{region}` に変更しました。");
+                }
+                
             }
             catch (Exception ex)
             {

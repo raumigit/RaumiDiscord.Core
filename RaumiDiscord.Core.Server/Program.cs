@@ -1,3 +1,5 @@
+using RaumiDiscord.Core.Server.DiscordBot;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -29,7 +31,7 @@ Task task = Task.Run(async () => {
     try
     {
         Console.WriteLine("Deltaraumi_loadŒÄ‚Ño‚µÏ‚İ");
-        await Deltaraumi_Discordbot.Deltaraumi_load();
+        await Deltaraumi_Discordbot.Deltaraumi_load(args);
     }
     catch (Exception ex)
     {
