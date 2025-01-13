@@ -31,7 +31,7 @@ Task task = Task.Run(async () => {
     try
     {
         Console.WriteLine("Deltaraumi_loadŒÄ‚Ño‚µÏ‚İ");
-        await Deltaraumi_Discordbot.Deltaraumi_load(args);
+        Deltaraumi_Discordbot.Deltaraumi_load(args);
     }
     catch (Exception ex)
     {

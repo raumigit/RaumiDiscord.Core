@@ -7,7 +7,7 @@
         { 
             get 
             { 
-                return $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}{Path.DirectorySeparatorChar}DeltaRaumi{Path.DirectorySeparatorChar}"; 
+                return $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}{Path.DirectorySeparatorChar}Raumi{Path.DirectorySeparatorChar}DeltaRaumi{Path.DirectorySeparatorChar}"; 
             } 
         }
         public static string Config

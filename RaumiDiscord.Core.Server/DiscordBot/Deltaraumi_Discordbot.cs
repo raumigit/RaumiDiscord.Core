@@ -4,6 +4,8 @@ using Nett;
 using Newtonsoft.Json.Linq;
 using RaumiDiscord.Core.Server.DiscordBot.Services;
 using Discord.Commands;
+using Microsoft.EntityFrameworkCore;
+using RaumiDiscord.Core.Server.DiscordBot.Data;
 
 namespace RaumiDiscord.Core.Server.DiscordBot
 {
@@ -32,9 +34,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         private DiscordCoordinationService DiscordCoordinationService;
         //旧コード^
 
-        internal static async Task Deltaraumi_load(string[] args)
+        internal static void Deltaraumi_load(string[] args)
         {
-
+            Console.WriteLine($"Directories.Config = {Directories.Config}");
+            Console.WriteLine($"Directories.Appdata = {Directories.AppData}");
+            Console.WriteLine($"Directories.ProgramData = {Directories.ProgramData}");
+            Console.WriteLine();
             try
             {
                 new Deltaraumi_Discordbot().MainAsync(args).GetAwaiter().GetResult();
@@ -115,17 +120,17 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 });
                 _services = BuildServices();
 
-                //var dbContext = _services.GetRequiredService<SenkoDbContext>();
+                var dbContext = _services.GetRequiredService<RaumiDiscord.Core.Server.DataContext.DeltaRaumiDbContext>();
                 this.DiscordCoordinationService = _services.GetRequiredService<DiscordCoordinationService>();
 
                 //apply new database migrations on startup
-                //var migrations = await dbContext.Database.GetPendingMigrationsAsync();
-                //if (migrations.Count() > 0)
-                //{
-                //    Console.WriteLine("Applying database migrations...");
-                //    await dbContext.Database.MigrateAsync();
-                //    Console.WriteLine("Done.");
-                //}
+                var migrations = await dbContext.Database.GetPendingMigrationsAsync();
+                if (migrations.Count() > 0)
+                {
+                    Console.WriteLine("Applying database migrations...");
+                    await dbContext.Database.MigrateAsync();
+                    Console.WriteLine("Done.");
+                }
 
                 await Log(new LogMessage(LogSeverity.Info, "Startup", "全て初期化が完了"));
 
@@ -160,7 +165,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine(new LogMessage(LogSeverity.Info, "Startup", "DeltaRaumi接続中").ToString());
             Console.ResetColor();
-            _client.SetGameAsync("TEST");
+            
 
             await Task.Delay(-1);
             
