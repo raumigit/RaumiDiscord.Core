@@ -3,7 +3,7 @@ using RaumiDiscord.Core.Server.Models;
 
 namespace RaumiDiscord.Core.Server.DataContext
 {
-    public class DeltaRaumiDbContext : DbContext
+    class DeltaRaumiDbContext : DbContext
     {
         public DbSet<DiscordComponentModel> Components { get; set; }
         private DatabaseType databaseType;
@@ -13,7 +13,7 @@ namespace RaumiDiscord.Core.Server.DataContext
             this.databaseType = type;
         }
 
-        protected override void OnConfugring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             switch (this.databaseType)
             {
@@ -27,7 +27,9 @@ namespace RaumiDiscord.Core.Server.DataContext
                         Directory.CreateDirectory("Resources\\Data");
                         File.Create("Resources\\Data\\DeltaRaumiData.db");
                     }
-                    optionsBuilder.UseSqlite("Resources\\Data\\DeltaRaumiData.db;Cache=Shared");
+
+                    optionsBuilder.UseSqlite("Data Source=Resources\\Data\\DeltaRaumiData.db;Cache=Shared");
+                    
                     break;
 
                 case DatabaseType.InMemory:

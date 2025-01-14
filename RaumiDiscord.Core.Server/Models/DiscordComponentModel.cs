@@ -11,13 +11,13 @@ namespace RaumiDiscord.Core.Server.Models
         public DateTime CreateTime { get; set; } = DateTime.Now;
 
         //オーナーのID　初期値は0
-        public ulong OwnerId {  get; set; }
+        public ulong OwnerId { get; set; } = 0;
 
         //チャンネルID　初期値は0
         public ulong ChannnelId { get; set; } = 0;
 
         //メッセージID　初期値は0
-        public ulong MessegeId { get; set; }
+        public ulong MessegeId { get; set; } = 0;
 
         //用途不明
         public string DeltaRaumiComponentType { get; set; }

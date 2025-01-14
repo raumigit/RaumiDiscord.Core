@@ -6,35 +6,31 @@ using RaumiDiscord.Core.Server.DiscordBot.Services;
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.DiscordBot.Data;
+using Discord.Net;
+using RaumiDiscord.Core.Server.DataContext;
+using Discord.Rest;
 
 namespace RaumiDiscord.Core.Server.DiscordBot
 {
     internal class Deltaraumi_Discordbot
     {
-        public static DiscordSocketClient? Client { get; set; }
+        //public IReadOnlyCollection<SocketGuildUser> ConnectedUsers { get; private set; }
+        //VCユーザーを取るためのコマンド　検証と実装はこれから
 
-        private readonly LoggingService? LoggingService;
-
-        private static readonly SocketVoiceChannel? _voiceChannel;
-
-        public IReadOnlyCollection<SocketGuildUser> ConnectedUsers { get; private set; }
-
-        private readonly SocketGuild _guild;
         public static ulong vc_chid { get; set; }
         public static string vc_region { get; set; }
-        public static ulong GuildId { get; private set; }
 
-
-        //旧コード
+        //public static ulong GuildId { get; private set; }
+        //おそらく出番なし
+        
         public static DiscordSocketClient _client;
         private IServiceProvider _services;
         public static Config _Config;
         public static SqlMode AppSqlMode { get; set; }
         public enum SqlMode { Sqlite, MariaDb }
         private DiscordCoordinationService DiscordCoordinationService;
-        //旧コード^
 
-        internal static void Deltaraumi_load(string[] args)
+        public static void Deltaraumi_load(string[] args)
         {
             Console.WriteLine($"Directories.Config = {Directories.Config}");
             Console.WriteLine($"Directories.Appdata = {Directories.AppData}");
@@ -120,7 +116,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 });
                 _services = BuildServices();
 
-                var dbContext = _services.GetRequiredService<RaumiDiscord.Core.Server.DataContext.DeltaRaumiDbContext>();
+                var dbContext = _services.GetRequiredService<DeltaRaumiDbContext>();
                 this.DiscordCoordinationService = _services.GetRequiredService<DiscordCoordinationService>();
 
                 //apply new database migrations on startup
@@ -144,12 +140,22 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
                     await _client.StartAsync();
                 }
-                catch (Exception e)
+                catch (HttpException e)
                 {
                     await Log(new LogMessage(LogSeverity.Critical, "Startup", "ログイン失敗"));
                     await Log(new LogMessage(LogSeverity.Critical, "Startup", $"{e}"));
                     Environment.Exit(1);
                 }
+                _client.MessageReceived += MessageReceivedAsync;
+                _client.MessageUpdated += MessageUpdated;
+                //_client.MessageDeleted += MessegeDeleted;
+                //まもなく分離　分離後はサービスプロバイダに登録予定
+
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine(new LogMessage(LogSeverity.Info, "Startup", "DeltaRaumi接続中").ToString());
+                Console.ResetColor();
+
+                await Task.Delay(-1);
             }
             catch (Exception e)
             {
@@ -159,24 +165,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
                 Environment.Exit(1);
             }
-
-            _client.MessageReceived += MessageReceivedAsync;
-
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine(new LogMessage(LogSeverity.Info, "Startup", "DeltaRaumi接続中").ToString());
-            Console.ResetColor();
-            
-
-            await Task.Delay(-1);
-            
-            
-
-                
-            
         }
-
-        
-
+        //今こそ動作はしていないが戻す予定/コードしてだけ残す
         private static async Task InteractionCreatedAsync(SocketInteraction interaction)
         {
             // 安全キャストは、キャストされるものが null になるのを防ぐ最善の方法です。
@@ -192,31 +182,16 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             }
         }
 
-        private async Task ReadyAsync()
-        {
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine($"{_client.CurrentUser} 接続中");
-            Console.ResetColor();
-
-            //return Task.CompletedTask;
-        }
-
-        private async Task LogAsync(LogMessage msg)
-        {
-            Console.WriteLine(msg.ToString());
-            //return Task.CompletedTask;
-        }
-
         private async Task MessageReceivedAsync(SocketMessage message)
         {
             Console.WriteLine($"*ReceivedServer:{message.Channel}");
             Console.WriteLine($"|ReceivedUser:{message.Author}");
             Console.WriteLine($"|MessageReceived:{message.Content}");
             Console.WriteLine($"|CleanContent:{message.CleanContent}");
+            Console.WriteLine();
             //ボットは自分自身に応答してはなりません。
             if (message.Author.Id == _client.CurrentUser.Id)
                 return;
-
 
             if (message.Content == "!ping")
             {
@@ -229,67 +204,56 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 await message.Channel.SendMessageAsync("pong!", components: cb.Build());
             }
 
-
             try
             {
+                string contentbase = "@Raumi#1195 *";
                 switch (message.CleanContent)
                 {
-
                     case "@Raumi#1195":
-
                         await message.Channel.SendFileAsync("./DiscordBot/Assets/Image/20241004114923.png", "ん？");
                         break;
 
                     case "@Raumi#1195 VCADD":
-
                         await message.Channel.SendMessageAsync("該当のVC`924574864143171599`を(勝手に)追加しました");
                         vc_chid = 924574864143171599;
-
                         break;
 
                     case "@Raumi#1195 Discordリージョン：適当" or "@Raumi#1195 Discordリージョン：" or "@Raumi#1195 reset":
-
                         await message.Channel.SendMessageAsync("＊リージョンを適当に変更中(実装中)");
                         vc_region = null;
                         VoicertcregionService.SetRTCRegion(message, vc_region);
                         break;
 
                     case "@Raumi#1195 Discordリージョン：HK" or "@Raumi#1195 Discordリージョン：香港" or "@Raumi#1195 VCHK":
-
                         await message.Channel.SendMessageAsync("＊リージョンを香港に変更中(実装中)");
                         vc_region = "hongkong";
                         VoicertcregionService.SetRTCRegion(message, vc_region);
                         break;
 
                     case "@Raumi#1195 Discordリージョン：JP" or "@Raumi#1195 Discordリージョン：日本" or "@Raumi#1195 VCJP":
-
                         await message.Channel.SendMessageAsync("＊リージョンを日本に変更中(実装中)");
                         vc_region = "japan";
                         VoicertcregionService.SetRTCRegion(message, vc_region);
                         break;
 
                     case "@Raumi#1195 Discordリージョン：BR" or "@Raumi#1195 Discordリージョン：ブラジル" or "@Raumi#1195 VCBR":
-
                         await message.Channel.SendMessageAsync("＊リージョンをブラジルに変更中(実装中)");
                         vc_region = "brazil";
                         VoicertcregionService.SetRTCRegion(message, vc_region);
                         break;
 
                     case "@Raumi#1195 Discordリージョン：SG" or "@Raumi#1195 Discordリージョン：シンガポール" or "@Raumi#1195 VCSG":
-
                         await message.Channel.SendMessageAsync("＊リージョンをシンガポールに変更中(実装中)");
                         vc_region = "singapore";
                         VoicertcregionService.SetRTCRegion(message, vc_region);
                         break;
 
                     case "@Raumi#1195 画像１":
-
                         //await message.Channel.SendMessageAsync("*TBA");
                         await message.Channel.SendFileAsync("./DiscordBot/Assets/Image/IMG_2265.JPG", "ん？");
                         break;
 
                     case "@Raumi#1195 画像２":
-
                         //await message.Channel.SendMessageAsync("*TBA");
                         await message.Channel.SendFileAsync("./DiscordBot/Assets/Image/20241004114915.png", "ん？");
                         break;
@@ -299,7 +263,21 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                         Console.WriteLine($"未実装");
                         break;
 
+                    case "@Raumi#1195 GlobalCommandUpdate" :
+                        if (message.Author.Id == 558636367106539521)
+                        {
+                            await SlashCommandInterationService.GlobalCommandUpdate();
+                        }
+                        else
+                        {
+                            await message.Channel.SendMessageAsync("ん？ \n この指示を受け付けてるのはあなたではないはず…");
+                        }
+                        break;
 
+                    case string match when System.Text.RegularExpressions.Regex.IsMatch(message.CleanContent, contentbase):
+
+                        await message.Channel.SendMessageAsync("該当するメッセージコマンドはないっぽい…");
+                        break;
                     default:
                         break;
                 }
@@ -308,14 +286,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             {
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("メッセージ送信エラー　(E-M001)");
-
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine(e);
                 Console.ResetColor();
             }
-
-
         }
+
         private static async Task MessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
         {
             // メッセージがキャッシュになかった場合、ダウンロードすると `after` のコピーが取得されます。
@@ -325,13 +301,14 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         public static Task Log(LogMessage msg) => Task.Run(() => Console.WriteLine(msg.ToString()));
         private IServiceProvider BuildServices()
         => new ServiceCollection()
-                .AddSingleton(_client)
-                .AddSingleton<CommandService>()
-                .AddSingleton<LoggingService>()
-                .AddSingleton<SlashCommandInterationService>()
-                .AddSingleton<WelcomeMessageService>()
-                .AddSingleton<ComponentInteractionService>()
-                .AddSingleton<DiscordCoordinationService>()
-                .BuildServiceProvider();
+            .AddSingleton(_client)
+            .AddSingleton<CommandService>()
+            .AddSingleton<LoggingService>()
+            .AddDbContext<DeltaRaumiDbContext>()
+            .AddSingleton<SlashCommandInterationService>()
+            .AddSingleton<WelcomeMessageService>()
+            .AddSingleton<ComponentInteractionService>()
+            .AddSingleton<DiscordCoordinationService>()
+            .BuildServiceProvider();
     }
 }

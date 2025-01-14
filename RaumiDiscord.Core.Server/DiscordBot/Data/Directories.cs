@@ -3,6 +3,8 @@
     internal class Directories
     {
         public static readonly Directories Instance = new Directories();
+
+        public static string MySqlConfigPath { get { return $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}{Path.DirectorySeparatorChar}Raumi{Path.DirectorySeparatorChar}DeltaRaumi{Path.DirectorySeparatorChar}mysqlconfig.json"; } }
         public static string AppData 
         { 
             get 

@@ -2,7 +2,7 @@
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Services
 {
-    public class DiscordCoordinationService
+    class DiscordCoordinationService
     {
         private readonly DiscordSocketClient Client;
         private readonly SlashCommandInterationService SlashCommandService;
