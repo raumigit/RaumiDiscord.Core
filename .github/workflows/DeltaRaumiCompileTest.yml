@@ -23,7 +23,7 @@ jobs:
         run: dotnet restore
       
       - name: DotNet Build Restore
-        run: ｜
+        run: |
           dotnet build --no-restore /warnaserror -clp:NoSummary
         
       
