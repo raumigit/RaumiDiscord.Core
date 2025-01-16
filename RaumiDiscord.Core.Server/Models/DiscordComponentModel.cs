@@ -14,10 +14,10 @@ namespace RaumiDiscord.Core.Server.Models
         public ulong OwnerId { get; set; } = 0;
 
         //チャンネルID　初期値は0
-        public ulong ChannnelId { get; set; } = 0;
+        public ulong ChannelId { get; set; } = 0;
 
         //メッセージID　初期値は0
-        public ulong MessegeId { get; set; } = 0;
+        public ulong MessageId { get; set; } = 0;
 
         //用途不明
         public string DeltaRaumiComponentType { get; set; }

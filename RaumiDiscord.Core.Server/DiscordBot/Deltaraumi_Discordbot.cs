@@ -127,6 +127,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                     await dbContext.Database.MigrateAsync();
                     Console.WriteLine("Done.");
                 }
+                else
+                {
+
+                    //Console.WriteLine("Applying database migrations...");
+                    //await dbContext.Database.MigrateAsync();
+                    //Console.WriteLine("Done.");
+                }
 
                 await Log(new LogMessage(LogSeverity.Info, "Startup", "全て初期化が完了"));
 
@@ -270,7 +277,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                         }
                         else
                         {
-                            await message.Channel.SendMessageAsync("ん？ \n この指示を受け付けてるのはあなたではないはず…");
+                            await message.Channel.SendMessageAsync("うん？\nこの指示を受け付けてるのはあなたではないはず…");
                         }
                         break;
 
@@ -285,7 +292,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine("メッセージ送信エラー　(E-M001)");
+                Console.WriteLine("メッセージ送信エラー　(E-M4001)");
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine(e);
                 Console.ResetColor();
@@ -309,6 +316,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             .AddSingleton<WelcomeMessageService>()
             .AddSingleton<ComponentInteractionService>()
             .AddSingleton<DiscordCoordinationService>()
+            .AddSingleton<VoicertcregionService>()
             .BuildServiceProvider();
     }
 }

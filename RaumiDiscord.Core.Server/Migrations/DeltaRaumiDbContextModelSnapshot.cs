@@ -23,7 +23,7 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<ulong>("ChannnelId")
+                    b.Property<ulong>("ChannelId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreateTime")
@@ -33,7 +33,7 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<ulong>("MessegeId")
+                    b.Property<ulong>("MessageId")
                         .HasColumnType("INTEGER");
 
                     b.Property<ulong>("OwnerId")
