@@ -1,17 +1,24 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
+using System.Drawing;
+using System.Threading.Channels;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Services
 {
     public class VoicertcregionService
     {
 
-        private static DiscordSocketClient? _client;
+        private DiscordSocketClient? _client;
+        private SocketMessage socketMessage;
+        private LoggingService loggingService;
 
-        public static void VCRtcRegion(DiscordSocketClient client)
+        public VoicertcregionService(DiscordSocketClient client, LoggingService logger)
         {
-            //Client = client;
-
+            this.loggingService = logger;
+            this._client = client;
         }
+
+        
 
 
         public static async void SetRTCRegion(SocketMessage message, string region)
@@ -59,8 +66,44 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             }
             catch (Exception ex)
             {
-                await message.Channel.SendMessageAsync($"リージョン変更に失敗しました: {ex.Message}");
+                await message.Channel.SendMessageAsync($"リージョン変更に失敗しました(E-4007): {ex.Message}");
             }
+        }
+
+        internal static async Task HandleRTCSettingsCommand(SocketSlashCommand command, string region_code)
+        {
+            
+            Console.WriteLine(new LogMessage(LogSeverity.Info, "Discord_Slashcommand", region_code ));
+
+            ulong VoiceChannelId = Deltaraumi_Discordbot.vc_chid;
+            var guildId = (command.Channel as SocketGuildChannel)?.Guild;
+            var vchannel = guildId.GetVoiceChannel(VoiceChannelId);
+            if (VoiceChannelId == 0)
+            {
+                await command.RespondAsync($"指定されたIDのボイスチャンネルが見つかりません。\n現在のチャンネルID:{VoiceChannelId}");
+                
+                return;
+            }
+
+            try
+            {
+                await vchannel.ModifyAsync(properties => { properties.RTCRegion = region_code =="auto"?null:region_code; });
+                if (region_code == null)
+                {
+                    await command.RespondAsync($"チャンネル `{vchannel.Name}` のリージョンを`AUTO`に変更しました。");
+                }
+                else
+                {
+                    await command.RespondAsync($"チャンネル `{vchannel.Name}` のリージョンを `{region_code}` に変更しました。");
+                }
+            }
+            catch (Exception ex)
+            {
+                await command.RespondAsync($"リージョン変更に失敗しました(E-4007): {ex.Message}");
+            }
+
+
+            //throw new NotImplementedException();
         }
     }
 }
