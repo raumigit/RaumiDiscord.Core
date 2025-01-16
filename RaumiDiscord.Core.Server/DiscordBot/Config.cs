@@ -40,7 +40,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             public string CustomStatusGame { get; set; }
             public bool SystemFatal { get; set; }
         }
-
         public class SystemLogSettings
         {
             public string LogFilePath { get; set; }
@@ -52,11 +51,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             var toml = Toml.ReadFile("F:/ProgramData/Deltaraumi.toml");
             var environmentalValue = toml.Get<TomlTable>("EnvironmentalValue");
             return token = environmentalValue.Get<string>("Tokun");
-            
         }
         public Config GetConfigFromFile()
         {
-
             
             Config settings;
 
@@ -92,9 +89,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             if (!Directory.Exists(Directories.ProgramData)) Directory.CreateDirectory(Directories.ProgramData);
             if (File.Exists(Directories.Config))
             {
-
                 return Toml.ReadFile<Config>(Directories.Config);
-
             }
             else
             {
@@ -106,7 +101,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 return config;
             }
         }
-
     }
 }
  

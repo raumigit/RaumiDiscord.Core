@@ -89,6 +89,5 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         }
 
         public enum LogGeneralSeverity { Info, Warning, Error, Fatal }
-
     }
 }
