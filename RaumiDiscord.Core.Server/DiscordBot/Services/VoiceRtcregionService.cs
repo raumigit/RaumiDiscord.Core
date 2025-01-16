@@ -12,15 +12,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         private SocketMessage socketMessage;
         private LoggingService loggingService;
 
-        public VoicertcregionService(DiscordSocketClient client, LoggingService logger)
-        {
-            this.loggingService = logger;
-            this._client = client;
-        }
-
-        
-
-
         public static async void SetRTCRegion(SocketMessage message, string region)
         {
             ulong channelId = Deltaraumi_Discordbot.vc_chid;

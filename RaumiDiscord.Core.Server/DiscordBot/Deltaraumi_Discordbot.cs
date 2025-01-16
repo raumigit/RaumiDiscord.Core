@@ -47,52 +47,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 throw;
             }
 
-            //旧コード
-
-            //try
-            //{
-
-
-
-            //    var _config = new DiscordSocketConfig
-            //    {
-            //        MessageCacheSize = 40,
-            //        GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
-            //    };
-
-            //    Client = new DiscordSocketClient(_config);
-            //    Client.Log += LogAsync;
-            //    Client.Ready += ReadyAsync;
-            //    Client.MessageReceived += MessageReceivedAsync;
-            //    Client.InteractionCreated += InteractionCreatedAsync;
-            //    //Client.Ready += SlashCommandInterationService.Client_Ready;
-            //    Client.SlashCommandExecuted += SlashCommandInterationService.SlashCommandHandler;
-
-            //    await Client.LoginAsync(TokenType.Bot, token);
-            //    await Client.StartAsync();
-
-            //    await LogAsync(new LogMessage(LogSeverity.Info, "Startup", "Discordプロバイダに接続中"));
-
-            //    Client.MessageUpdated += MessageUpdated;
-            //    Client.Ready += () =>
-            //    {
-            //        Console.ForegroundColor = ConsoleColor.Magenta;
-            //        Console.WriteLine(new LogMessage(LogSeverity.Info, "Startup", "DeltaRaumi接続中").ToString());
-            //        Console.ResetColor();
-            //        Client.SetGameAsync("TEST");
-            //        return Task.CompletedTask;
-            //    };
-
-            //    Task task = Task.Run(static () => SlashCommandInterationService.Client_Ready(Client));
-
-            //    await Task.Delay(-1);
-            //}
-            //catch (Exception)
-            //{
-
-            //    throw;
-            //}
-            //旧コード^
         }
 
         private async Task MainAsync(string[] args)
@@ -127,14 +81,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                     await dbContext.Database.MigrateAsync();
                     Console.WriteLine("Done.");
                 }
-                else
-                {
-
-                    //Console.WriteLine("Applying database migrations...");
-                    //await dbContext.Database.MigrateAsync();
-                    //Console.WriteLine("Done.");
-                }
-
+                
                 await Log(new LogMessage(LogSeverity.Info, "Startup", "全て初期化が完了"));
 
                 await Log(new LogMessage(LogSeverity.Info, "Startup", "ログイン→"));

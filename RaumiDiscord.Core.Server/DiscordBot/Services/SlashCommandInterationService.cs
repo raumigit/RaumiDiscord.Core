@@ -252,7 +252,6 @@ class SlashCommandInterationService
 
         try
         {
-
             switch (cmd_reagion)
             {
                 case "auto":

@@ -11,9 +11,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         private readonly DeltaRaumiDbContext DeltaRaumiDbContext;
         private readonly LoggingService LoggingService;
 
-          
-        
-
         private Discord.Color RaumiMainColor = new Discord.Color(0x7bb3ee);
         private Discord.Color RaumiSubColor = new Discord.Color(0xf02443);
 
@@ -27,8 +24,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             client.ButtonExecuted += Client_ButtonExecuted;
             //client.SlashCommandExecuted += Client_SlashCommandExecuted;
         }
-
-        
 
         private async Task Client_ButtonExecuted(SocketMessageComponent component)
         {
@@ -51,12 +46,10 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                     builder.WithColor(Color.DarkRed);
                     await component.FollowupAsync(embed: builder.Build(), ephemeral: true) ;
                     break;
-
                 default:
                     await LoggingService.LogGeneral("通常では到達できないエラー(E-5900)",LoggingService.LogGeneralSeverity.Error);
                     break;
             }
-            throw new NotImplementedException();
         }
 
         private async Task Client_SelectMenuExecuted(SocketMessageComponent component)
