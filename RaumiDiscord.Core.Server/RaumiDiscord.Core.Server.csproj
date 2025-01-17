@@ -43,6 +43,7 @@
 
   <ItemGroup>
     <Folder Include="DiscordBot\SysFile\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

@@ -34,10 +34,8 @@ namespace RaumiDiscord.Core.Server.DataContext
 
                 case DatabaseType.InMemory:
                     throw new NotImplementedException();
-                    break;
                 default:
                     throw new ArgumentException("Unsupported database type");
-                    break;
             }
         }
 

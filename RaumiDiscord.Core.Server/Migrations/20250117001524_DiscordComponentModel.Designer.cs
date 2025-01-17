@@ -11,7 +11,7 @@ using RaumiDiscord.Core.Server.DataContext;
 namespace RaumiDiscord.Core.Server.Migrations
 {
     [DbContext(typeof(DeltaRaumiDbContext))]
-    [Migration("20250113233817_DiscordComponentModel")]
+    [Migration("20250117001524_DiscordComponentModel")]
     partial class DiscordComponentModel
     {
         /// <inheritdoc />
@@ -26,7 +26,7 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<ulong>("ChannnelId")
+                    b.Property<ulong>("ChannelId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreateTime")
@@ -36,7 +36,7 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<ulong>("MessegeId")
+                    b.Property<ulong>("MessageId")
                         .HasColumnType("INTEGER");
 
                     b.Property<ulong>("OwnerId")
