@@ -53,11 +53,10 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         {
             try
             {
-
-            
                 await Log(new LogMessage(LogSeverity.Info, "Startup", "DeltaRaumiを初期化中"));
 
                 await Log(new LogMessage(LogSeverity.Info, "Startup", "サービスプロバイダを設定中..."));
+
                 _Config = new Config().GetConfigFromFile();
 
                 _client = new DiscordSocketClient(new DiscordSocketConfig
@@ -81,13 +80,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                     await dbContext.Database.MigrateAsync();
                     Console.WriteLine("Done.");
                 }
-                
+
                 await Log(new LogMessage(LogSeverity.Info, "Startup", "全て初期化が完了"));
 
                 await Log(new LogMessage(LogSeverity.Info, "Startup", "ログイン→"));
                 try
                 {
-                    string _token = _Config.GetConfigToken();
+                    string _token = _Config.TokenData.Token;
 
                     await _client.LoginAsync(TokenType.Bot, _token);
                     //await Log(new LogMessage(LogSeverity.Debug, "Startup", $"Tokun:{_token}"));
@@ -120,7 +119,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 Environment.Exit(1);
             }
         }
-        //今こそ動作はしていないが戻す予定/コードしてだけ残す
+        //今こそ動作はしていないが戻す予定/コードだけ残す
         private static async Task InteractionCreatedAsync(SocketInteraction interaction)
         {
             // 安全キャストは、キャストされるものが null になるのを防ぐ最善の方法です。

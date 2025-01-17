@@ -18,8 +18,8 @@ namespace RaumiDiscord.Core.Server.Migrations
                     CustomId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     OwnerId = table.Column<ulong>(type: "INTEGER", nullable: false),
-                    ChannnelId = table.Column<ulong>(type: "INTEGER", nullable: false),
-                    MessegeId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    ChannelId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    MessageId = table.Column<ulong>(type: "INTEGER", nullable: false),
                     DeltaRaumiComponentType = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

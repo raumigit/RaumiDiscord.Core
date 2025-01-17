@@ -13,14 +13,15 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 class SlashCommandInterationService
 {
-    private readonly DeltaRaumiDbContext dbContext;
+    private readonly DeltaRaumiDbContext DbContext;
     private readonly DiscordSocketClient Client;
     private readonly LoggingService LoggingService;
 
     private ComponentInteractionService ComponentInteractionService { get; set; }
 
-    public SlashCommandInterationService(DiscordSocketClient client, LoggingService logger)
+    public SlashCommandInterationService(DiscordSocketClient client, LoggingService logger, DeltaRaumiDbContext dbContext)
     {
+        this.DbContext = dbContext;
         this.Client = client;
         this.LoggingService = logger;
         client.GuildAvailable += Client_GuildAvailadle;
@@ -204,8 +205,8 @@ class SlashCommandInterationService
         model.DeltaRaumiComponentType = "DeltaraumiPat";
         model.OwnerId = command_arg.User.Id;
 
-        dbContext.Components.Add(model);
-        await dbContext.SaveChangesAsync();
+        DbContext.Components.Add(model);
+        await DbContext.SaveChangesAsync();
 
     }
 
@@ -240,9 +241,9 @@ class SlashCommandInterationService
         model.DeltaRaumiComponentType = "FAQ-Menu";
         model.OwnerId = command_arg.User.Id;
 
-        dbContext.Components.Add(model);
+        DbContext.Components.Add(model);
         
-        await dbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync();
     }
 
     public async Task VcRegion(SocketSlashCommand command_arg)
