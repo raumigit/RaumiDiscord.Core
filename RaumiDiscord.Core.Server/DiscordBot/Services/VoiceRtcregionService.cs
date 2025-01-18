@@ -11,6 +11,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         private DiscordSocketClient? _client;
         private SocketMessage socketMessage;
         private LoggingService loggingService;
+        public static HashSet<ulong> allowedRoleIds = new HashSet<ulong>
+        {
+            1329621030637015040,    //ハードコート：ロール名：アプリ開発(ラウミの裏小屋)
+            1157017168471400682     //ハードコート：ロール名：VCモデレーター(ラウミの裏小屋)
+        };
+        
 
         public static async void SetRTCRegion(SocketMessage message, string region)
         {
@@ -71,9 +77,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             var guildUser = (SocketGuildUser)command.User;
             //var vchannel = guildId.GetVoiceChannel(VoiceChannelId);
             var userVoiceChannel = guildUser.VoiceChannel;
+            bool AllowRores = guildUser.Roles.Any(role => allowedRoleIds.Contains(role.Id));
 
-
-            if (!guildUser.GuildPermissions.ManageChannels )
+            if (guildUser.GuildPermissions.ManageChannels || AllowRores) 
+            {
+            }
+            else
             {
                 await command.RespondAsync($"権限不足：大いなる力にはそれ相応の責任があるのです…", ephemeral: true);
                 return;
