@@ -16,6 +16,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
     {
         //public IReadOnlyCollection<SocketGuildUser> ConnectedUsers { get; private set; }
         //VCユーザーを取るためのコマンド　検証と実装はこれから
+        public List<ulong> guildIDs { get; private set; }
 
         public static ulong vc_chid { get; set; }
         public static string vc_region { get; set; }
@@ -54,6 +55,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             try
             {
                 await Log(new LogMessage(LogSeverity.Info, "Startup", "DeltaRaumiを初期化中"));
+
+                
 
                 await Log(new LogMessage(LogSeverity.Info, "Startup", "サービスプロバイダを設定中..."));
 
@@ -99,10 +102,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                     await Log(new LogMessage(LogSeverity.Critical, "Startup", $"{e}"));
                     Environment.Exit(1);
                 }
+
                 _client.MessageReceived += MessageReceivedAsync;
                 _client.MessageUpdated += MessageUpdated;
                 //_client.MessageDeleted += MessegeDeleted;
                 //まもなく分離　分離後はサービスプロバイダに登録予定
+
+                guildIDs = _client.Guilds.Select(guild => guild.Id).ToList();
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine(new LogMessage(LogSeverity.Info, "Startup", "DeltaRaumi接続中").ToString());
@@ -137,11 +143,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
         private async Task MessageReceivedAsync(SocketMessage message)
         {
-            Console.WriteLine($"*ReceivedServer:{message.Channel}");
+            Console.WriteLine($"*ReceivedServer:");
+            Console.WriteLine($"|ReceivedChannel:{message.Channel}");
             Console.WriteLine($"|ReceivedUser:{message.Author}");
             Console.WriteLine($"|MessageReceived:{message.Content}");
             Console.WriteLine($"|CleanContent:{message.CleanContent}");
-            Console.WriteLine();
+            Console.WriteLine($"|EmbedelMessage:{message.Embeds}");
             //ボットは自分自身に応答してはなりません。
             if (message.Author.Id == _client.CurrentUser.Id)
                 return;
@@ -167,38 +174,27 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                         break;
 
                     case "@Raumi#1195 VCADD":
-                        await message.Channel.SendMessageAsync("該当のVC`924574864143171599`を(勝手に)追加しました");
-                        vc_chid = 924574864143171599;
+                        await message.Channel.SendMessageAsync("＊このコマンドは廃止されました。");
                         break;
 
                     case "@Raumi#1195 Discordリージョン：適当" or "@Raumi#1195 Discordリージョン：" or "@Raumi#1195 reset":
-                        await message.Channel.SendMessageAsync("＊リージョンを適当に変更中(実装中)");
-                        vc_region = null;
-                        VoicertcregionService.SetRTCRegion(message, vc_region);
+                        await message.Channel.SendMessageAsync("＊このコマンドは廃止されています。代わりに/vc-regionを利用してください。");
                         break;
 
                     case "@Raumi#1195 Discordリージョン：HK" or "@Raumi#1195 Discordリージョン：香港" or "@Raumi#1195 VCHK":
-                        await message.Channel.SendMessageAsync("＊リージョンを香港に変更中(実装中)");
-                        vc_region = "hongkong";
-                        VoicertcregionService.SetRTCRegion(message, vc_region);
+                        await message.Channel.SendMessageAsync("＊このコマンドは廃止されています。代わりに/vc-regionを利用してください。");
                         break;
 
                     case "@Raumi#1195 Discordリージョン：JP" or "@Raumi#1195 Discordリージョン：日本" or "@Raumi#1195 VCJP":
-                        await message.Channel.SendMessageAsync("＊リージョンを日本に変更中(実装中)");
-                        vc_region = "japan";
-                        VoicertcregionService.SetRTCRegion(message, vc_region);
+                        await message.Channel.SendMessageAsync("＊このコマンドは廃止されています。代わりに/vc-regionを利用してください。");
                         break;
 
                     case "@Raumi#1195 Discordリージョン：BR" or "@Raumi#1195 Discordリージョン：ブラジル" or "@Raumi#1195 VCBR":
-                        await message.Channel.SendMessageAsync("＊リージョンをブラジルに変更中(実装中)");
-                        vc_region = "brazil";
-                        VoicertcregionService.SetRTCRegion(message, vc_region);
+                        await message.Channel.SendMessageAsync("＊このコマンドは廃止されています。代わりに/vc-regionを利用してください。)");
                         break;
 
                     case "@Raumi#1195 Discordリージョン：SG" or "@Raumi#1195 Discordリージョン：シンガポール" or "@Raumi#1195 VCSG":
-                        await message.Channel.SendMessageAsync("＊リージョンをシンガポールに変更中(実装中)");
-                        vc_region = "singapore";
-                        VoicertcregionService.SetRTCRegion(message, vc_region);
+                        await message.Channel.SendMessageAsync("＊このコマンドは廃止されています。代わりに/vc-regionを利用してください。");
                         break;
 
                     case "@Raumi#1195 画像１":
@@ -212,7 +208,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                         break;
 
                     case "@Raumi#1195 誰がいる？" or "@Raumi#1195 !vcls":
-                        await message.Channel.SendMessageAsync("[銀河スラング]め！この機能は[銀河スラング]過ぎて実装できてないんだYO[銀河スラング]");
+                        await message.Channel.SendMessageAsync("そのうち実装されます(スラッシュコマンドと共に)");
                         Console.WriteLine($"未実装");
                         break;
 
@@ -249,7 +245,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         {
             // メッセージがキャッシュになかった場合、ダウンロードすると `after` のコピーが取得されます。
             var message = await before.GetOrDownloadAsync();
-            Console.WriteLine($"{message} -> {after}");
+            Console.WriteLine($"{message.Channel}\n{message.Author}:```diff\n- {message}\n! {after}\n```");
         }
         public static Task Log(LogMessage msg) => Task.Run(() => Console.WriteLine(msg.ToString()));
         private IServiceProvider BuildServices()
