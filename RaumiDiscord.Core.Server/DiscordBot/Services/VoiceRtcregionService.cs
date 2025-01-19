@@ -79,10 +79,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             var userVoiceChannel = guildUser.VoiceChannel;
             bool AllowRores = guildUser.Roles.Any(role => allowedRoleIds.Contains(role.Id));
 
-            if (guildUser.GuildPermissions.ManageChannels || AllowRores) 
-            {
-            }
-            else
+            if (!guildUser.GuildPermissions.ManageChannels && !AllowRores) 
             {
                 await command.RespondAsync($"権限不足：大いなる力にはそれ相応の責任があるのです…", ephemeral: true);
                 return;
