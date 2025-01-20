@@ -11,6 +11,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         private DiscordSocketClient? _client;
         private SocketMessage socketMessage;
         private LoggingService loggingService;
+        public static HashSet<ulong> allowedRoleIds = new HashSet<ulong>
+        {
+            1329621030637015040,    //ハードコート：ロール名：アプリ開発(ラウミの裏小屋)
+            1157017168471400682     //ハードコート：ロール名：VCモデレーター(ラウミの裏小屋)
+        };
+        
 
         public static async void SetRTCRegion(SocketMessage message, string region)
         {
@@ -61,31 +67,52 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             }
         }
 
-        internal static async Task HandleRTCSettingsCommand(SocketSlashCommand command, string region_code)
+        internal static async Task HandleRTCSettingsCommand(SocketSlashCommand command, string region_code, SocketVoiceChannel cmd_vcChannel)
         {
-            
-            Console.WriteLine(new LogMessage(LogSeverity.Info, "Discord_Slashcommand", region_code ));
+            //要注意：保守容易性指数が50を切っている1％以上の確率でバグを引くおそれあり
+            Console.WriteLine(new LogMessage(LogSeverity.Info, "RTCfunc", $"{region_code}" ));
 
-            ulong VoiceChannelId = Deltaraumi_Discordbot.vc_chid;
+
             var guildId = (command.Channel as SocketGuildChannel)?.Guild;
-            var vchannel = guildId.GetVoiceChannel(VoiceChannelId);
-            if (VoiceChannelId == 0)
+            var guildUser = (SocketGuildUser)command.User;
+            //var vchannel = guildId.GetVoiceChannel(VoiceChannelId);
+            var userVoiceChannel = guildUser.VoiceChannel;
+            bool AllowRores = guildUser.Roles.Any(role => allowedRoleIds.Contains(role.Id));
+
+            if (!guildUser.GuildPermissions.ManageChannels && !AllowRores) 
             {
-                await command.RespondAsync($"指定されたIDのボイスチャンネルが見つかりません。\n現在のチャンネルID:{VoiceChannelId}");
+                await command.RespondAsync($"権限不足：大いなる力にはそれ相応の責任があるのです…", ephemeral: true);
+                return;
+            }
+            if (cmd_vcChannel != null)
+            {
+                ulong VoiceChannelId = cmd_vcChannel.Id;
+                Console.WriteLine($"引数で追加されました。{VoiceChannelId}");
+            }
+            if (cmd_vcChannel == null && userVoiceChannel != null)//
+            {
+                cmd_vcChannel = userVoiceChannel;
+                Console.WriteLine($"コマンド使用ユーザーのチャンネルを使って追加されました。{cmd_vcChannel}");
+
+            }
+            if (cmd_vcChannel == null)
+            {
                 
+                await command.RespondAsync($"指定されたIDのボイスチャンネルが見つかりません。\n" +
+                    $"ボイスチャンネルに入ってからコマンドを実行するかVCを指定してください。\n",ephemeral:true);
                 return;
             }
 
             try
             {
-                await vchannel.ModifyAsync(properties => { properties.RTCRegion = region_code =="auto"?null:region_code; });
+                await cmd_vcChannel.ModifyAsync(properties => { properties.RTCRegion = region_code =="auto"?null:region_code; });
                 if (region_code == null)
                 {
-                    await command.RespondAsync($"チャンネル `{vchannel.Name}` のリージョンを`AUTO`に変更しました。");
+                    await command.RespondAsync($"チャンネル `{cmd_vcChannel.Name}` のリージョンを`AUTO`に変更しました。");
                 }
                 else
                 {
-                    await command.RespondAsync($"チャンネル `{vchannel.Name}` のリージョンを `{region_code}` に変更しました。");
+                    await command.RespondAsync($"チャンネル `{cmd_vcChannel.Name}` のリージョンを `{region_code}` に変更しました。");
                 }
             }
             catch (Exception ex)
