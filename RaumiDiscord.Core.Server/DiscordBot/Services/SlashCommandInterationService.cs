@@ -17,10 +17,17 @@ class SlashCommandInterationService
     private readonly DeltaRaumiDbContext DbContext;
     private readonly DiscordSocketClient Client;
     private readonly LoggingService LoggingService;
-    private ulong guildID { get; set; } 
+    private bool commandUpgrade = false;
+
+    private ulong guildID { get; set; }
+
+    public Optional<IVoiceRegion> Region { get; set; }
 
     private ComponentInteractionService ComponentInteractionService { get; set; }
-    
+
+    private List<string> VoiceRegionLists { get; set; } = new List<string>();
+
+
 
     public SlashCommandInterationService(DiscordSocketClient client, LoggingService logger, DeltaRaumiDbContext dbContext)
     {
@@ -62,8 +69,16 @@ class SlashCommandInterationService
         SlashCommandProperties[] commands = GetCmmands();
         try
         {
-            await guild_arg.DeleteApplicationCommandsAsync();
-            await guild_arg.BulkOverwriteApplicationCommandAsync(commands);
+            if (commandUpgrade== true)
+            {
+                await guild_arg.DeleteApplicationCommandsAsync();
+                await guild_arg.BulkOverwriteApplicationCommandAsync(commands);
+            }
+            else
+            {
+                await LoggingService.LogGeneral("コマンドの更新がスキップされました。");
+            }
+
         }
         catch (HttpException e)
         {
@@ -192,7 +207,7 @@ class SlashCommandInterationService
         return slashGlobalCommandsBuilder.ToArray();
 
     }
-    //注意：この先すべて未実装
+
     public async Task Pat(SocketSlashCommand command_arg)
     {
         await command_arg.DeferAsync();
@@ -266,74 +281,70 @@ class SlashCommandInterationService
 
     public async Task VcRegion(SocketSlashCommand command_arg)
     {
-        string cmd_reagion = command_arg.Data.Options.First(op => op.Name == "region").Value.ToString();
+        string cmd_region = command_arg.Data.Options.First(op => op.Name == "region").Value.ToString();
         var cmd_vcChannel = command_arg.Data.Options.FirstOrDefault(op => op.Name == "target");
         
-        string ? region_code;
+        //string ? region_code;
         SocketVoiceChannel voiceChannel = null;
+        
         if (cmd_vcChannel != null)
         {
             voiceChannel = cmd_vcChannel.Value as SocketVoiceChannel;
+            
+            //static Array AllowedRegionCodeへの変更が推奨されている
+            //注意：targetがnull以外の場合実行されるコードのため削ってしまうと指定ができない
         }
+
+
+
+        await listVoiceRegion(voiceChannel);
         try
         {
-            switch (cmd_reagion)
+            
+            switch (cmd_region)
             {
                 case "auto":
-                    region_code = null;
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "brazil":
-                    region_code = "brazil";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "hongkong":
-                    region_code = "hongkong";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "india":
-                    region_code = "india";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "japan":
-                    region_code = "japan";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "rotterdam":
-                    region_code = "rotterdam";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "russia":
-                    region_code = "russia";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "singapore":
-                    region_code = "singapore";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "southafrica":
-                    region_code = "southafrica";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "us-central":
-                    region_code = "us-central";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "us-east":
-                    region_code = "us-east";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "us-south":
-                    region_code = "us-south";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
                 case "us-west":
-                    region_code = "us-west";
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, region_code, voiceChannel);
+                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
                     break;
 
                 default:
-                    await LoggingService.LogGeneral($"コマンドオプションが不明(E-R4007)引数：{cmd_reagion}", LoggingService.LogGeneralSeverity.Warning);
+                    await LoggingService.LogGeneral($"コマンドオプションが不明(E-R4007)引数：{cmd_region}", LoggingService.LogGeneralSeverity.Warning);
                     break;
             }
         }
@@ -347,7 +358,23 @@ class SlashCommandInterationService
 
     }
 
-    
+
+    public async Task listVoiceRegion(SocketVoiceChannel? voiceChannel)
+    {
+        if (voiceChannel!=null)
+        {
+            var v = await Client.GetVoiceRegionsAsync();
+            //regionのリストはnull
+            foreach (var item in v)
+            {
+                VoiceRegionLists.Add(item.Id);
+            }
+        }
+
+    }
+
+
+
 
     internal static async Task GlobalCommandUpdate()
     {

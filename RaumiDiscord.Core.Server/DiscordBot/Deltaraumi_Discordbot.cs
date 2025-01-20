@@ -144,11 +144,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         private async Task MessageReceivedAsync(SocketMessage message)
         {
             Console.WriteLine($"*ReceivedServer:");
-            Console.WriteLine($"|ReceivedChannel:{message.Channel}");
-            Console.WriteLine($"|ReceivedUser:{message.Author}");
-            Console.WriteLine($"|MessageReceived:{message.Content}");
-            Console.WriteLine($"|CleanContent:{message.CleanContent}");
+            Console.WriteLine($"|ReceivedChannel:{message.Channel}\n|ReceivedUser:{message.Author}\n|MessageReceived:{message.Content}\n|CleanContent:{message.CleanContent}\n");
             Console.WriteLine($"|EmbedelMessage:{message.Embeds}");
+
             //ボットは自分自身に応答してはなりません。
             if (message.Author.Id == _client.CurrentUser.Id)
                 return;
@@ -166,6 +164,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
             try
             {
+                //最クロマティック複雑度が高く、保守用意性が50切ってるので要修正
                 string contentbase = "@Raumi#1195 *";
                 switch (message.CleanContent)
                 {

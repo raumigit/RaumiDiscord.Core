@@ -69,7 +69,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
 
         internal static async Task HandleRTCSettingsCommand(SocketSlashCommand command, string region_code, SocketVoiceChannel cmd_vcChannel)
         {
-            
+            //要注意：保守容易性指数が50を切っている1％以上の確率でバグを引くおそれあり
             Console.WriteLine(new LogMessage(LogSeverity.Info, "RTCfunc", $"{region_code}" ));
 
 
@@ -99,8 +99,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             {
                 
                 await command.RespondAsync($"指定されたIDのボイスチャンネルが見つかりません。\n" +
-                    $"ボイスチャンネルに入ってからコマンドを実行するかVCを指定してください。\n" +
-                    $"現在のチャンネルID:null",ephemeral:true);
+                    $"ボイスチャンネルに入ってからコマンドを実行するかVCを指定してください。\n",ephemeral:true);
                 return;
             }
 
