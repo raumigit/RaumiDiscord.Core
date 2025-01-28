@@ -55,7 +55,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
 
         private async Task Client_SelectMenuExecuted(SocketMessageComponent component)
         {
-            await component.DeferAsync();
+            //await component.DeferAsync();
 
             DiscordComponentModel model = DeltaRaumiDbContext.Components.Find(Guid.Parse(component.Data.CustomId));
 
@@ -69,6 +69,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                         await component.RespondAsync("**許可されていない動作**：このメニューは他ユーザーによって制御されています。", ephemeral: true);
                         return;
                     }
+
                     switch (component.Data.Values.FirstOrDefault())
                     {
                         case "about":
@@ -185,7 +186,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                             builder.WithCurrentTimestamp();
                             builder.WithFooter("DeltaRaumi");
                             break;
-                        
                     }
 
                     await component.Message.ModifyAsync(x =>
@@ -195,14 +195,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                         x.Embed = builder.Build();
                     });
                     break;
-
-                default:
-                    break;
+                
             }
             DeltaRaumiDbContext.Components.Remove(model);
             await DeltaRaumiDbContext.SaveChangesAsync();
-
-            throw new NotImplementedException();
+            
         }
     }
 }
