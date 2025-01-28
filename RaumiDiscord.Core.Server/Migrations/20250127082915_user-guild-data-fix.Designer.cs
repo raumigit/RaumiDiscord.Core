@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RaumiDiscord.Core.Server.DataContext;
 
@@ -10,9 +11,11 @@ using RaumiDiscord.Core.Server.DataContext;
 namespace RaumiDiscord.Core.Server.Migrations
 {
     [DbContext(typeof(DeltaRaumiDbContext))]
-    partial class DeltaRaumiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250127082915_user-guild-data-fix")]
+    partial class userguilddatafix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -87,28 +90,6 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.HasKey("GuildId");
 
                     b.ToTable("GuildBases");
-                });
-
-            modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.UrlDetaModel", b =>
-                {
-                    b.Property<uint>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("TTL")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UrlType")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("urlDetaModels");
                 });
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.UserBaseData", b =>

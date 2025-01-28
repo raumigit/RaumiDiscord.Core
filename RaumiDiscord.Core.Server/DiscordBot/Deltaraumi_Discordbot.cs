@@ -66,7 +66,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 {
                     ConnectionTimeout = 8000,
                     HandlerTimeout = 3000,
-                    MessageCacheSize = 64,
+                    MessageCacheSize = 1000,
                     LogLevel = LogSeverity.Verbose,
                     GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
                 });
@@ -132,12 +132,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             // このチェックに合格しない場合は、その型にキャストできません。
             if (interaction is SocketMessageComponent component)
             {
-                // 上記のボタン(MessageReceivedAsync)で作成された ID を確認します。
+                // 上記のボタン(MessageReceivedAsync)で作成された Id を確認します。
                 if (component.Data.CustomId == "pingbtn")
                     await interaction.RespondAsync("やぁ、ラウミことデルタラウミだよ。");
 
                 else
-                    Console.WriteLine("ハンドラーのない ID が飛んできたぞ…？");
+                    Console.WriteLine("ハンドラーのない Id が飛んできたぞ…？");
             }
         }
 
@@ -244,7 +244,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         {
             // メッセージがキャッシュになかった場合、ダウンロードすると `after` のコピーが取得されます。
             var message = await before.GetOrDownloadAsync();
-            Console.WriteLine($"{message.Channel}\n{message.Author}:```diff\n- {message}\n! {after}\n```");
+            Console.WriteLine($"{message.Channel}|{message.Author}\n{message.Author}:```diff\n- {message}\n! {after}\n```");
         }
         public static Task Log(LogMessage msg) => Task.Run(() => Console.WriteLine(msg.ToString()));
         private IServiceProvider BuildServices()

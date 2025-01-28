@@ -1,17 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RaumiDiscord.Core.Server.Models;
+using RaumiDiscord.Core.Server.Api.Models;
 
 namespace RaumiDiscord.Core.Server.DataContext
 {
-    class DeltaRaumiDbContext : DbContext
+    public class DeltaRaumiDbContext : DbContext
     {
         public DbSet<DiscordComponentModel> Components { get; set; }
-        private DatabaseType databaseType;
+        public DbSet<GuildBaseData> GuildBases { get; set; }
+        public DbSet<UserBaseData> UserBases { get; set; }
+        public DbSet<UserGuildData> UserGuildData { get; set; }
+        public DbSet<UrlDetaModel> urlDetaModels { get; set; } = null!;
 
-        public DeltaRaumiDbContext(DatabaseType type = DatabaseType.Sqlite)
+        private DatabaseType databaseType = DatabaseType.Sqlite;
+
+        public DeltaRaumiDbContext(DbContextOptions<DeltaRaumiDbContext> options)
+        : base(options)
         {
-            this.databaseType = type;
         }
+        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -43,6 +49,9 @@ namespace RaumiDiscord.Core.Server.DataContext
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<DiscordComponentModel>(entity => { entity.HasKey(e => e.CustomId); });
+            //modelBuilder.Entity
+            //
+            //
         }
 
         public enum DatabaseType { MariaDb, Sqlite, InMemory };

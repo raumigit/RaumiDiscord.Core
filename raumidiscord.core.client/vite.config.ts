@@ -50,6 +50,10 @@ export default defineConfig({
             '^/weatherforecast': {
                 target,
                 secure: false
+            },
+            '/dashbord': {
+                target,
+                secure: false
             }
         },
         port: 39888,

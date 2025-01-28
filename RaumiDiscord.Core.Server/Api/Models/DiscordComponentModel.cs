@@ -1,22 +1,22 @@
 ﻿using Discord;
 
-namespace RaumiDiscord.Core.Server.Models
+namespace RaumiDiscord.Core.Server.Api.Models
 {
     public class DiscordComponentModel
     {
         //GUID
-        public Guid CustomId { get; set; } 
+        public Guid CustomId { get; set; }
 
         //時間(ローカル)
         public DateTime CreateTime { get; set; } = DateTime.Now;
 
-        //オーナーのID　初期値は0
+        //オーナーのId　初期値は0
         public ulong OwnerId { get; set; } = 0;
 
-        //チャンネルID　初期値は0
+        //チャンネルId　初期値は0
         public ulong ChannelId { get; set; } = 0;
 
-        //メッセージID　初期値は0
+        //メッセージId　初期値は0
         public ulong MessageId { get; set; } = 0;
 
         //用途不明
