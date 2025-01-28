@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RaumiDiscord.Core.Server.DataContext;
 
@@ -10,9 +11,11 @@ using RaumiDiscord.Core.Server.DataContext;
 namespace RaumiDiscord.Core.Server.Migrations
 {
     [DbContext(typeof(DeltaRaumiDbContext))]
-    partial class DeltaRaumiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250127080844_user-guild-data")]
+    partial class userguilddata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -89,28 +92,6 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.ToTable("GuildBases");
                 });
 
-            modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.UrlDetaModel", b =>
-                {
-                    b.Property<uint>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("TTL")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UrlType")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("urlDetaModels");
-                });
-
             modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.UserBaseData", b =>
                 {
                     b.Property<ulong>("UserId")
@@ -148,13 +129,13 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.Property<string>("GuildAvatarId")
                         .HasColumnType("TEXT");
 
-                    b.Property<ulong>("GuildId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("GuildLebel")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("GuildUserFlags")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<ulong>("Guildid")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("JoinedAt")
@@ -166,12 +147,12 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.Property<int>("TotalMessage")
                         .HasColumnType("INTEGER");
 
-                    b.Property<ulong>("UserId")
+                    b.Property<ulong>("Userid")
                         .HasColumnType("INTEGER");
 
-                    b.HasIndex("GuildId");
+                    b.HasIndex("Guildid");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("Userid");
 
                     b.ToTable("UserGuildData");
                 });
@@ -180,13 +161,13 @@ namespace RaumiDiscord.Core.Server.Migrations
                 {
                     b.HasOne("RaumiDiscord.Core.Server.Api.Models.GuildBaseData", "GuildBaseData")
                         .WithMany()
-                        .HasForeignKey("GuildId")
+                        .HasForeignKey("Guildid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RaumiDiscord.Core.Server.Api.Models.UserBaseData", "UserBaseData")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("Userid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

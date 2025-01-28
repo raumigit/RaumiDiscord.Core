@@ -4,10 +4,11 @@ using Discord.Rest;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using NuGet.Protocol;
+using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DataContext;
 using RaumiDiscord.Core.Server.DiscordBot;
 using RaumiDiscord.Core.Server.DiscordBot.Services;
-using RaumiDiscord.Core.Server.Models;
 using System.Linq;
 using System.Reflection.Emit;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -26,6 +27,9 @@ class SlashCommandInterationService
     private ComponentInteractionService ComponentInteractionService { get; set; }
 
     private List<string> VoiceRegionLists { get; set; } = new List<string>();
+
+    private bool command_GuildAvailadle { get; set; } = true;
+    private bool command_GlobalAvailadle { get; set; } = true;
 
 
 
@@ -69,10 +73,11 @@ class SlashCommandInterationService
         SlashCommandProperties[] commands = GetCmmands();
         try
         {
-            if (commandUpgrade== true)
+            if (command_GuildAvailadle == true)
             {
                 await guild_arg.DeleteApplicationCommandsAsync();
                 await guild_arg.BulkOverwriteApplicationCommandAsync(commands);
+                command_GuildAvailadle = false;
             }
             else
             {
@@ -99,6 +104,7 @@ class SlashCommandInterationService
         {
             await Client.Rest.DeleteAllGlobalCommandsAsync();
             await Client.Rest.BulkOverwriteGlobalCommands(global_Commands);
+            command_GlobalAvailadle = false;
         }
         catch (HttpException e)
         {
@@ -192,6 +198,13 @@ class SlashCommandInterationService
         patBuilder.WithName("名刺").WithDescription("名刺を作れます。カードは1920＊720で作られます。");
         globalcommands.Add(patBuilder);
         #endregion
+
+        #region /WebTools
+        SlashCommandBuilder webtoolsBuilder = new SlashCommandBuilder();
+        webtoolsBuilder.WithName("WebTools").WithDescription("Webで使えるツール類に案内されます。(外部のウェブサイトへ行きます)");
+        globalcommands.Add(webtoolsBuilder);
+        #endregion
+
 
         //#region
         //SlashCommandBuilder GlobalBuilder = new SlashCommandBuilder();

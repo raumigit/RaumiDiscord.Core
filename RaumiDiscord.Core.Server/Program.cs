@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using RaumiDiscord.Core.Server.DataContext;
 using RaumiDiscord.Core.Server.DiscordBot;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+//サービスにDataContextを登録する
+builder.Services.AddDbContext<DeltaRaumiDbContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -21,11 +29,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
 app.UseAuthorization();
-
 app.MapControllers();
-
-app.MapFallbackToFile("/index.html");
 
 Task task = Task.Run(async () => {
     try
@@ -40,4 +46,3 @@ Task task = Task.Run(async () => {
 });
 
 app.Run();
-//

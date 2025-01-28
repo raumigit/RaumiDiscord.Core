@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace RaumiDiscord.Core.Server.Controllers
+namespace RaumiDiscord.Core.Server.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
