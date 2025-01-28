@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import plugin from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
+import { resolve } from 'path'
 import child_process from 'child_process';
 import { env } from 'process';
 
@@ -39,6 +40,14 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    build: {
+        rollupOptions: {
+            input: {
+                main: resolve(__dirname, 'index.html'),
+                toolpage: resolve(__dirname,'tools/index.html'),
+            },
+        },
+    },
     plugins: [plugin()],
     resolve: {
         alias: {
@@ -60,6 +69,7 @@ export default defineConfig({
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),
-        }
+        },
+
     }
 })

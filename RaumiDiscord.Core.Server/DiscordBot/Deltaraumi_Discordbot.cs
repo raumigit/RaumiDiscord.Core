@@ -249,10 +249,10 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         public static Task Log(LogMessage msg) => Task.Run(() => Console.WriteLine(msg.ToString()));
         private IServiceProvider BuildServices()
         => new ServiceCollection()
+            .AddDbContext<DeltaRaumiDbContext>()
             .AddSingleton(_client)
             .AddSingleton<CommandService>()
             .AddSingleton<LoggingService>()
-            .AddDbContext<DeltaRaumiDbContext>()
             .AddSingleton<SlashCommandInterationService>()
             .AddSingleton<WelcomeMessageService>()
             .AddSingleton<ComponentInteractionService>()
