@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Net;
+using Discord.Net.Queue;
 using Discord.Rest;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
@@ -38,11 +39,14 @@ class SlashCommandInterationService
         this.DbContext = dbContext;
         this.Client = client;
         this.LoggingService = logger;
+        client.Ready += Client_GlobalAvailadle;
         client.GuildAvailable += Client_GuildAvailadle;
         client.SlashCommandExecuted += Client_SlashCommandExcuted;
-        client.Ready += Client_GlobalAvailadle;
+        
         
     }
+
+    
     
 
     private async Task Client_SlashCommandExcuted(SocketSlashCommand command_arg)
@@ -62,8 +66,6 @@ class SlashCommandInterationService
                 await LoggingService.LogGeneral($"このコマンドは不明なため実行されませんでした: {command_arg.CommandName}");
                 break;
         }
-        
-        
     }
 
     
@@ -81,9 +83,8 @@ class SlashCommandInterationService
             }
             else
             {
-                await LoggingService.LogGeneral("コマンドの更新がスキップされました。");
+                await LoggingService.LogGeneral("ギルドコマンドの更新がスキップされました。");
             }
-
         }
         catch (HttpException e)
         {
@@ -99,12 +100,19 @@ class SlashCommandInterationService
     private async Task Client_GlobalAvailadle()
     {
         SlashCommandProperties[] global_Commands = GetGlobalCommands();
-
         try
         {
-            await Client.Rest.DeleteAllGlobalCommandsAsync();
-            await Client.Rest.BulkOverwriteGlobalCommands(global_Commands);
-            command_GlobalAvailadle = false;
+            if (command_GlobalAvailadle == true)
+            {
+                await Client.Rest.DeleteAllGlobalCommandsAsync();
+                await Client.Rest.BulkOverwriteGlobalCommands(global_Commands);
+                await LoggingService.LogGeneral("グローバルコマンドが更新されました。");
+                command_GlobalAvailadle = false;
+            }
+            else
+            {
+                await LoggingService.LogGeneral("グローバルコマンドの更新がスキップされました。");
+            }
         }
         catch (HttpException e)
         {
@@ -194,17 +202,32 @@ class SlashCommandInterationService
         List<SlashCommandBuilder> globalcommands = new List<SlashCommandBuilder>();
 
         #region /名刺
-        SlashCommandBuilder patBuilder = new SlashCommandBuilder();
-        patBuilder.WithName("名刺").WithDescription("名刺を作れます。カードは1920＊720で作られます。");
-        globalcommands.Add(patBuilder);
+        SlashCommandBuilder CardBuilder = new SlashCommandBuilder();
+        CardBuilder.WithName("名刺").WithDescription("名刺を作れます。カードは1920＊720で作られます。");
+        globalcommands.Add(CardBuilder);
         #endregion
 
         #region /WebTools
         SlashCommandBuilder webtoolsBuilder = new SlashCommandBuilder();
-        webtoolsBuilder.WithName("WebTools").WithDescription("Webで使えるツール類に案内されます。(外部のウェブサイトへ行きます)");
+        webtoolsBuilder.WithName("webtools").WithDescription("Webで使えるツール類に案内されます。(外部のウェブサイトへ行きます)");
         globalcommands.Add(webtoolsBuilder);
         #endregion
 
+        #region /HoYoCode
+        SlashCommandBuilder BookmarkBuilder = new SlashCommandBuilder();
+        BookmarkBuilder.WithName("bookmark").WithDescription("登録されているURLを表示します。")
+            .AddOption(new SlashCommandOptionBuilder()
+            .WithName("type")
+            .WithDescription("URLのタイプを指定します。")
+            .WithRequired(true)
+            .AddChoice("URL", "url")
+            .AddChoice("GenshinImpact", "GI")
+            .AddChoice("HonkaiStarRail", "HSR")
+            .AddChoice("ZenlessZoneZero", "ZZZ")
+            .WithType(ApplicationCommandOptionType.String)
+            );
+        globalcommands.Add(BookmarkBuilder);
+        #endregion
 
         //#region
         //SlashCommandBuilder GlobalBuilder = new SlashCommandBuilder();
@@ -266,16 +289,15 @@ class SlashCommandInterationService
         menuBuilder.WithCustomId(model.CustomId.ToString());
         menuBuilder.AddOption("DeltaRaumiとは？", "about", emote: new Emoji("❓"));
         menuBuilder.AddOption("現在の設定値は？","nowsettings", emote: new Emoji("🗒"));
-        menuBuilder.AddOption("A3", "B3", emote: new Emoji("⏬"));
-        menuBuilder.AddOption("A4", "B4");
+        menuBuilder.AddOption("サーバーの状態は?", "serverstat", emote: new Emoji("📶"));
         menuBuilder.AddOption("DeltaRaumiのホームページはある?", "website", emote: new Emoji("🌐"));
         menuBuilder.AddOption("Patreonとかしてるの？", "donate", emote: new Emoji("💰"));
-        menuBuilder.AddOption("A7?", "B7", emote: new Emoji("📇"));
-        menuBuilder.AddOption("A8", "B8", emote: new Emoji("🎮"));
+        menuBuilder.AddOption("ブックマークって何?", "bookmark", emote: new Emoji("🔖"));
         menuBuilder.AddOption("なぜ24時間上がってないの？", "wayoperate-24", emote: new Emoji("👀"));
-        menuBuilder.AddOption("A10", "B10", emote: new Emoji("🗿"));
-        menuBuilder.AddOption("A11", "B11", emote: new Emoji("🔻"));
-        menuBuilder.AddOption("新しい機能を作る予定は？", "cards", emote: new Emoji("🔧"));
+        menuBuilder.AddOption("新しい機能を作る予定は？", "enhancement", emote: new Emoji("🔧"));
+        menuBuilder.AddOption("最新で行われた変更は？", "updatenow", emote: new Emoji("☑️"));
+
+
 
         ComponentBuilder componentBuilder = new ComponentBuilder();
         componentBuilder.WithSelectMenu(menuBuilder, 0);
@@ -294,7 +316,7 @@ class SlashCommandInterationService
 
     public async Task VcRegion(SocketSlashCommand command_arg)
     {
-        string cmd_region = command_arg.Data.Options.First(op => op.Name == "region").Value.ToString();
+        string? cmd_region = command_arg.Data.Options.First(op => op.Name == "region").Value.ToString();
         var cmd_vcChannel = command_arg.Data.Options.FirstOrDefault(op => op.Name == "target");
         
         //string ? region_code;
@@ -387,20 +409,9 @@ class SlashCommandInterationService
     }
 
 
-
-
     internal static async Task GlobalCommandUpdate()
     {
-        throw new NotImplementedException();
+         
     }
-    internal static void Client_Ready(DiscordSocketClient client)
-    {
-        throw new NotImplementedException();
-    }
-
-
-    internal static async Task SlashCommandHandler(SocketSlashCommand command)
-    {
-        throw new NotImplementedException();
-    }
+    
 }
