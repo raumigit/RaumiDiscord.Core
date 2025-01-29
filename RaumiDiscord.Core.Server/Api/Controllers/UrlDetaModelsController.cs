@@ -25,14 +25,14 @@ namespace RaumiDiscord.Core.Server.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UrlDetaModel>>> GeturlDetaModels()
         {
-            return await _context.urlDetaModels.ToListAsync();
+            return await _context.UrlDetaModels.ToListAsync();
         }
 
         // GET: api/UrlDetaModels/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UrlDetaModel>> GetUrlDetaModel(uint id)
         {
-            var urlDetaModel = await _context.urlDetaModels.FindAsync(id);
+            var urlDetaModel = await _context.UrlDetaModels.FindAsync(id);
 
             if (urlDetaModel == null)
             {
@@ -78,7 +78,7 @@ namespace RaumiDiscord.Core.Server.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<UrlDetaModel>> PostUrlDetaModel(UrlDetaModel urlDetaModel)
         {
-            _context.urlDetaModels.Add(urlDetaModel);
+            _context.UrlDetaModels.Add(urlDetaModel);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUrlDetaModel", new { id = urlDetaModel.Id }, urlDetaModel);
@@ -88,13 +88,13 @@ namespace RaumiDiscord.Core.Server.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUrlDetaModel(uint id)
         {
-            var urlDetaModel = await _context.urlDetaModels.FindAsync(id);
+            var urlDetaModel = await _context.UrlDetaModels.FindAsync(id);
             if (urlDetaModel == null)
             {
                 return NotFound();
             }
 
-            _context.urlDetaModels.Remove(urlDetaModel);
+            _context.UrlDetaModels.Remove(urlDetaModel);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -102,7 +102,7 @@ namespace RaumiDiscord.Core.Server.Api.Controllers
 
         private bool UrlDetaModelExists(uint id)
         {
-            return _context.urlDetaModels.Any(e => e.Id == id);
+            return _context.UrlDetaModels.Any(e => e.Id == id);
         }
     }
 }

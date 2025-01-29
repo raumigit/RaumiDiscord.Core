@@ -6,11 +6,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RaumiDiscord.Core.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class userguilddata : Migration
+    public partial class InitModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Components",
+                columns: table => new
+                {
+                    CustomId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    OwnerId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    ChannelId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    MessageId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    DeltaRaumiComponentType = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Components", x => x.CustomId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "GuildBases",
                 columns: table => new
@@ -32,6 +48,21 @@ namespace RaumiDiscord.Core.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GuildBases", x => x.GuildId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UrlDetaModels",
+                columns: table => new
+                {
+                    Id = table.Column<uint>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Url = table.Column<string>(type: "TEXT", nullable: true),
+                    UrlType = table.Column<string>(type: "TEXT", nullable: true),
+                    TTL = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UrlDetaModels", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,8 +88,8 @@ namespace RaumiDiscord.Core.Server.Migrations
                 name: "UserGuildData",
                 columns: table => new
                 {
-                    Guildid = table.Column<ulong>(type: "INTEGER", nullable: false),
-                    Userid = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    GuildId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<ulong>(type: "INTEGER", nullable: false),
                     GuildAvatarId = table.Column<string>(type: "TEXT", nullable: true),
                     GuildUserFlags = table.Column<int>(type: "INTEGER", nullable: false),
                     JoinedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -69,33 +100,39 @@ namespace RaumiDiscord.Core.Server.Migrations
                 constraints: table =>
                 {
                     table.ForeignKey(
-                        name: "FK_UserGuildData_GuildBases_Guildid",
-                        column: x => x.Guildid,
+                        name: "FK_UserGuildData_GuildBases_GuildId",
+                        column: x => x.GuildId,
                         principalTable: "GuildBases",
                         principalColumn: "GuildId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserGuildData_UserBases_Userid",
-                        column: x => x.Userid,
+                        name: "FK_UserGuildData_UserBases_UserId",
+                        column: x => x.UserId,
                         principalTable: "UserBases",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserGuildData_Guildid",
+                name: "IX_UserGuildData_GuildId",
                 table: "UserGuildData",
-                column: "Guildid");
+                column: "GuildId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserGuildData_Userid",
+                name: "IX_UserGuildData_UserId",
                 table: "UserGuildData",
-                column: "Userid");
+                column: "UserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Components");
+
+            migrationBuilder.DropTable(
+                name: "UrlDetaModels");
+
             migrationBuilder.DropTable(
                 name: "UserGuildData");
 

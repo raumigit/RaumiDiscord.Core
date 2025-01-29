@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DiscordBot\SysFile\**" />
+    <Content Remove="DiscordBot\SysFile\**" />
+    <EmbeddedResource Remove="DiscordBot\SysFile\**" />
+    <None Remove="DiscordBot\SysFile\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Resources\raumi.ico" />
   </ItemGroup>
 
@@ -29,6 +36,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     <PackageReference Include="Nett" Version="0.15.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.2.efcore.9.0.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
     <PackageReference Include="SQLite" Version="3.13.0" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.10" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
@@ -42,7 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DiscordBot\SysFile\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

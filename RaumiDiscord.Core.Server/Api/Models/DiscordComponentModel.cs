@@ -20,6 +20,6 @@ namespace RaumiDiscord.Core.Server.Api.Models
         public ulong MessageId { get; set; } = 0;
 
         //用途不明
-        public string DeltaRaumiComponentType { get; set; }
+        public string? DeltaRaumiComponentType { get; set; }
     }
 }

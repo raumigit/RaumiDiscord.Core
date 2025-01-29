@@ -19,7 +19,7 @@ class SlashCommandInterationService
     private readonly DeltaRaumiDbContext DbContext;
     private readonly DiscordSocketClient Client;
     private readonly LoggingService LoggingService;
-    private bool commandUpgrade = false;
+    //private bool commandUpgrade = false;
 
     private ulong guildID { get; set; }
 
@@ -317,10 +317,10 @@ class SlashCommandInterationService
     public async Task VcRegion(SocketSlashCommand command_arg)
     {
         string? cmd_region = command_arg.Data.Options.First(op => op.Name == "region").Value.ToString();
-        var cmd_vcChannel = command_arg.Data.Options.FirstOrDefault(op => op.Name == "target");
+        SocketSlashCommandDataOption? cmd_vcChannel = command_arg.Data.Options.FirstOrDefault(op => op.Name == "target");
         
         //string ? region_code;
-        SocketVoiceChannel voiceChannel = null;
+        SocketVoiceChannel? voiceChannel = null;
         
         if (cmd_vcChannel != null)
         {
@@ -409,9 +409,8 @@ class SlashCommandInterationService
     }
 
 
-    internal static async Task GlobalCommandUpdate()
+    internal static Task GlobalCommandUpdate()
     {
-         
+        return Task.CompletedTask;
     }
-    
 }

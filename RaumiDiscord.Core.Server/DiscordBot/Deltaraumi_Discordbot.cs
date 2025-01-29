@@ -16,20 +16,20 @@ namespace RaumiDiscord.Core.Server.DiscordBot
     {
         //public IReadOnlyCollection<SocketGuildUser> ConnectedUsers { get; private set; }
         //VCユーザーを取るためのコマンド　検証と実装はこれから
-        public List<ulong> guildIDs { get; private set; }
+        public List<ulong>? guildIDs { get; private set; }
 
         public static ulong vc_chid { get; set; }
-        public static string vc_region { get; set; }
+        public static string? vc_region { get; set; }
 
         //public static ulong GuildId { get; private set; }
         //おそらく出番なし
         
         public static DiscordSocketClient _client;
-        private IServiceProvider _services;
-        public static Config _Config;
+        private IServiceProvider? _services;
+        public static Config? _Config;
         public static SqlMode AppSqlMode { get; set; }
         public enum SqlMode { Sqlite, MariaDb }
-        private DiscordCoordinationService DiscordCoordinationService;
+        private DiscordCoordinationService? DiscordCoordinationService;
 
         public static void Deltaraumi_load(string[] args)
         {

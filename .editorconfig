@@ -1,0 +1,7 @@
+﻿[*.cs]
+
+# CS8618: null 非許容のフィールドには、コンストラクターの終了時に null 以外の値が入っていなければなりません。'required' 修飾子を追加するか、Null 許容として宣言することを検討してください。
+dotnet_diagnostic.CS8618.severity = suggestion
+
+# CS8602: null 参照の可能性があるものの逆参照です。
+dotnet_diagnostic.CS8602.severity = suggestion
