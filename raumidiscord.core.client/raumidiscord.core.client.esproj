@@ -8,4 +8,9 @@
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="src\apps\dashboard\" />
+    <Folder Include="src\assets\audio\" />
+    <Folder Include="src\assets\img\" />
+  </ItemGroup>
 </Project>

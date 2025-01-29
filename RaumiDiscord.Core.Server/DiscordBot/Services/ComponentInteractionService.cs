@@ -131,6 +131,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                             builder.WithCurrentTimestamp();
                             builder.WithFooter("DeltaRaumi");
                             break;
+
                         case "donate":
                             builder.WithAuthor(component.User);
                             builder.WithTitle("Patreonとかしてるの？");
@@ -140,26 +141,27 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                             builder.WithCurrentTimestamp();
                             builder.WithFooter("DeltaRaumi");
                             break;
+
                         case "bookmark":
                             builder.WithAuthor(component.User);
                             builder.WithTitle("ブックマークって何？");
                             builder.WithDescription("スラッシュコマンドに一つで特定のタイプのURLを出してくれます。\n ＊現在登録はできません。");
-                            
                             builder.WithColor(RaumiMainColor);
                             builder.WithUrl("");
                             builder.WithCurrentTimestamp();
                             builder.WithFooter("ヘルプを参照中");
                             break;
+
                         case "wayoperate-24":
                             builder.WithAuthor(component.User);
                             builder.WithTitle("なぜ24時間上がってないの？");
                             builder.WithDescription("Releaseバージョンではないため開発と同時に適当にセルフホスティングされているためです。v1.0までは頻繁に停止します。");
-                            
                             builder.WithColor(RaumiMainColor);
                             builder.WithUrl("");
                             builder.WithCurrentTimestamp();
                             builder.WithFooter("ヘルプを参照中");
                             break;
+
                         case "enhancement":
                             builder.WithAuthor(component.User);
                             builder.WithTitle("新しい機能を作る予定は？");
@@ -177,11 +179,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                             builder.WithCurrentTimestamp();
                             builder.WithFooter("DeltaRaumi");
                             break;
+
                         case "updatenow":
                             builder.WithAuthor(component.User);
                             builder.WithTitle("最新で行われた変更は？");
                             builder.WithDescription("スラッシュコマンドにリージョンの指定が追加されました。");
-                            
                             builder.WithColor(RaumiMainColor);
                             builder.WithUrl("");
                             builder.WithCurrentTimestamp();
