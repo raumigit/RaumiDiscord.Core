@@ -7,10 +7,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
 {
     public class VoicertcregionService
     {
+#nullable disable
+        //private DiscordSocketClient _client;
+        //private SocketMessage socketMessage;
+        //private LoggingService loggingService;
 
-        private DiscordSocketClient? _client;
-        private SocketMessage socketMessage;
-        private LoggingService loggingService;
         public static HashSet<ulong> allowedRoleIds = new HashSet<ulong>
         {
             1329621030637015040,    //ハードコート：ロール名：アプリ開発(ラウミの裏小屋)

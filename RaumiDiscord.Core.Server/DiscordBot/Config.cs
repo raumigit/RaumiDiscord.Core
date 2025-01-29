@@ -8,10 +8,10 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 {
     class Config
     {
-        string commandPrefix;
+        string? commandPrefix;
         
         
-        public string CommandPrefix
+        public string? CommandPrefix
         {
             get => commandPrefix;
             set => commandPrefix = value;

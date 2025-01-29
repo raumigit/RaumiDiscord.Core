@@ -15,7 +15,7 @@ namespace RaumiDiscord.Core.Server.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.DiscordComponentModel", b =>
                 {
@@ -30,7 +30,6 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DeltaRaumiComponentType")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<ulong>("MessageId")
@@ -99,16 +98,14 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Url")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UrlType")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("urlDetaModels");
+                    b.ToTable("UrlDetaModels");
                 });
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.UserBaseData", b =>

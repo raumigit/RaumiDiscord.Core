@@ -8,6 +8,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
 {
     class ComponentInteractionService
     {
+#nullable disable
         private readonly DiscordSocketClient Client;
         private readonly DeltaRaumiDbContext DeltaRaumiDbContext;
         private readonly LoggingService LoggingService;

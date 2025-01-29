@@ -33,7 +33,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-Task task = Task.Run(async () => {
+Task? task = Task.Run(async () => {
     try
     {
         Console.WriteLine("Deltaraumi_loadŒÄ‚Ño‚µÏ‚İ");

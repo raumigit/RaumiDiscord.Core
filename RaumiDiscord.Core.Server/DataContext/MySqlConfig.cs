@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿#nullable disable
+
+using Newtonsoft.Json;
 using RaumiDiscord.Core.Server.DiscordBot.Data;
 using System.Text;
 
