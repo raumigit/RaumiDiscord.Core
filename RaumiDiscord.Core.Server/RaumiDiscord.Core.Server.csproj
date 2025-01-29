@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DiscordBot\SysFile\**" />
+    <Content Remove="DiscordBot\SysFile\**" />
+    <EmbeddedResource Remove="DiscordBot\SysFile\**" />
+    <None Remove="DiscordBot\SysFile\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Resources\raumi.ico" />
   </ItemGroup>
 
@@ -42,7 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DiscordBot\SysFile\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
