@@ -1,0 +1,26 @@
+name: Release (master)
+on:
+  push:
+    # オプション。デフォルトはすべて。
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    permissions:
+      # githubリリースを作成するには、書き込み権限が必要です。
+      contents: write
+      # オートラベリングには書き込みパーミッションが必要です。
+      # そうでない場合は、少なくとも読み込みパーミッションが必要
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v6
+      
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+      
