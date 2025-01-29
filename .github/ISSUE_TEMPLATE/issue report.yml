@@ -1,0 +1,195 @@
+name: 課題レポート
+description: 問題報告書を提出する
+labels: [bug, triage]
+body:
+  - type: markdown
+    id: introduction
+    attributes:
+      value: |
+        ### バグを報告してくれることに感謝します。
+        このプロジェクトは現在ほぼ単独開発されており、対応までに時間がかかることがあります。
+  - type: checkboxes
+    id: before-posting
+    attributes:
+      label: "この号では以下の点が考慮されています。:"
+      description: 条件はすべて**必須**です。 これらの条件のいずれかに従わない場合、あなたのissueはコメントなしでクローズされる場合があります。条件はすべて**必須**です。 これらの条件のいずれかに従わない場合、あなたのissueはコメントなしでクローズされる場合があります。
+      options:
+        - label: これは**バグ**であり、質問や設定の問題ではありません。
+          required: true
+        - label: この問題は[GitHub](https://github.com/raumigit/RaumiDiscord.Core/issues?q=is%3Aissue%20state%3Aopen%20)(検索した上)で報告されていません。
+          required: true
+        - label: 私はこのプロジェクトのstable、unstable、またはmasterの最新バージョンを使用しています。 可能であれば、問題を提起する前に最新バージョンにアップデートしてください。
+          required: true
+        - label: 私は礼儀を持って行動規範に従うことに同意します。
+          required: true
+        - label: このレポートは1つの問題にのみ対応しています。複数の問題が発生した場合は、それぞれ別のレポートを作成してください。
+          required: true
+  - type: markdown
+    id: preliminary-information
+    attributes:
+      value: |
+        ### 一般的な予備情報
+
+        このissueを作成する際には、以下の点に留意してください。:
+
+        1. テンプレートに可能な限り記入すること。 セクションの関連性に確信が持てない場合は、そのセクションに要求された情報を含めてください。 関連性がないと完全に確信できる場合のみ、セクションの情報を削除してください。
+        2. できるだけ詳しく説明すること。 何が起こっているかを他の人が知っていると思い込まないこと。
+        3. すべてを読みやすく、構造化すること。 理解しにくい稚拙なレポートを読んで喜ぶ人はいません。
+        4. レポートが公開されている限り、あなたのレポートから目を離さないでください。
+        5. タイトルは短く、説明的に。 タイトルは、問題の完全な説明を書く場所ではありません。
+        6. フィールドの情報を空欄にする場合は、空欄のままにしてください。 空のフィールドに`n/a`などと書くのは避けましょう。
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: バグの説明
+      description: あなたが遭遇したバグについて、読みやすく理解しやすい方法で詳しく説明してください。
+      placeholder: |
+        DeltaRaumiをバージョンx.y.zにアップグレードした後、 スラッシュコマンドからの応答がなくなりました。プルリクエストxからのリグレッションかもしれません。アプリケーションを何度も再起動してみました。 異なるクライアントでこの機能をテストしたところ、スラッシュコマンドをサポートしているすべてのテスト済みクライアント（クライアントx、y、z）で発生しました。 このことから、私はサーバー側の問題だと考えています。
+    validations:
+      required: true
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: 再現手順
+      description: 再現手順は完全かつ自己完結的でなければなりません。 これらのステップに従えば、誰でもこの問題を再現することができます。 さらに、手順は明確で、簡単に従うことができるはずです。
+      placeholder: |
+        1. Botがオンラインな状態を確認
+        2. 任意のブラウザ/アプリを使用して、/bookmarkを実行します。
+        3. typeを指定する
+        4. GenshinImpactを選択する
+        5. 3秒ほど待ちます。
+        
+        
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: 現在の_bug_の動作は何ですか？
+      description: 再現手順を踏んだ後、現在起こっている誤った動作を書き留めてください。
+      placeholder: |
+        アプリケーションが応答しませんでした これらはあなただけに表示されています • これらのメッセージを削除する と表示されてだけです。
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: 期待される正しい行動とは？
+      description: 再現ステップに従った後に起こるはずの、正しい期待動作を書き出す。
+      placeholder: |
+        アプけーケーションが応答し、ギフトコードのURLが出力されます。
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: DeltaRaumi バージョン
+      description: DeltaRaumiのバージョンは？
+      options:
+        - 0.0.1.27
+        - Master
+        - Unstable
+        - Older*
+    validations:
+      required: true
+  - type: input
+    id: version-master
+    attributes:
+      label: "コミットIDの指定"
+      description: master'オプションが選択されている場合、このフィールドを埋める。 ビルドされたコミットIDを入力してください。
+      placeholder: |
+        0bff1a81088d87be19ca8aa93dce472859622fb3
+  - type: input
+    id: version-unstable
+    attributes:
+      label: "不安定リリース番号を指定する"
+      description: unstableオプションを選択した場合、このフィールドに記入する。 不安定版のリリース番号を入力してください。
+      placeholder: |
+        2025012902
+  - type: input
+    id: version-older
+    attributes:
+      label: "バージョン番号の指定"
+      description: オプションoldが選択されている場合、このフィールドに入力します。 バージョン番号を入力してください。
+      placeholder: |
+        x.y.z
+  - type: input
+    id: build-version
+    attributes:
+      label: "ビルド・バージョンを指定する"
+      description: Botかダッシュボードに表示されているビルド・バージョンを教えてください。
+    validations:
+      required: true
+  - type: textarea
+    id: environment-information
+    attributes:
+      label: 環境
+      description: |
+        環境の詳細はできるだけ正確に記入してください。 下記のテンプレートに記載されていない環境項目でも、有用な情報であると思われる場合は、記載してください。
+        例:
+        - OS**： [例：Debian 11、Windows 10］
+        - Linuxカーネル**： [例：なし、5.15、6.1 など]。
+        - 仮想化**： [例：Docker、KVM、LXC].
+        - クライアント [ブラウザ、Android、Fire Stickなど].
+        - ブラウザ [例：Firefox 91、Chrome 93、Safari 13］
+        - ハードウェアアクセラレーション**： [例：なし、VAAPI、NVENC など]。
+        - GPUモデル**： [例：なし、UHD630、GTX1050など]。
+        - インストールされているプラグイン [例：なし、ファンアート、アニメなど].
+        - **リバースプロキシ**： [例：なし、nginx、apacheなど］
+        - ベースURL**： [例：なし、あり：/example].
+        - ネットワーク**： [例：ホスト、ブリッジ/NAT］
+        - ストレージ**： [例：ローカル、NFS、クラウド］
+      value: |
+        - OS:
+        - Linux Kernel:
+        - Virtualization:
+        - Clients:
+        - Browser:
+        - FFmpeg Version:
+        - Playback Method:
+        - Hardware Acceleration:
+        - GPU Model:
+        - Plugins:
+        - Reverse Proxy:
+        - Base URL:
+        - Networking:
+        - Storage:
+      render: markdown
+    validations:
+      required: true
+  - type: markdown
+    id: general-information-logs
+    attributes:
+      value: |
+        ログをご提供いただく際には、以下の点にご留意ください：
+        1. **外部の貼り付けサービスは使用しないでください。 ログが大きすぎてフィールドに貼り付けられない場合は、テキストファイルとしてアップロードしてください。
+        2. 完全なログをご提供ください。
+        - サーバーのログについては、問題が発生するまでのイベントと発生した後のイベントの両方を網羅し、関連するすべての情報を取得するようにしてください。 通常、問題の前後10行を提供すれば十分です。
+        - ffmpegのログについては、変更されていないファイル全体を提供してください。
+        3. 翻訳プログラムにログを通さないでください。 翻訳されていない生のログのみを受け付けます。 ブラウザがデフォルトで自動的にページを翻訳する場合は特に注意してください。
+        - 公開IPアドレスのような個人情報の検閲をお忘れなく。
+        4. スクリーンショットとしてログを含めないでください。ただし、ブラウザのクライアントログだけは例外です。
+  - type: textarea
+    id: deltaraumi-logs
+    attributes:
+      label: DeltaRaumi logs
+      description: 関連するログ出力をコピー＆ペーストしてください。 
+      render: shell
+    validations:
+      required: true
+  
+  - type: textarea
+    id: browser-logs
+    attributes:
+      label: Client / Browser logs
+      description: F12でコンソールを表示し、ブラウザのログにアクセスする。 **__間違ってトークンを含めないように十分注意してください__**
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 関連するスクリーンショットまたはビデオ
+      description: このレポートに関連するスクリーンショットやビデオを添付してください。
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: 追加情報
+      description: この問題に役立つ可能性のある追加情報。
