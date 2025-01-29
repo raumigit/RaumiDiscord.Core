@@ -13,7 +13,7 @@ jobs:
     # ジョブの中で実行する処理をステップで定義
     steps:
     
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup .net
         uses: actions/setup-dotnet@v4
