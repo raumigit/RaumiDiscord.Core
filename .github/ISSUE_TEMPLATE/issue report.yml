@@ -1,5 +1,5 @@
-name: Issue Report
-description: File an issue report
+name: 課題レポート
+description: 問題報告書を提出する
 labels: [bug, triage]
 body:
   - type: markdown
