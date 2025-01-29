@@ -103,7 +103,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                             builder.WithAuthor(component.User);
                             builder.WithTitle("サーバーの状態");
                             builder.WithDescription(
-                                "バージョン：0.0.1.25 (2025/01/29-01:11)\n " +
+                                "バージョン：0.0.1.28 (2025/01/29-02:55)\n " +
                                 "外部連携：null\n" +
                                 "読み上げエンジン：null\n" +
                                 "WebGUI：null" +
