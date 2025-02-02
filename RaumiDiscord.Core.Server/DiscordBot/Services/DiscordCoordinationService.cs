@@ -1,4 +1,6 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
+using RaumiDiscord.Core.Server.DiscordBot.Data;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Services
 {
@@ -9,6 +11,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         private readonly ComponentInteractionService ComponentInteractionService;
         private readonly LoggingService LoggingService;
         private readonly WelcomeMessageService WelcomeMessageService;
+        public Configuration config { get; set; }
         public DiscordCoordinationService(DiscordSocketClient client, SlashCommandInterationService slashCommandService, ComponentInteractionService componentInteractionService, LoggingService loggingService, WelcomeMessageService welcomeMessageService)
         {
             Client = client;
@@ -22,7 +25,10 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
 
         private async Task OnReady()
         {
-            await Client.SetGameAsync("TEST");
+            config = new Configuration().GetConfig();
+            string game = config.Setting?.CustomStatusGame ?? "null";
+            Console.WriteLine(game??="null!");
+            await Client.SetGameAsync(game);
             await LoggingService.LogGeneral("Startup Complete");
             await LoggingService.LogGeneral($"Logged in as {Client.CurrentUser.Username}");
 

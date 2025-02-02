@@ -26,7 +26,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         
         public static DiscordSocketClient _client;
         private IServiceProvider? _services;
-        public static Config? _Config;
+        public static Configuration? _Config { get; set; }
         public static SqlMode AppSqlMode { get; set; }
         public enum SqlMode { Sqlite, MariaDb }
         private DiscordCoordinationService? DiscordCoordinationService;
@@ -60,7 +60,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
                 await Log(new LogMessage(LogSeverity.Info, "Startup", "サービスプロバイダを設定中..."));
 
-                _Config = new Config().GetConfigFromFile();
+                _Config = new Configuration().GetConfigFromFile();
 
                 _client = new DiscordSocketClient(new DiscordSocketConfig
                 {
