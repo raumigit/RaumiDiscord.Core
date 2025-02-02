@@ -3,6 +3,7 @@ using Discord.WebSocket;
 using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DataContext;
 using RaumiDiscord.Core.Server.DiscordBot;
+using RaumiDiscord.Core.Server.DiscordBot.Data;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Services
 {
@@ -15,6 +16,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
 
         private Discord.Color RaumiMainColor = new Discord.Color(0x7bb3ee);
         private Discord.Color RaumiSubColor = new Discord.Color(0xf02443);
+
+        public Configuration configuration { get; set; }
 
         public ComponentInteractionService(DiscordSocketClient client, DeltaRaumiDbContext deltaRaumiDbContext, LoggingService loggingService)
         {
@@ -62,6 +65,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
 
             EmbedBuilder builder = new EmbedBuilder();
 
+            configuration = new Configuration().GetConfig();
+
             switch (model.DeltaRaumiComponentType)
             {
                 case "FAQ-Menu":
@@ -101,10 +106,15 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                             break;
 
                         case "serverstat":
+                           
+                            DateTime localuptime = configuration.Setting.UpTime;
+                            DateTime utcUptime = localuptime.ToUniversalTime();
+                            long unixTime = new DateTimeOffset(utcUptime).ToUnixTimeSeconds(); 
+                            //string unixTimestr = unixTime.ToString();
                             builder.WithAuthor(component.User);
                             builder.WithTitle("サーバーの状態");
                             builder.WithDescription(
-                                "バージョン：0.0.1.28 (2025/01/29-02:55)\n " +
+                                "バージョン：0.1.0.12 (2025/02/3-0:10)\n " +
                                 "外部連携：null\n" +
                                 "読み上げエンジン：null\n" +
                                 "WebGUI：null" +
@@ -112,9 +122,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                                 "ロギング中：no\n" +
                                 "Stat機能：null\n" +
                                 "使用DB：SQlite3\n" +
-                                "致命的なエラー：false\n"
+                                $"致命的なエラー：{configuration.Setting.SystemFatal.ToString()}\n"
                                 );
-                            builder.AddField("UpTime","?");
+                            builder.AddField("UpTime",$"<t:{unixTime.ToString()}:R>");
                             builder.WithColor(RaumiMainColor);
                             builder.WithUrl("");
                             builder.WithCurrentTimestamp();
@@ -131,6 +141,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                             builder.WithCurrentTimestamp();
                             builder.WithFooter("DeltaRaumi");
                             break;
+
                         case "donate":
                             builder.WithAuthor(component.User);
                             builder.WithTitle("Patreonとかしてるの？");
@@ -140,26 +151,27 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                             builder.WithCurrentTimestamp();
                             builder.WithFooter("DeltaRaumi");
                             break;
+
                         case "bookmark":
                             builder.WithAuthor(component.User);
                             builder.WithTitle("ブックマークって何？");
                             builder.WithDescription("スラッシュコマンドに一つで特定のタイプのURLを出してくれます。\n ＊現在登録はできません。");
-                            
                             builder.WithColor(RaumiMainColor);
                             builder.WithUrl("");
                             builder.WithCurrentTimestamp();
                             builder.WithFooter("ヘルプを参照中");
                             break;
+
                         case "wayoperate-24":
                             builder.WithAuthor(component.User);
                             builder.WithTitle("なぜ24時間上がってないの？");
                             builder.WithDescription("Releaseバージョンではないため開発と同時に適当にセルフホスティングされているためです。v1.0までは頻繁に停止します。");
-                            
                             builder.WithColor(RaumiMainColor);
                             builder.WithUrl("");
                             builder.WithCurrentTimestamp();
                             builder.WithFooter("ヘルプを参照中");
                             break;
+
                         case "enhancement":
                             builder.WithAuthor(component.User);
                             builder.WithTitle("新しい機能を作る予定は？");
@@ -177,11 +189,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                             builder.WithCurrentTimestamp();
                             builder.WithFooter("DeltaRaumi");
                             break;
+
                         case "updatenow":
                             builder.WithAuthor(component.User);
                             builder.WithTitle("最新で行われた変更は？");
                             builder.WithDescription("スラッシュコマンドにリージョンの指定が追加されました。");
-                            
                             builder.WithColor(RaumiMainColor);
                             builder.WithUrl("");
                             builder.WithCurrentTimestamp();

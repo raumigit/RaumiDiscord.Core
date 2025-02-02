@@ -50,6 +50,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DeltaRaumi.Common\Configuration\" />
+    <Folder Include="DeltaRaumi.Controller\Configuration\" />
+    <Folder Include="DiscordBot\Configuration\" />
+    <Folder Include="DiscordBot\Data\Interfaces\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
