@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Audio;
 using Discord.Net;
 using Discord.Net.Queue;
 using Discord.Rest;
@@ -32,6 +33,7 @@ class SlashCommandInterationService
     private bool command_GuildAvailadle { get; set; } = true;
     private bool command_GlobalAvailadle { get; set; } = true;
 
+    private IAudioClient _audioClient;
 
 
     public SlashCommandInterationService(DiscordSocketClient client, LoggingService logger, DeltaRaumiDbContext dbContext)
@@ -42,25 +44,28 @@ class SlashCommandInterationService
         client.Ready += Client_GlobalAvailadle;
         client.GuildAvailable += Client_GuildAvailadle;
         client.SlashCommandExecuted += Client_SlashCommandExcuted;
-        
-        
+
+
     }
 
-    
-    
+
+
 
     private async Task Client_SlashCommandExcuted(SocketSlashCommand command_arg)
     {
         switch (command_arg.Data.Name)
         {
             case "faq":
-            await Faq(command_arg);
+                await Faq(command_arg);
                 break;
             case "pat":
                 await Pat(command_arg);
                 break;
             case "vc-region":
                 await VcRegion(command_arg);
+                break;
+            case "join":
+                await JoinVC(command_arg);
                 break;
             default:
                 await LoggingService.LogGeneral($"このコマンドは不明なため実行されませんでした: {command_arg.CommandName}");
@@ -121,7 +126,7 @@ class SlashCommandInterationService
             await LoggingService.LogGeneral(e.ToString(), LoggingService.LogGeneralSeverity.Fatal);
             await LoggingService.LogGeneral(Newtonsoft.Json.JsonConvert.SerializeObject(e.Errors, Newtonsoft.Json.Formatting.Indented), LoggingService.LogGeneralSeverity.Fatal);
             Environment.Exit(1);
-            
+
         }
     }
     /// <summary>
@@ -130,7 +135,7 @@ class SlashCommandInterationService
     /// <returns></returns>
     private SlashCommandProperties[] GetCmmands()
     {
-        
+
         var guild = Client.GetGuild(guildID);
 
         List<SlashCommandBuilder> commands = new List<SlashCommandBuilder>();
@@ -181,7 +186,10 @@ class SlashCommandInterationService
         commands.Add(vcRegionBuilder);
         #endregion
 
-        #region /VcRegion DefaultChannnel
+        #region /Join
+        SlashCommandBuilder joinBuilder = new SlashCommandBuilder();
+        joinBuilder.WithName("join").WithDescription("VCに入る(操作できません)");
+        commands.Add(joinBuilder);
         #endregion
 
         List<SlashCommandProperties> slashCommandBuildCommands = new List<SlashCommandProperties>();
@@ -190,7 +198,7 @@ class SlashCommandInterationService
             slashCommandBuildCommands.Add(builder1.Build());
         }
         return slashCommandBuildCommands.ToArray();
-        
+
     }
 
     /// <summary>
@@ -288,7 +296,7 @@ class SlashCommandInterationService
         menuBuilder.WithPlaceholder("オプションを選択");
         menuBuilder.WithCustomId(model.CustomId.ToString());
         menuBuilder.AddOption("DeltaRaumiとは？", "about", emote: new Emoji("❓"));
-        menuBuilder.AddOption("現在の設定値は？","nowsettings", emote: new Emoji("🗒"));
+        menuBuilder.AddOption("現在の設定値は？", "nowsettings", emote: new Emoji("🗒"));
         menuBuilder.AddOption("サーバーの状態は?", "serverstat", emote: new Emoji("📶"));
         menuBuilder.AddOption("DeltaRaumiのホームページはある?", "website", emote: new Emoji("🌐"));
         menuBuilder.AddOption("Patreonとかしてるの？", "donate", emote: new Emoji("💰"));
@@ -310,7 +318,7 @@ class SlashCommandInterationService
         model.OwnerId = command_arg.User.Id;
 
         DbContext.Components.Add(model);
-        
+
         await DbContext.SaveChangesAsync();
     }
 
@@ -318,24 +326,22 @@ class SlashCommandInterationService
     {
         string? cmd_region = command_arg.Data.Options.First(op => op.Name == "region").Value.ToString();
         SocketSlashCommandDataOption? cmd_vcChannel = command_arg.Data.Options.FirstOrDefault(op => op.Name == "target");
-        
+
         //string ? region_code;
         SocketVoiceChannel? voiceChannel = null;
-        
+
         if (cmd_vcChannel != null)
         {
             voiceChannel = cmd_vcChannel.Value as SocketVoiceChannel;
-            
+
             //static Array AllowedRegionCodeへの変更が推奨されている
             //注意：targetがnull以外の場合実行されるコードのため削ってしまうと指定ができない
         }
 
-
-
         await listVoiceRegion(voiceChannel);
         try
         {
-            
+
             switch (cmd_region)
             {
                 case "auto":
@@ -396,7 +402,7 @@ class SlashCommandInterationService
 
     public async Task listVoiceRegion(SocketVoiceChannel? voiceChannel)
     {
-        if (voiceChannel!=null)
+        if (voiceChannel != null)
         {
             var v = await Client.GetVoiceRegionsAsync();
             //regionのリストはnull
@@ -408,9 +414,26 @@ class SlashCommandInterationService
 
     }
 
-
-    internal static Task GlobalCommandUpdate()
+    private async Task JoinVC(SocketSlashCommand command_arg)
     {
-        return Task.CompletedTask;
+
+        
+        var guilduser = (SocketGuildUser)command_arg.User;
+        var userVoiceChannel = guilduser.VoiceChannel;
+
+        //SocketVoiceChannel? voiceChannel;
+
+
+        if (userVoiceChannel != null)
+        {
+            await command_arg.RespondAsync($"接続しましたが、音声ストリームが存在しません自動的に切断します。", ephemeral: true);
+            _audioClient = await userVoiceChannel.ConnectAsync();
+        }
+        else
+        {
+            await command_arg.RespondAsync($"VCに入っていないためスキップされました。", ephemeral: true);
+        }
+        
     }
+
 }

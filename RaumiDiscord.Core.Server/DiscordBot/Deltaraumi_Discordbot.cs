@@ -211,16 +211,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                         Console.WriteLine($"未実装");
                         break;
 
-                    case "@Raumi#1195 GlobalCommandUpdate" :
-                        if (message.Author.Id == 558636367106539521)
-                        {
-                            await SlashCommandInterationService.GlobalCommandUpdate();
-                        }
-                        else
-                        {
-                            await message.Channel.SendMessageAsync("うん？\nこの指示を受け付けてるのはあなたではないはず…");
-                        }
-                        break;
+                    
 
                     case string match when System.Text.RegularExpressions.Regex.IsMatch(message.CleanContent, contentbase):
 

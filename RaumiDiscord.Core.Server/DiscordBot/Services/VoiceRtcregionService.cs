@@ -60,7 +60,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                 {
                     await message.Channel.SendMessageAsync($"チャンネル `{channel.Name}` のリージョンを `{region}` に変更しました。");
                 }
-                
             }
             catch (Exception ex)
             {
@@ -94,11 +93,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             {
                 cmd_vcChannel = userVoiceChannel;
                 Console.WriteLine($"コマンド使用ユーザーのチャンネルを使って追加されました。{cmd_vcChannel}");
-
             }
             if (cmd_vcChannel == null)
             {
-                
                 await command.RespondAsync($"指定されたIDのボイスチャンネルが見つかりません。\n" +
                     $"ボイスチャンネルに入ってからコマンドを実行するかVCを指定してください。\n",ephemeral:true);
                 return;
