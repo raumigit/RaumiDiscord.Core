@@ -1,42 +1,42 @@
 import { useState } from "react";
 
-// TodoItem‚ÌŒ^éŒ¾
+// TodoItemã®åž‹å®£è¨€
 type TodoItem = {
     id?: number;
     name: string;
     isComplete: boolean;
 };
 
-// ‰Šú’l
+// åˆæœŸå€¤
 const initialValues = [
     {
         id: 1,
-        name: "ƒvƒƒOƒ‰ƒ~ƒ“ƒO",
+        name: "ãƒ—ãƒ­ã‚°ãƒ©ãƒŸãƒ³ã‚°",
         isComplete: false,
     },
     {
         id: 2,
-        name: "ƒ‰ƒ“ƒjƒ“ƒO",
+        name: "ãƒ©ãƒ³ãƒ‹ãƒ³ã‚°",
         isComplete: true,
     },
 ];
 
-// TodoƒRƒ“ƒ|[ƒlƒ“ƒg
+// Todoã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
 export const Todo = () => {
-    // TodoƒAƒCƒeƒ€ƒIƒuƒWƒFƒNƒg‚Ì”z—ñ‚ðŠÇ—‚·‚éstate
+    // Todoã‚¢ã‚¤ãƒ†ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é…åˆ—ã‚’ç®¡ç†ã™ã‚‹state
     const [todos, setTodos] = useState<TodoItem[]>(initialValues);
 
     return (
         <div>
-            <h1>TodoƒŠƒXƒg</h1>
+            <h1>Todoãƒªã‚¹ãƒˆ</h1>
             <input type="text" />
-            <button>’Ç‰Á</button>
+            <button>è¿½åŠ </button>
             <ul>
-                {/* todoƒAƒCƒeƒ€‚Ì”z—ñ‚ð“WŠJ */}
+                {/* todoã‚¢ã‚¤ãƒ†ãƒ ã®é…åˆ—ã‚’å±•é–‹ */}
                 {todos.map((todo) => (
                     <li key={todo.id}>
                         <input type="checkbox" />
-                        {/* Š®—¹ƒtƒ‰ƒO‚ªtrue‚Ìê‡‚ÍŽæ‚èÁ‚µü‚ð•\Ž¦ */}
+                        {/* å®Œäº†ãƒ•ãƒ©ã‚°ãŒtrueã®å ´åˆã¯å–ã‚Šæ¶ˆã—ç·šã‚’è¡¨ç¤º */}
                         {todo.isComplete ? (
                             <span style={{ textDecorationLine: "line-through" }}>
                                 {todo.name}
@@ -44,7 +44,7 @@ export const Todo = () => {
                         ) : (
                             <span>{todo.name}</span>
                         )}
-                        <button>íœ</button>
+                        <button>å‰Šé™¤</button>
                     </li>
                 ))}
             </ul>

@@ -43,7 +43,7 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                main: resolve(__dirname, 'index.html'),
+                main: resolve(__dirname, 'src/index.html'),
                 toolpage: resolve(__dirname,'tools/index.html'),
             },
         },
@@ -60,7 +60,7 @@ export default defineConfig({
                 target,
                 secure: false
             },
-            '/dashbord': {
+            '^/dashbord': {
                 target,
                 secure: false
             }

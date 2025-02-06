@@ -22,6 +22,8 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
+app.Urls.Add("http://localhost:6444");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

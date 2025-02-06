@@ -54,6 +54,8 @@
     <Folder Include="DeltaRaumi.Controller\Configuration\" />
     <Folder Include="DiscordBot\Configuration\" />
     <Folder Include="DiscordBot\Data\Interfaces\" />
+    <Folder Include="DiscordBot\Modules\SlashCommand\Global\" />
+    <Folder Include="DiscordBot\Modules\SlashCommand\Local\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
