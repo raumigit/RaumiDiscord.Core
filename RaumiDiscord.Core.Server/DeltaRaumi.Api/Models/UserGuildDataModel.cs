@@ -22,6 +22,5 @@ namespace RaumiDiscord.Core.Server.Api.Models
         public DateTime TimedOutUntil { get; set; }
         public int GuildLebel {  get; set; }
         public int TotalMessage {  get; set; } 
-
     }
 }

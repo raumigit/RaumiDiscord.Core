@@ -5,7 +5,6 @@ using System.Data;
 
 namespace RaumiDiscord.Core.Server.Api.Models
 {
-    
     public class GuildBaseData
     {
         /// <summary>
@@ -69,7 +68,5 @@ namespace RaumiDiscord.Core.Server.Api.Models
         ///  このギルドのギルドブーストのティアを取得または設定します。
         /// </summary>
         public PremiumTier PremiumTier { get; set; }
-
     }
-    
 }

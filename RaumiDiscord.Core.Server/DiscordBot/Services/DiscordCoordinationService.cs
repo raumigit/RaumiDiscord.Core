@@ -31,7 +31,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             await Client.SetGameAsync(game);
             await LoggingService.LogGeneral("Startup Complete");
             await LoggingService.LogGeneral($"Logged in as {Client.CurrentUser.Username}");
-
         }
     }
 }

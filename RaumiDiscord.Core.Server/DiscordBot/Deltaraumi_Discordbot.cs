@@ -47,7 +47,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 Console.WriteLine(e.StackTrace);
                 throw;
             }
-
         }
 
         private async Task MainAsync(string[] args)
@@ -135,12 +134,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 // 上記のボタン(MessageReceivedAsync)で作成された Id を確認します。
                 if (component.Data.CustomId == "pingbtn")
                     await interaction.RespondAsync("やぁ、ラウミことデルタラウミだよ。");
-
                 else
                     Console.WriteLine("ハンドラーのない Id が飛んできたぞ…？");
             }
         }
 
+        //複雑なメソッド：https://www.codefactor.io/repository/github/raumigit/raumidiscord.core/file/master/RaumiDiscord.Core.Server/DiscordBot/Deltaraumi_Discordbot.cs
         private async Task MessageReceivedAsync(SocketMessage message)
         {
             Console.WriteLine($"*ReceivedServer:");
