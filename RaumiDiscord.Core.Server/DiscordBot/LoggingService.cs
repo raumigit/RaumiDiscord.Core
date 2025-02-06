@@ -6,7 +6,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 {
     public class LoggingService
     {
-
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commands;
 
@@ -22,7 +21,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
         public Task LogGeneral(string message, LogGeneralSeverity severity = LogGeneralSeverity.Info)
         {
-
             switch (severity)
             {
                 case LogGeneralSeverity.Info:

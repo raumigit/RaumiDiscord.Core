@@ -54,6 +54,6 @@ namespace RaumiDiscord.Core.Server.DataContext
             //
         }
 
-        public enum DatabaseType { MariaDb, Sqlite, InMemory };
+        public enum DatabaseType { MariaDb, Sqlite, InMemory }
     }
 }

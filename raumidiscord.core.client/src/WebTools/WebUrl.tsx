@@ -21,9 +21,9 @@ const initialValues = [
     },
 ];
 
-// Todoコンポーネント
+// UrlListコンポーネント
 export const Todo = () => {
-    // Todoアイテムオブジェクトの配列を管理するstate
+    // UrlListアイテムオブジェクトの配列を管理するstate
     const [todos, setTodos] = useState<TodoItem[]>(initialValues);
 
     return (
@@ -32,7 +32,7 @@ export const Todo = () => {
             <input type="text" />
             <button>追加</button>
             <ul>
-                {/* todoアイテムの配列を展開 */}
+                {/* UrlListアイテムの配列を展開 */}
                 {todos.map((todo) => (
                     <li key={todo.id}>
                         <input type="checkbox" />

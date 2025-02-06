@@ -21,7 +21,7 @@ namespace RaumiDiscord.Core.Server.DataContext
         [Newtonsoft.Json.JsonConstructor]
         public MySqlConfig()
         {
-
+            //コードがない
         }
         /// <summary>
         /// Override the "database=" portion of the connection string configured in the file
@@ -35,18 +35,18 @@ namespace RaumiDiscord.Core.Server.DataContext
         public string GetConnectionString()
         {
             StringBuilder builder = new StringBuilder("Server=");
-            builder.Append(Address.ToString());
+            builder.Append(Address);
             builder.Append("; Port=");
-            builder.Append(Port.ToString());
+            builder.Append(Port);
             builder.Append("; Database=");
             if (string.IsNullOrEmpty(this.DatabaseNameOverride))
-                builder.Append(Database.ToString());
-            else builder.Append(DatabaseNameOverride.ToString());
+                builder.Append(Database);
+            else builder.Append(DatabaseNameOverride);
             builder.Append("; Uid=");
-            builder.Append(Username.ToString());
+            builder.Append(Username);
             builder.Append("; Pwd=");
-            builder.Append(Password.ToString());
-            builder.Append(";");
+            builder.Append(Password);
+            builder.Append(';');
             return builder.ToString();
         }
         public static MySqlConfig FromJsonString(string json)
@@ -69,7 +69,6 @@ namespace RaumiDiscord.Core.Server.DataContext
                 return config;
             }
             else return JsonConvert.DeserializeObject<MySqlConfig>(File.ReadAllText(Directories.MySqlConfigPath));
-
         }
     }
 }

@@ -44,8 +44,6 @@ class SlashCommandInterationService
         client.Ready += Client_GlobalAvailadle;
         client.GuildAvailable += Client_GuildAvailadle;
         client.SlashCommandExecuted += Client_SlashCommandExcuted;
-
-
     }
 
 
@@ -126,7 +124,6 @@ class SlashCommandInterationService
             await LoggingService.LogGeneral(e.ToString(), LoggingService.LogGeneralSeverity.Fatal);
             await LoggingService.LogGeneral(Newtonsoft.Json.JsonConvert.SerializeObject(e.Errors, Newtonsoft.Json.Formatting.Indented), LoggingService.LogGeneralSeverity.Fatal);
             Environment.Exit(1);
-
         }
     }
     /// <summary>
@@ -135,7 +132,6 @@ class SlashCommandInterationService
     /// <returns></returns>
     private SlashCommandProperties[] GetCmmands()
     {
-
         var guild = Client.GetGuild(guildID);
 
         List<SlashCommandBuilder> commands = new List<SlashCommandBuilder>();
@@ -198,7 +194,6 @@ class SlashCommandInterationService
             slashCommandBuildCommands.Add(builder1.Build());
         }
         return slashCommandBuildCommands.ToArray();
-
     }
 
     /// <summary>
@@ -249,7 +244,6 @@ class SlashCommandInterationService
             slashGlobalCommandsBuilder.Add(item.Build());
         }
         return slashGlobalCommandsBuilder.ToArray();
-
     }
 
     public async Task Pat(SocketSlashCommand command_arg)
@@ -284,7 +278,6 @@ class SlashCommandInterationService
 
         DbContext.Components.Add(model);
         await DbContext.SaveChangesAsync();
-
     }
 
     public async Task Faq(SocketSlashCommand command_arg)
@@ -341,7 +334,7 @@ class SlashCommandInterationService
         await listVoiceRegion(voiceChannel);
         try
         {
-
+            //Complex Method ：https://www.codefactor.io/repository/github/raumigit/raumidiscord.core/file/master/RaumiDiscord.Core.Server/DiscordBot/Services/SlashCommandInterationService.cs
             switch (cmd_region)
             {
                 case "auto":
@@ -394,9 +387,7 @@ class SlashCommandInterationService
             await LoggingService.LogGeneral($"エラーが発生しました(E-R4007)", severity: LoggingService.LogGeneralSeverity.Error);
             await LoggingService.LogGeneral(e.ToString(), LoggingService.LogGeneralSeverity.Fatal);
             await LoggingService.LogGeneral("");
-
         }
-
     }
 
 
@@ -411,13 +402,10 @@ class SlashCommandInterationService
                 VoiceRegionLists.Add(item.Id);
             }
         }
-
     }
 
     private async Task JoinVC(SocketSlashCommand command_arg)
     {
-
-        
         var guilduser = (SocketGuildUser)command_arg.User;
         var userVoiceChannel = guilduser.VoiceChannel;
 
@@ -433,7 +421,5 @@ class SlashCommandInterationService
         {
             await command_arg.RespondAsync($"VCに入っていないためスキップされました。", ephemeral: true);
         }
-        
     }
-
 }

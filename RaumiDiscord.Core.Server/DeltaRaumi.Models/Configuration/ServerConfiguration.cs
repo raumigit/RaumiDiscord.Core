@@ -4,7 +4,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Models.Configuration
 {
     public class ServerConfiguration : BaseApplicationConfiguration
     {
-
         public GeneralSettings? Setting { get; set; }
         public SystemLogSettings? SystemLog { get; set; }
         public TokenSetting? TokenData { get; set; }
@@ -39,7 +38,5 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Models.Configuration
         {
             public required string Token { get; set; }
         }
-
     }
-
 }

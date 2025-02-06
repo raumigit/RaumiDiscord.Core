@@ -9,7 +9,6 @@ using static RaumiDiscord.Core.Server.DiscordBot.Data.Configuration;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Data
 {
-
     class Configuration
     {
         string? commandPrefix;
@@ -112,7 +111,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Data
             if (!Directory.Exists(Directories.ProgramData)) Directory.CreateDirectory(Directories.ProgramData);
             if (File.Exists(Directories.Config))
             {
-
                 Toml.ReadFile<Configuration>(Directories.Config);
             }
             else

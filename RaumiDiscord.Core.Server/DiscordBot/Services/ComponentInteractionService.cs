@@ -208,11 +208,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                         x.Embed = builder.Build();
                     });
                     break;
-                
             }
             DeltaRaumiDbContext.Components.Remove(model);
             await DeltaRaumiDbContext.SaveChangesAsync();
-            
         }
     }
 }
