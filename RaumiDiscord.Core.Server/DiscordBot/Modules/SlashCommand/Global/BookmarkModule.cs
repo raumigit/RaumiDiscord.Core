@@ -26,8 +26,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             [Choice("ZenlessZoneZero","ZZZ")]
             string urlType,
             string url = null,
-            string ttl = null
-            )
+            string ttl = null)
         {
             if (action == "set")
             {

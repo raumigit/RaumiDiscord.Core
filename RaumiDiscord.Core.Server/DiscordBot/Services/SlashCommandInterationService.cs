@@ -82,7 +82,7 @@ class SlashCommandInterationService
             {
                 await guild_arg.DeleteApplicationCommandsAsync();
                 await guild_arg.BulkOverwriteApplicationCommandAsync(commands);
-                //command_GuildAvailadle = false;
+                command_GuildAvailadle = false;
             }
             else
             {
@@ -100,33 +100,7 @@ class SlashCommandInterationService
         }
     }
 
-    private async Task Client_GlobalAvailadle()
-    {
-        SlashCommandProperties[] global_Commands = GetGlobalCommands();
-        try
-        {
-            if (command_GlobalAvailadle == true)
-            {
-                await Client.Rest.DeleteAllGlobalCommandsAsync();
-                await Client.Rest.BulkOverwriteGlobalCommands(global_Commands);
-                await LoggingService.LogGeneral("グローバルコマンドが更新されました。");
-                command_GlobalAvailadle = false;
-            }
-            else
-            {
-                await LoggingService.LogGeneral("グローバルコマンドの更新がスキップされました。");
-            }
-        }
-        catch (HttpException e)
-        {
-            //前回の謎の苦渋からHttpエラーをどうにかして吐くように変更(本来あるべき姿)
-            await LoggingService.LogGeneral($"コマンドの追加中にエラーが発生しました", LoggingService.LogGeneralSeverity.Error);
-            await LoggingService.LogGeneral(e.ToString(), LoggingService.LogGeneralSeverity.Fatal);
-            await LoggingService.LogGeneral(Newtonsoft.Json.JsonConvert.SerializeObject(e.Errors, Newtonsoft.Json.Formatting.Indented), LoggingService.LogGeneralSeverity.Fatal);
-            Environment.Exit(1);
-        }
-    }
-    //使われてないため次のバージョンで削除
+    
 
     /// <summary>
     /// ギルドコマンドを設定するためのリストが作られます。
@@ -149,46 +123,7 @@ class SlashCommandInterationService
         commands.Add(patBuilder);
         #endregion
 
-        //#region /VcRegion
-        //SlashCommandBuilder vcRegionBuilder = new SlashCommandBuilder();
-        //vcRegionBuilder.WithName("vc-region").WithDescription("VCの接続リージョンを変更する")
-        //    .AddOption(new SlashCommandOptionBuilder()
-        //    .WithName("region")
-        //    .WithDescription("変更するVCの地域")
-        //    .WithRequired(true)
-        //    .AddChoice("auto", "auto")
-        //    .AddChoice("brazil", "brazil")
-        //    .AddChoice("hongkong", "hongkong")
-        //    .AddChoice("india", "india")
-        //    .AddChoice("japan", "japan")
-        //    .AddChoice("rotterdam", "rotterdam")
-        //    .AddChoice("russia", "russia")
-        //    .AddChoice("singapore", "singapore")
-        //    .AddChoice("southafrica", "southafrica")
-        //    .AddChoice("us-central", "us-central")
-        //    .AddChoice("us-east", "us-east")
-        //    .AddChoice("us-south", "us-south")
-        //    .AddChoice("us-west", "us-west")
-        //    .WithType(ApplicationCommandOptionType.String)
-        //    )
-        //        .AddOption(new SlashCommandOptionBuilder()
-        //        .WithName("target")
-        //        .WithDescription("変更を加えるチャンネル")
-        //        .WithRequired(false)
-        //        .WithType(ApplicationCommandOptionType.Channel)
-        //        .AddChannelType(ChannelType.Voice)  // ボイスチャンネルのみ指定
-        //    );
-
-
-
-        //commands.Add(vcRegionBuilder);
-        //#endregion
-
-        //#region /Join
-        //SlashCommandBuilder joinBuilder = new SlashCommandBuilder();
-        //joinBuilder.WithName("join").WithDescription("VCに入る(操作できません)");
-        //commands.Add(joinBuilder);
-        //#endregion
+        
 
         List<SlashCommandProperties> slashCommandBuildCommands = new List<SlashCommandProperties>();
         foreach (SlashCommandBuilder builder1 in commands)
@@ -205,34 +140,6 @@ class SlashCommandInterationService
     private SlashCommandProperties[] GetGlobalCommands()
     {
         List<SlashCommandBuilder> globalcommands = new List<SlashCommandBuilder>();
-
-        #region /名刺
-        SlashCommandBuilder CardBuilder = new SlashCommandBuilder();
-        CardBuilder.WithName("名刺").WithDescription("名刺を作れます。カードは1920＊720で作られます。");
-        globalcommands.Add(CardBuilder);
-        #endregion
-
-        #region /WebTools
-        SlashCommandBuilder webtoolsBuilder = new SlashCommandBuilder();
-        webtoolsBuilder.WithName("webtools").WithDescription("Webで使えるツール類に案内されます。(外部のウェブサイトへ行きます)");
-        globalcommands.Add(webtoolsBuilder);
-        #endregion
-
-        #region /HoYoCode
-        SlashCommandBuilder BookmarkBuilder = new SlashCommandBuilder();
-        BookmarkBuilder.WithName("bookmark").WithDescription("登録されているURLを表示します。")
-            .AddOption(new SlashCommandOptionBuilder()
-            .WithName("type")
-            .WithDescription("URLのタイプを指定します。")
-            .WithRequired(true)
-            .AddChoice("URL", "url")
-            .AddChoice("GenshinImpact", "GI")
-            .AddChoice("HonkaiStarRail", "HSR")
-            .AddChoice("ZenlessZoneZero", "ZZZ")
-            .WithType(ApplicationCommandOptionType.String)
-            );
-        globalcommands.Add(BookmarkBuilder);
-        #endregion
 
         //#region
         //SlashCommandBuilder GlobalBuilder = new SlashCommandBuilder();
@@ -317,9 +224,6 @@ class SlashCommandInterationService
         await DbContext.SaveChangesAsync();
     }
 
-    
-
-
     public async Task listVoiceRegion(SocketVoiceChannel? voiceChannel)
     {
         if (voiceChannel != null)
@@ -330,25 +234,6 @@ class SlashCommandInterationService
             {
                 VoiceRegionLists.Add(item.Id);
             }
-        }
-    }
-
-    private async Task JoinVC(SocketSlashCommand command_arg)
-    {
-        var guilduser = (SocketGuildUser)command_arg.User;
-        var userVoiceChannel = guilduser.VoiceChannel;
-
-        //SocketVoiceChannel? voiceChannel;
-
-
-        if (userVoiceChannel != null)
-        {
-            await command_arg.RespondAsync($"接続しましたが、音声ストリームが存在しません自動的に切断します。", ephemeral: true);
-            _audioClient = await userVoiceChannel.ConnectAsync();
-        }
-        else
-        {
-            await command_arg.RespondAsync($"VCに入っていないためスキップされました。", ephemeral: true);
         }
     }
 }

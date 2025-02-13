@@ -7,14 +7,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
     public class BotInfoModule : InteractionModuleBase<SocketInteractionContext>
     {
-
         public InteractionService Commands { get; set; }
 
         private InteractionHandler handler;
 
         public BotInfoModule()
         {
-
         }
 
 

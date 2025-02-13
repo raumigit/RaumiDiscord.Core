@@ -42,7 +42,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Local
             [Choice("US South", "us-south")]
             [Choice("US West", "us-west")]
             string region,
-
             [Summary("voice_channel", "VCを選択(VCに入っていれば省略可)")]
             [Autocomplete(typeof(VoiceChannelAutocompleteHandler))]
             SocketVoiceChannel? voiceChannel = null)
