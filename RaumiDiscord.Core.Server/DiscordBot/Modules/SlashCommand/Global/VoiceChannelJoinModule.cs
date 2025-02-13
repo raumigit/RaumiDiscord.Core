@@ -7,6 +7,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
         [SlashCommand("join", "BOTをボイスチャンネルに呼び出す")]
         public async Task BotJoin()
         {
+            await RespondAsync("実装されていないためしばらくお待ち下さい", ephemeral: true);
             throw new NotImplementedException();
         }
     }

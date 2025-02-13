@@ -62,11 +62,11 @@ class SlashCommandInterationService
             //case "vc-region":
             //    await VcRegion(command_arg);
             //    break;
-            case "join":
-                await JoinVC(command_arg);
-                break;
+            //case "join":
+            //    await JoinVC(command_arg);
+            //    break;
             default:
-                await LoggingService.LogGeneral($"このコマンドは不明なため実行されませんでした: {command_arg.CommandName}");
+                await LoggingService.LogGeneral($"このコマンドはギルドコマンドに存在しないためギルドコマンドとして実行されませんでした: {command_arg.CommandName}");
                 break;
         }
     }
