@@ -32,23 +32,29 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             {
                 if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(ttl))
                 {
-                    await RespondAsync("URLと有効期限を指定してください。(有効期限：yyyy/mm/dd-hh:mm:ss)", ephemeral: true);
+                    await RespondAsync("URLと有効期限を指定してください。(有効期限：yyyy/mm/dd-hh:mm:sszzz)", ephemeral: true);
                     return;
                 }
-                if (!DateTime.TryParseExact(ttl, "yyyy/MM/dd-HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out DateTime expirationTime))
+                if (!DateTimeOffset.TryParseExact(ttl, "yyyy/MM/dd-HH:mm:sszzz", null, System.Globalization.DateTimeStyles.None, out DateTimeOffset expirationTime))
                 {
-                    await RespondAsync("TTLの形式が正しくありません。yyyy/MM/dd-HH:mm:ss 形式で入力してください。", ephemeral: true);
+                    await RespondAsync("TTLの形式が正しくありません。yyyy/MM/dd-HH:mm:sszzz 形式で入力してください。", ephemeral: true);
                     return;
                 }
+
+                
+
+                // UnixTime 形式に変換
+                long unixExpirationTime = expirationTime.ToUnixTimeSeconds();
+
                 var newEntry = new UrlDetaModel
                 {
                     Url = url,
                     UrlType = urlType,
-                    TTL = expirationTime
+                    TTL = expirationTime.UtcDateTime
                 };
                 deltaRaumiDb.UrlDetaModels.Add(newEntry);
                 await deltaRaumiDb.SaveChangesAsync();
-                await RespondAsync($"登録完了: {urlType} - {url} (期限: {ttl})");
+                await RespondAsync($"登録完了: {urlType} - {url} (期限: <t:{unixExpirationTime}:R>)");
             }
             else if (action == "get")
             {
