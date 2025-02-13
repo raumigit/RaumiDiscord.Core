@@ -19,107 +19,107 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         };
         
 
-        public static async void SetRTCRegion(SocketMessage message, string region)
-        {
-            ulong channelId = Deltaraumi_Discordbot.vc_chid;
+        //public static async void SetRTCRegion(SocketMessage message, string region)
+        //{
+        //    ulong channelId = Deltaraumi_Discordbot.vc_chid;
 
-            //if (!ulong.TryParse(parts[1], out ulong channelId))
-            //{
-            //    await message.Channel.SendMessageAsync("チャンネルIDが無効です。");
-            //    return;
-            //}
+        //    //if (!ulong.TryParse(parts[1], out ulong channelId))
+        //    //{
+        //    //    await message.Channel.SendMessageAsync("チャンネルIDが無効です。");
+        //    //    return;
+        //    //}
 
-            //var region ;
-            var guild = (message.Channel as SocketGuildChannel)?.Guild;
+        //    //var region ;
+        //    var guild = (message.Channel as SocketGuildChannel)?.Guild;
 
-            if (guild == null)
-            {
-                await message.Channel.SendMessageAsync("サーバー内でコマンドを実行してください。");
-                return;
-            }
+        //    if (guild == null)
+        //    {
+        //        await message.Channel.SendMessageAsync("サーバー内でコマンドを実行してください。");
+        //        return;
+        //    }
 
-            var channel = guild.GetVoiceChannel(channelId);
-            if (channel == null)
-            {
-                await message.Channel.SendMessageAsync("指定されたIDのボイスチャンネルが見つかりません。");
-                await message.Channel.SendMessageAsync($"現在のチャンネルID:{channelId}");
-                return;
-            }
+        //    var channel = guild.GetVoiceChannel(channelId);
+        //    if (channel == null)
+        //    {
+        //        await message.Channel.SendMessageAsync("指定されたIDのボイスチャンネルが見つかりません。");
+        //        await message.Channel.SendMessageAsync($"現在のチャンネルID:{channelId}");
+        //        return;
+        //    }
 
-            try
-            {
-                await channel.ModifyAsync(properties =>
-                {
-                    properties.RTCRegion = region == "auto" ? null : region;
-                });
-                if (region== null)
-                {
-                    await message.Channel.SendMessageAsync($"チャンネル `{channel.Name}` のリージョンを`AUTO`に変更しました。");
-                }
-                else
-                {
-                    await message.Channel.SendMessageAsync($"チャンネル `{channel.Name}` のリージョンを `{region}` に変更しました。");
-                }
-            }
-            catch (Exception ex)
-            {
-                await message.Channel.SendMessageAsync($"リージョン変更に失敗しました(E-4007): {ex.Message}");
-            }
-        }
+        //    try
+        //    {
+        //        await channel.ModifyAsync(properties =>
+        //        {
+        //            properties.RTCRegion = region == "auto" ? null : region;
+        //        });
+        //        if (region== null)
+        //        {
+        //            await message.Channel.SendMessageAsync($"チャンネル `{channel.Name}` のリージョンを`AUTO`に変更しました。");
+        //        }
+        //        else
+        //        {
+        //            await message.Channel.SendMessageAsync($"チャンネル `{channel.Name}` のリージョンを `{region}` に変更しました。");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await message.Channel.SendMessageAsync($"リージョン変更に失敗しました(E-4007): {ex.Message}");
+        //    }
+        //}
 
-        internal static async Task HandleRTCSettingsCommand(SocketSlashCommand command, string region_code, SocketVoiceChannel cmd_vcChannel)
-        {
-            //要注意：保守容易性指数が50を切っている1％以上の確率でバグを引くおそれあり
-            Console.WriteLine(new LogMessage(LogSeverity.Info, "RTCfunc", $"{region_code}" ));
-
-
-            var guildId = (command.Channel as SocketGuildChannel)?.Guild;
-            var guildUser = (SocketGuildUser)command.User;
-            //var vchannel = guildId.GetVoiceChannel(VoiceChannelId);
-            var userVoiceChannel = guildUser.VoiceChannel;
-            bool AllowRores = guildUser.Roles.Any(role => allowedRoleIds.Contains(role.Id));
-
-            if (!guildUser.GuildPermissions.ManageChannels && !AllowRores) 
-            {
-                await command.RespondAsync($"権限不足：大いなる力にはそれ相応の責任があるのです…", ephemeral: true);
-                return;
-            }
-            if (cmd_vcChannel != null)
-            {
-                ulong VoiceChannelId = cmd_vcChannel.Id;
-                Console.WriteLine($"引数で追加されました。{VoiceChannelId}");
-            }
-            if (cmd_vcChannel == null && userVoiceChannel != null)//
-            {
-                cmd_vcChannel = userVoiceChannel;
-                Console.WriteLine($"コマンド使用ユーザーのチャンネルを使って追加されました。{cmd_vcChannel}");
-            }
-            if (cmd_vcChannel == null)
-            {
-                await command.RespondAsync($"指定されたIDのボイスチャンネルが見つかりません。\n" +
-                    $"ボイスチャンネルに入ってからコマンドを実行するかVCを指定してください。\n",ephemeral:true);
-                return;
-            }
-
-            try
-            {
-                await cmd_vcChannel.ModifyAsync(properties => { properties.RTCRegion = region_code =="auto"?null:region_code; });
-                if (region_code == null)
-                {
-                    await command.RespondAsync($"チャンネル `{cmd_vcChannel.Name}` のリージョンを`AUTO`に変更しました。");
-                }
-                else
-                {
-                    await command.RespondAsync($"チャンネル `{cmd_vcChannel.Name}` のリージョンを `{region_code}` に変更しました。");
-                }
-            }
-            catch (Exception ex)
-            {
-                await command.RespondAsync($"リージョン変更に失敗しました(E-4007): {ex.Message}");
-            }
+        //internal static async Task HandleRTCSettingsCommand(SocketSlashCommand command, string region_code, SocketVoiceChannel cmd_vcChannel)
+        //{
+        //    //要注意：保守容易性指数が50を切っている1％以上の確率でバグを引くおそれあり
+        //    Console.WriteLine(new LogMessage(LogSeverity.Info, "RTCfunc", $"{region_code}" ));
 
 
-            //throw new NotImplementedException();
-        }
+        //    var guildId = (command.Channel as SocketGuildChannel)?.Guild;
+        //    var guildUser = (SocketGuildUser)command.User;
+        //    //var vchannel = guildId.GetVoiceChannel(VoiceChannelId);
+        //    var userVoiceChannel = guildUser.VoiceChannel;
+        //    bool AllowRores = guildUser.Roles.Any(role => allowedRoleIds.Contains(role.Id));
+
+        //    if (!guildUser.GuildPermissions.ManageChannels && !AllowRores) 
+        //    {
+        //        await command.RespondAsync($"権限不足：大いなる力にはそれ相応の責任があるのです…", ephemeral: true);
+        //        return;
+        //    }
+        //    if (cmd_vcChannel != null)
+        //    {
+        //        ulong VoiceChannelId = cmd_vcChannel.Id;
+        //        Console.WriteLine($"引数で追加されました。{VoiceChannelId}");
+        //    }
+        //    if (cmd_vcChannel == null && userVoiceChannel != null)//
+        //    {
+        //        cmd_vcChannel = userVoiceChannel;
+        //        Console.WriteLine($"コマンド使用ユーザーのチャンネルを使って追加されました。{cmd_vcChannel}");
+        //    }
+        //    if (cmd_vcChannel == null)
+        //    {
+        //        await command.RespondAsync($"指定されたIDのボイスチャンネルが見つかりません。\n" +
+        //            $"ボイスチャンネルに入ってからコマンドを実行するかVCを指定してください。\n",ephemeral:true);
+        //        return;
+        //    }
+
+        //    try
+        //    {
+        //        await cmd_vcChannel.ModifyAsync(properties => { properties.RTCRegion = region_code =="auto"?null:region_code; });
+        //        if (region_code == null)
+        //        {
+        //            await command.RespondAsync($"チャンネル `{cmd_vcChannel.Name}` のリージョンを`AUTO`に変更しました。");
+        //        }
+        //        else
+        //        {
+        //            await command.RespondAsync($"チャンネル `{cmd_vcChannel.Name}` のリージョンを `{region_code}` に変更しました。");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await command.RespondAsync($"リージョン変更に失敗しました(E-4007): {ex.Message}");
+        //    }
+
+
+        //    //throw new NotImplementedException();
+        //}
     }
 }

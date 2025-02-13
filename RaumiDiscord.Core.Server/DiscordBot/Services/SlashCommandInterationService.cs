@@ -41,7 +41,7 @@ class SlashCommandInterationService
         this.DbContext = dbContext;
         this.Client = client;
         this.LoggingService = logger;
-        client.Ready += Client_GlobalAvailadle;
+        //client.Ready += Client_GlobalAvailadle;
         client.GuildAvailable += Client_GuildAvailadle;
         client.SlashCommandExecuted += Client_SlashCommandExcuted;
     }
@@ -59,9 +59,9 @@ class SlashCommandInterationService
             case "pat":
                 await Pat(command_arg);
                 break;
-            case "vc-region":
-                await VcRegion(command_arg);
-                break;
+            //case "vc-region":
+            //    await VcRegion(command_arg);
+            //    break;
             case "join":
                 await JoinVC(command_arg);
                 break;
@@ -82,7 +82,7 @@ class SlashCommandInterationService
             {
                 await guild_arg.DeleteApplicationCommandsAsync();
                 await guild_arg.BulkOverwriteApplicationCommandAsync(commands);
-                command_GuildAvailadle = false;
+                //command_GuildAvailadle = false;
             }
             else
             {
@@ -126,6 +126,8 @@ class SlashCommandInterationService
             Environment.Exit(1);
         }
     }
+    //使われてないため次のバージョンで削除
+
     /// <summary>
     /// ギルドコマンドを設定するためのリストが作られます。
     /// </summary>
@@ -147,40 +149,40 @@ class SlashCommandInterationService
         commands.Add(patBuilder);
         #endregion
 
-        #region /VcRegion
-        SlashCommandBuilder vcRegionBuilder = new SlashCommandBuilder();
-        vcRegionBuilder.WithName("vc-region").WithDescription("VCの接続リージョンを変更する")
-            .AddOption(new SlashCommandOptionBuilder()
-            .WithName("region")
-            .WithDescription("変更するVCの地域")
-            .WithRequired(true)
-            .AddChoice("auto", "auto")
-            .AddChoice("brazil", "brazil")
-            .AddChoice("hongkong", "hongkong")
-            .AddChoice("india", "india")
-            .AddChoice("japan", "japan")
-            .AddChoice("rotterdam", "rotterdam")
-            .AddChoice("russia", "russia")
-            .AddChoice("singapore", "singapore")
-            .AddChoice("southafrica", "southafrica")
-            .AddChoice("us-central", "us-central")
-            .AddChoice("us-east", "us-east")
-            .AddChoice("us-south", "us-south")
-            .AddChoice("us-west", "us-west")
-            .WithType(ApplicationCommandOptionType.String)
-            )
-                .AddOption(new SlashCommandOptionBuilder()
-                .WithName("target")
-                .WithDescription("変更を加えるチャンネル")
-                .WithRequired(false)
-                .WithType(ApplicationCommandOptionType.Channel)
-                .AddChannelType(ChannelType.Voice)  // ボイスチャンネルのみ指定
-            );
+        //#region /VcRegion
+        //SlashCommandBuilder vcRegionBuilder = new SlashCommandBuilder();
+        //vcRegionBuilder.WithName("vc-region").WithDescription("VCの接続リージョンを変更する")
+        //    .AddOption(new SlashCommandOptionBuilder()
+        //    .WithName("region")
+        //    .WithDescription("変更するVCの地域")
+        //    .WithRequired(true)
+        //    .AddChoice("auto", "auto")
+        //    .AddChoice("brazil", "brazil")
+        //    .AddChoice("hongkong", "hongkong")
+        //    .AddChoice("india", "india")
+        //    .AddChoice("japan", "japan")
+        //    .AddChoice("rotterdam", "rotterdam")
+        //    .AddChoice("russia", "russia")
+        //    .AddChoice("singapore", "singapore")
+        //    .AddChoice("southafrica", "southafrica")
+        //    .AddChoice("us-central", "us-central")
+        //    .AddChoice("us-east", "us-east")
+        //    .AddChoice("us-south", "us-south")
+        //    .AddChoice("us-west", "us-west")
+        //    .WithType(ApplicationCommandOptionType.String)
+        //    )
+        //        .AddOption(new SlashCommandOptionBuilder()
+        //        .WithName("target")
+        //        .WithDescription("変更を加えるチャンネル")
+        //        .WithRequired(false)
+        //        .WithType(ApplicationCommandOptionType.Channel)
+        //        .AddChannelType(ChannelType.Voice)  // ボイスチャンネルのみ指定
+        //    );
 
 
 
-        commands.Add(vcRegionBuilder);
-        #endregion
+        //commands.Add(vcRegionBuilder);
+        //#endregion
 
         #region /Join
         SlashCommandBuilder joinBuilder = new SlashCommandBuilder();
@@ -315,80 +317,7 @@ class SlashCommandInterationService
         await DbContext.SaveChangesAsync();
     }
 
-    public async Task VcRegion(SocketSlashCommand command_arg)
-    {
-        string? cmd_region = command_arg.Data.Options.First(op => op.Name == "region").Value.ToString();
-        SocketSlashCommandDataOption? cmd_vcChannel = command_arg.Data.Options.FirstOrDefault(op => op.Name == "target");
-
-        //string ? region_code;
-        SocketVoiceChannel? voiceChannel = null;
-
-        if (cmd_vcChannel != null)
-        {
-            voiceChannel = cmd_vcChannel.Value as SocketVoiceChannel;
-
-            //static Array AllowedRegionCodeへの変更が推奨されている
-            //注意：targetがnull以外の場合実行されるコードのため削ってしまうと指定ができない
-        }
-
-        await listVoiceRegion(voiceChannel);
-        try
-        {
-            //Complex Method ：https://www.codefactor.io/repository/github/raumigit/raumidiscord.core/file/master/RaumiDiscord.Core.Server/DiscordBot/Services/SlashCommandInterationService.cs
-            switch (cmd_region)
-            {
-                case "auto":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "brazil":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "hongkong":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "india":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "japan":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "rotterdam":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "russia":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "singapore":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "southafrica":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "us-central":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "us-east":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "us-south":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "us-west":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-
-                default:
-                    await LoggingService.LogGeneral($"コマンドオプションが不明(E-R4007)引数：{cmd_region}", LoggingService.LogGeneralSeverity.Warning);
-                    break;
-            }
-        }
-        catch (Exception e)
-        {
-            await LoggingService.LogGeneral($"エラーが発生しました(E-R4007)", severity: LoggingService.LogGeneralSeverity.Error);
-            await LoggingService.LogGeneral(e.ToString(), LoggingService.LogGeneralSeverity.Fatal);
-            await LoggingService.LogGeneral("");
-        }
-    }
+    
 
 
     public async Task listVoiceRegion(SocketVoiceChannel? voiceChannel)
