@@ -11,9 +11,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DeltaRaumi.Common\**" />
+    <Compile Remove="DeltaRaumi.Controller\**" />
+    <Compile Remove="DiscordBot\Configuration\**" />
     <Compile Remove="DiscordBot\SysFile\**" />
+    <Content Remove="DeltaRaumi.Common\**" />
+    <Content Remove="DeltaRaumi.Controller\**" />
+    <Content Remove="DiscordBot\Configuration\**" />
     <Content Remove="DiscordBot\SysFile\**" />
+    <EmbeddedResource Remove="DeltaRaumi.Common\**" />
+    <EmbeddedResource Remove="DeltaRaumi.Controller\**" />
+    <EmbeddedResource Remove="DiscordBot\Configuration\**" />
     <EmbeddedResource Remove="DiscordBot\SysFile\**" />
+    <None Remove="DeltaRaumi.Common\**" />
+    <None Remove="DeltaRaumi.Controller\**" />
+    <None Remove="DiscordBot\Configuration\**" />
     <None Remove="DiscordBot\SysFile\**" />
   </ItemGroup>
 
@@ -50,9 +62,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DeltaRaumi.Common\Configuration\" />
-    <Folder Include="DeltaRaumi.Controller\Configuration\" />
-    <Folder Include="DiscordBot\Configuration\" />
     <Folder Include="DiscordBot\Data\Interfaces\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
