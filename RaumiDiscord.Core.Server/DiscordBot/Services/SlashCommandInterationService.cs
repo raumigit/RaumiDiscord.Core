@@ -41,7 +41,7 @@ class SlashCommandInterationService
         this.DbContext = dbContext;
         this.Client = client;
         this.LoggingService = logger;
-        client.Ready += Client_GlobalAvailadle;
+        //client.Ready += Client_GlobalAvailadle;
         client.GuildAvailable += Client_GuildAvailadle;
         client.SlashCommandExecuted += Client_SlashCommandExcuted;
     }
@@ -59,14 +59,14 @@ class SlashCommandInterationService
             case "pat":
                 await Pat(command_arg);
                 break;
-            case "vc-region":
-                await VcRegion(command_arg);
-                break;
-            case "join":
-                await JoinVC(command_arg);
-                break;
+            //case "vc-region":
+            //    await VcRegion(command_arg);
+            //    break;
+            //case "join":
+            //    await JoinVC(command_arg);
+            //    break;
             default:
-                await LoggingService.LogGeneral($"このコマンドは不明なため実行されませんでした: {command_arg.CommandName}");
+                await LoggingService.LogGeneral($"このコマンドはギルドコマンドに存在しないためギルドコマンドとして実行されませんでした: {command_arg.CommandName}");
                 break;
         }
     }
@@ -100,32 +100,8 @@ class SlashCommandInterationService
         }
     }
 
-    private async Task Client_GlobalAvailadle()
-    {
-        SlashCommandProperties[] global_Commands = GetGlobalCommands();
-        try
-        {
-            if (command_GlobalAvailadle == true)
-            {
-                await Client.Rest.DeleteAllGlobalCommandsAsync();
-                await Client.Rest.BulkOverwriteGlobalCommands(global_Commands);
-                await LoggingService.LogGeneral("グローバルコマンドが更新されました。");
-                command_GlobalAvailadle = false;
-            }
-            else
-            {
-                await LoggingService.LogGeneral("グローバルコマンドの更新がスキップされました。");
-            }
-        }
-        catch (HttpException e)
-        {
-            //前回の謎の苦渋からHttpエラーをどうにかして吐くように変更(本来あるべき姿)
-            await LoggingService.LogGeneral($"コマンドの追加中にエラーが発生しました", LoggingService.LogGeneralSeverity.Error);
-            await LoggingService.LogGeneral(e.ToString(), LoggingService.LogGeneralSeverity.Fatal);
-            await LoggingService.LogGeneral(Newtonsoft.Json.JsonConvert.SerializeObject(e.Errors, Newtonsoft.Json.Formatting.Indented), LoggingService.LogGeneralSeverity.Fatal);
-            Environment.Exit(1);
-        }
-    }
+    
+
     /// <summary>
     /// ギルドコマンドを設定するためのリストが作られます。
     /// </summary>
@@ -147,46 +123,7 @@ class SlashCommandInterationService
         commands.Add(patBuilder);
         #endregion
 
-        #region /VcRegion
-        SlashCommandBuilder vcRegionBuilder = new SlashCommandBuilder();
-        vcRegionBuilder.WithName("vc-region").WithDescription("VCの接続リージョンを変更する")
-            .AddOption(new SlashCommandOptionBuilder()
-            .WithName("region")
-            .WithDescription("変更するVCの地域")
-            .WithRequired(true)
-            .AddChoice("auto", "auto")
-            .AddChoice("brazil", "brazil")
-            .AddChoice("hongkong", "hongkong")
-            .AddChoice("india", "india")
-            .AddChoice("japan", "japan")
-            .AddChoice("rotterdam", "rotterdam")
-            .AddChoice("russia", "russia")
-            .AddChoice("singapore", "singapore")
-            .AddChoice("southafrica", "southafrica")
-            .AddChoice("us-central", "us-central")
-            .AddChoice("us-east", "us-east")
-            .AddChoice("us-south", "us-south")
-            .AddChoice("us-west", "us-west")
-            .WithType(ApplicationCommandOptionType.String)
-            )
-                .AddOption(new SlashCommandOptionBuilder()
-                .WithName("target")
-                .WithDescription("変更を加えるチャンネル")
-                .WithRequired(false)
-                .WithType(ApplicationCommandOptionType.Channel)
-                .AddChannelType(ChannelType.Voice)  // ボイスチャンネルのみ指定
-            );
-
-
-
-        commands.Add(vcRegionBuilder);
-        #endregion
-
-        #region /Join
-        SlashCommandBuilder joinBuilder = new SlashCommandBuilder();
-        joinBuilder.WithName("join").WithDescription("VCに入る(操作できません)");
-        commands.Add(joinBuilder);
-        #endregion
+        
 
         List<SlashCommandProperties> slashCommandBuildCommands = new List<SlashCommandProperties>();
         foreach (SlashCommandBuilder builder1 in commands)
@@ -203,34 +140,6 @@ class SlashCommandInterationService
     private SlashCommandProperties[] GetGlobalCommands()
     {
         List<SlashCommandBuilder> globalcommands = new List<SlashCommandBuilder>();
-
-        #region /名刺
-        SlashCommandBuilder CardBuilder = new SlashCommandBuilder();
-        CardBuilder.WithName("名刺").WithDescription("名刺を作れます。カードは1920＊720で作られます。");
-        globalcommands.Add(CardBuilder);
-        #endregion
-
-        #region /WebTools
-        SlashCommandBuilder webtoolsBuilder = new SlashCommandBuilder();
-        webtoolsBuilder.WithName("webtools").WithDescription("Webで使えるツール類に案内されます。(外部のウェブサイトへ行きます)");
-        globalcommands.Add(webtoolsBuilder);
-        #endregion
-
-        #region /HoYoCode
-        SlashCommandBuilder BookmarkBuilder = new SlashCommandBuilder();
-        BookmarkBuilder.WithName("bookmark").WithDescription("登録されているURLを表示します。")
-            .AddOption(new SlashCommandOptionBuilder()
-            .WithName("type")
-            .WithDescription("URLのタイプを指定します。")
-            .WithRequired(true)
-            .AddChoice("URL", "url")
-            .AddChoice("GenshinImpact", "GI")
-            .AddChoice("HonkaiStarRail", "HSR")
-            .AddChoice("ZenlessZoneZero", "ZZZ")
-            .WithType(ApplicationCommandOptionType.String)
-            );
-        globalcommands.Add(BookmarkBuilder);
-        #endregion
 
         //#region
         //SlashCommandBuilder GlobalBuilder = new SlashCommandBuilder();
@@ -315,82 +224,6 @@ class SlashCommandInterationService
         await DbContext.SaveChangesAsync();
     }
 
-    public async Task VcRegion(SocketSlashCommand command_arg)
-    {
-        string? cmd_region = command_arg.Data.Options.First(op => op.Name == "region").Value.ToString();
-        SocketSlashCommandDataOption? cmd_vcChannel = command_arg.Data.Options.FirstOrDefault(op => op.Name == "target");
-
-        //string ? region_code;
-        SocketVoiceChannel? voiceChannel = null;
-
-        if (cmd_vcChannel != null)
-        {
-            voiceChannel = cmd_vcChannel.Value as SocketVoiceChannel;
-
-            //static Array AllowedRegionCodeへの変更が推奨されている
-            //注意：targetがnull以外の場合実行されるコードのため削ってしまうと指定ができない
-        }
-
-        await listVoiceRegion(voiceChannel);
-        try
-        {
-            //Complex Method ：https://www.codefactor.io/repository/github/raumigit/raumidiscord.core/file/master/RaumiDiscord.Core.Server/DiscordBot/Services/SlashCommandInterationService.cs
-            switch (cmd_region)
-            {
-                case "auto":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "brazil":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "hongkong":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "india":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "japan":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "rotterdam":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "russia":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "singapore":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "southafrica":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "us-central":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "us-east":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "us-south":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-                case "us-west":
-                    await VoicertcregionService.HandleRTCSettingsCommand(command_arg, cmd_region, voiceChannel);
-                    break;
-
-                default:
-                    await LoggingService.LogGeneral($"コマンドオプションが不明(E-R4007)引数：{cmd_region}", LoggingService.LogGeneralSeverity.Warning);
-                    break;
-            }
-        }
-        catch (Exception e)
-        {
-            await LoggingService.LogGeneral($"エラーが発生しました(E-R4007)", severity: LoggingService.LogGeneralSeverity.Error);
-            await LoggingService.LogGeneral(e.ToString(), LoggingService.LogGeneralSeverity.Fatal);
-            await LoggingService.LogGeneral("");
-        }
-    }
-
-
     public async Task listVoiceRegion(SocketVoiceChannel? voiceChannel)
     {
         if (voiceChannel != null)
@@ -401,25 +234,6 @@ class SlashCommandInterationService
             {
                 VoiceRegionLists.Add(item.Id);
             }
-        }
-    }
-
-    private async Task JoinVC(SocketSlashCommand command_arg)
-    {
-        var guilduser = (SocketGuildUser)command_arg.User;
-        var userVoiceChannel = guilduser.VoiceChannel;
-
-        //SocketVoiceChannel? voiceChannel;
-
-
-        if (userVoiceChannel != null)
-        {
-            await command_arg.RespondAsync($"接続しましたが、音声ストリームが存在しません自動的に切断します。", ephemeral: true);
-            _audioClient = await userVoiceChannel.ConnectAsync();
-        }
-        else
-        {
-            await command_arg.RespondAsync($"VCに入っていないためスキップされました。", ephemeral: true);
         }
     }
 }

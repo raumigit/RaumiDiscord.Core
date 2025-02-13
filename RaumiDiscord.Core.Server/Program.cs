@@ -22,7 +22,7 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.Urls.Add("http://localhost:6444");
+//app.Urls.Add("http://localhost:6444");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -35,7 +35,8 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 app.MapControllers();
 
-Task? task = Task.Run(async () => {
+Task? task = Task.Run(() =>
+{
     try
     {
         Console.WriteLine("Deltaraumi_loadŒÄ‚Ño‚µÏ‚Ý");
@@ -45,6 +46,8 @@ Task? task = Task.Run(async () => {
     {
         Console.Error.WriteLine(ex);
     }
+
+    return Task.CompletedTask;
 });
 
 app.Run();
