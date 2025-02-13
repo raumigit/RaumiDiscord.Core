@@ -184,11 +184,11 @@ class SlashCommandInterationService
         //commands.Add(vcRegionBuilder);
         //#endregion
 
-        #region /Join
-        SlashCommandBuilder joinBuilder = new SlashCommandBuilder();
-        joinBuilder.WithName("join").WithDescription("VCに入る(操作できません)");
-        commands.Add(joinBuilder);
-        #endregion
+        //#region /Join
+        //SlashCommandBuilder joinBuilder = new SlashCommandBuilder();
+        //joinBuilder.WithName("join").WithDescription("VCに入る(操作できません)");
+        //commands.Add(joinBuilder);
+        //#endregion
 
         List<SlashCommandProperties> slashCommandBuildCommands = new List<SlashCommandProperties>();
         foreach (SlashCommandBuilder builder1 in commands)
