@@ -9,6 +9,8 @@ jobs:
   # ひとかたまりのジョブを定義(別のジョブになると環境も立て直しになる)
   Job1:
     # 実行する環境を指定
+    permissions:
+      contents: read
     runs-on: ubuntu-24.04
     # ジョブの中で実行する処理をステップで定義
     steps:

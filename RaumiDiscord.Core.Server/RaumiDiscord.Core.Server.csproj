@@ -24,12 +24,12 @@
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.17.1" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
-      <Version>9.0.1</Version>
+      <Version>9.0.2</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
-    <PackageReference Include="microsoft.entityframeworkcore.sqlite" Version="9.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="9.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.1">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+    <PackageReference Include="microsoft.entityframeworkcore.sqlite" Version="9.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="9.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -40,7 +40,7 @@
     <PackageReference Include="SQLite" Version="3.13.0" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.10" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.1" />
+    <PackageReference Include="System.Text.Json" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,8 +54,6 @@
     <Folder Include="DeltaRaumi.Controller\Configuration\" />
     <Folder Include="DiscordBot\Configuration\" />
     <Folder Include="DiscordBot\Data\Interfaces\" />
-    <Folder Include="DiscordBot\Modules\SlashCommand\Global\" />
-    <Folder Include="DiscordBot\Modules\SlashCommand\Local\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
