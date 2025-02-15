@@ -9,7 +9,10 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\apps\dashboard\" />
+    <None Remove="src\apps\**" />
+    <TypeScriptConfiguration Remove="src\apps\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="src\assets\audio\" />
     <Folder Include="src\assets\img\" />
   </ItemGroup>

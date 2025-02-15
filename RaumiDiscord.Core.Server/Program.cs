@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.DataContext;
 using RaumiDiscord.Core.Server.DiscordBot;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,23 +18,35 @@ builder.Services.AddDbContext<DeltaRaumiDbContext>(options =>
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.WebHost.UseUrls("http://0.0.0.0:6440");
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
 
-//app.Urls.Add("http://localhost:6444");
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI(options =>
+//    {
+//        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+//        options.RoutePrefix = string.Empty;
+//    });
+//}
 
-//app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
+
 app.MapControllers();
 
 Task? task = Task.Run(() =>
@@ -49,5 +63,7 @@ Task? task = Task.Run(() =>
 
     return Task.CompletedTask;
 });
+
+
 
 app.Run();
