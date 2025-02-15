@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout project
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.2
       - name: generate a release note and a version tag
         uses: release-drafter/release-drafter@v6
         with:
