@@ -18,8 +18,13 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v6
-      
+      - name: checkout project
+        uses: actions/checkout@v4.1.7
+      - name: generate a release note and a version tag
+        uses: release-drafter/release-drafter@v6
+        with:
+          tag: v${{ inputs.release_version }}
+          publish: false
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
