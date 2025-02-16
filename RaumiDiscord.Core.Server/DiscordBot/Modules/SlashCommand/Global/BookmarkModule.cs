@@ -112,7 +112,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     return;
                 }
 
-                await RespondAsync(string.Join("\n", results));
+                await RespondAsync(string.Join("\n", results),ephemeral:true);
             }
             
         }
