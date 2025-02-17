@@ -22,7 +22,7 @@ body:
           required: true
         - label: このレポートは1つの機能リクエストにのみ対応しています。複数の機能リクエストをしたい場合は、それぞれ別のレポートを作成してください。
           required: true
-    - type: markdown
+  - type: markdown
     id: preliminary-information
     attributes:
       value: |
