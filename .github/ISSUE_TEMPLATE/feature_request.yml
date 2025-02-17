@@ -61,7 +61,7 @@ body:
       description: |
         It should start like this:
       placeholder: |
-      stable 369195 (9bac023) Host 1.0.9182 x64 (58558) Build Override: N/A Windows 10 64-bit (10.0.19045)
-      バージョン：0.1.1.5 (2025/02/14-18:35)
-      Version: 0.1.1.5 (9e72004)
+        stable 369195 (9bac023) Host 1.0.9182 x64 (58558) Build Override: N/A Windows 10 64-bit (10.0.19045)
+        バージョン：0.1.1.5 (2025/02/14-18:35)
+        Version： 0.1.1.5 (9e72004)
       
