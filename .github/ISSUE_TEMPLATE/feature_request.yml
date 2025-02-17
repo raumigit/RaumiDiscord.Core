@@ -12,7 +12,8 @@ body:
     attributes:
       label: Checklist
       description: |
-        Carefully read and work through this check list in order to prevent the most common mistakes and misuse of yt-dlp:
+        テンプレートの誤用を防ぐためにも一読したうえでチェックを入れてください。
+      options:
       options:
         - label: 機能をリクエストしています
           required: true
