@@ -16,7 +16,7 @@ body:
       options:
         - label: 機能をリクエストしています
           required: true
-        - label: [RaumiDiscord.Core](https://github.com/raumigit/RaumiDiscord.Core/issues?q=is%3Aissue%20)(検索した上)で報告されていません。
+        - label: このリポジトリ[RaumiDiscord.Core](https://github.com/raumigit/RaumiDiscord.Core/issues?q=is%3Aissue%20)(検索した上)で報告されていません。
           required: true
         - label: 私はこのプロジェクトのstable、unstable、またはmasterの最新バージョンを使用しています。 可能であれば、問題を提起する前に最新バージョンにアップデートしてください。
           required: true
