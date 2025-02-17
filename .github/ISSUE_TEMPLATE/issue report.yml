@@ -11,12 +11,12 @@ body:
   - type: checkboxes
     id: before-posting
     attributes:
-      label: "この号では以下の点が考慮されています。:"
-      description: 条件はすべて**必須**です。 これらの条件のいずれかに従わない場合、あなたのissueはコメントなしでクローズされる場合があります。条件はすべて**必須**です。 これらの条件のいずれかに従わない場合、あなたのissueはコメントなしでクローズされる場合があります。
+      label: "このissueでは以下の点が考慮されています。:"
+      description: 条件はすべて**必須**です。 これらの条件のいずれかに従わない場合、あなたのissueはコメントなしでクローズされる場合があります。
       options:
         - label: これは**バグ**であり、質問や設定の問題ではありません。
           required: true
-        - label: この問題は[GitHub](https://github.com/raumigit/RaumiDiscord.Core/issues?q=is%3Aissue%20state%3Aopen%20)(検索した上)で報告されていません。
+        - label: この問題は[RaumiDiscord.Core](https://github.com/raumigit/RaumiDiscord.Core/issues?q=is%3Aissue%20)(検索した上)で報告されていません。
           required: true
         - label: 私はこのプロジェクトのstable、unstable、またはmasterの最新バージョンを使用しています。 可能であれば、問題を提起する前に最新バージョンにアップデートしてください。
           required: true
