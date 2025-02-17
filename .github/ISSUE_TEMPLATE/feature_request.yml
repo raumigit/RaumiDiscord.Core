@@ -16,13 +16,13 @@ body:
       options:
         - label: 機能をリクエストしています
           required: true
-        - label: [RaumiDiscord.Core](https://github.com/raumigit/RaumiDiscord.Core/issues?q=is%3Aissue%20)(検索した上)で報告されていません。
+        - label: このリポジトリ[RaumiDiscord.Core](https://github.com/raumigit/RaumiDiscord.Core/issues?q=is%3Aissue%20)(検索した上)で報告されていません。
           required: true
         - label: 私はこのプロジェクトのstable、unstable、またはmasterの最新バージョンを使用しています。 可能であれば、問題を提起する前に最新バージョンにアップデートしてください。
           required: true
         - label: このレポートは1つの機能リクエストにのみ対応しています。複数の機能リクエストをしたい場合は、それぞれ別のレポートを作成してください。
           required: true
-    - type: markdown
+  - type: markdown
     id: preliminary-information
     attributes:
       value: |
@@ -61,7 +61,7 @@ body:
       description: |
         It should start like this:
       placeholder: |
-      stable 369195 (9bac023) Host 1.0.9182 x64 (58558) Build Override: N/A Windows 10 64-bit (10.0.19045)
-      バージョン：0.1.1.5 (2025/02/14-18:35)
-      Version: 0.1.1.5 (9e72004)
+        stable 369195 (9bac023) Host 1.0.9182 x64 (58558) Build Override: N/A Windows 10 64-bit (10.0.19045)
+        バージョン：0.1.1.5 (2025/02/14-18:35)
+        Version： 0.1.1.5 (9e72004)
       
