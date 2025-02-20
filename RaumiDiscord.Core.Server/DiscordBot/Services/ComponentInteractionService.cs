@@ -117,7 +117,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                                 "外部連携：null\n" +
                                 "読み上げエンジン：null\n" +
                                 "WebGUI：null" +
-                                "API：Online(not public)\n" +
+                                "API：Online\n" +
                                 "ロギング中：no\n" +
                                 "Stat機能：null\n" +
                                 "使用DB：SQlite3\n" +

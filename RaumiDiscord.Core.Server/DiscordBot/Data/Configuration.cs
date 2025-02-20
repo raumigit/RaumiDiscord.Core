@@ -21,6 +21,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Data
         }
 
         public GeneralSettings? Setting { get; set; }
+        public ConnectionServiceAppPath appPath { get; set; }
         public SystemLogSettings? SystemLog { get; set; }
         public TokenSetting? TokenData { get; set; }
 
@@ -96,6 +97,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Data
                     Color = "0xFFFFFF",
                     CustomStatusGame = "",
                     SystemFatal = false
+                },
+                appPath = new ConnectionServiceAppPath
+                {
+                    CoeiroinkAppPath="",
+                    LLMAppPath="",
+                    ffmpegPath="",
+                    ytdlpAppPath=""
                 },
                 SystemLog = new SystemLogSettings
                 {

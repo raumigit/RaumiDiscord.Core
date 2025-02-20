@@ -1,9 +1,11 @@
-﻿using Discord.Interactions;
+﻿using Discord.Commands;
+using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DataContext;
 using System.Linq;
 using System.Text.RegularExpressions;
+using SummaryAttribute = Discord.Interactions.SummaryAttribute;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
@@ -19,7 +21,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 
         [SlashCommand("hoyocode", "HoYoverseで使えるギフトコードを出力します")]
         public async Task HoYoCode(
-            [Summary("Get","有効なコードを出力します。Setを使えばURLを共有できます。")]
+            [Summary("action","Get:有効なコードを出力します。Set:URLを共有できます。")]
             [Choice("Get","get")]
             [Choice("Set","set")]
             string action,
@@ -30,13 +32,14 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             [Choice("ZenlessZoneZero","ZZZ")]
             string urlType,
             string url = null,
+            [Summary("ttl","有効期限を設定します。yyyy/MM/dd-HH:mm:sszzz形式で入力してください。")]
             string ttl = null)
         {
             if (action == "set")
             {
                 if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(ttl))
                 {
-                    await RespondAsync("URLと有効期限を指定してください。(有効期限：yyyy/mm/dd-hh:mm:sszzz)", ephemeral: true);
+                    await RespondAsync("URLと有効期限を指定してください。(有効期限：yyyy/MM/dd-HH:mm:sszzz)", ephemeral: true);
                     return;
                 }
                 if (!DateTimeOffset.TryParseExact(ttl, "yyyy/MM/dd-HH:mm:sszzz", null, System.Globalization.DateTimeStyles.None, out DateTimeOffset expirationTime) && expirationTime.UtcDateTime <= DateTime.UtcNow)
