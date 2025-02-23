@@ -1,3 +1,4 @@
+
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.DataContext;
@@ -18,7 +19,7 @@ builder.Services.AddDbContext<DeltaRaumiDbContext>(options =>
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.WebHost.UseUrls("http://0.0.0.0:6440");
+builder.WebHost.UseUrls("http://0.0.0.0:6440");
 
 var app = builder.Build();
 
@@ -41,6 +42,7 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     //options.RoutePrefix = string.Empty;
 });
+
 
 app.MapControllers();
 
