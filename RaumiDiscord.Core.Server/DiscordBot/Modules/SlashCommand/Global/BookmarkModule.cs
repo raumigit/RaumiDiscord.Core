@@ -79,37 +79,51 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     }
                     await LoggingService.LogGeneral($"URLがCodeだったため修正しました。");
                 }
-                
 
 
+                ulong discordUser = Context.User.Id;
 
                 // UnixTime 形式に変換
                 long unixExpirationTime = expirationTime.ToUnixTimeSeconds();
 
-                var newEntry = new UrlDetaModel
+                var newEntry = new UrlDataModel
                 {
                     Url = url,
                     UrlType = urlType,
+                    DiscordUser = discordUser,
                     TTL = expirationTime.UtcDateTime
                 };
 
-                var Url_record = deltaRaumiDb.UrlDetaModels.Where(k => k.Url == url).ToList();
+                var Url_record = deltaRaumiDb.UrlDataModels.Where(k => k.Url == url).ToList();
                 if (Url_record.Any())
                 {
-                    await RespondAsync("既に登録されています。",ephemeral:true);
+                    await RespondAsync("既に登録されています。", ephemeral: true);
                     return;
                 }
-                deltaRaumiDb.UrlDetaModels.Add(newEntry);
+                deltaRaumiDb.UrlDataModels.Add(newEntry);
                 await deltaRaumiDb.SaveChangesAsync();
-                await RespondAsync($"登録完了: {urlType} - {url} (期限: <t:{unixExpirationTime}:R>)");
+                await RespondAsync($"登録完了: {urlType} - {url} (期限: <t:{unixExpirationTime}:R>)<@{discordUser}>");
             }
             else if (action == "get")
             {
                 var now = DateTime.UtcNow;
-                var results = await deltaRaumiDb.UrlDetaModels
-                    .Where(u => u.UrlType == urlType && u.TTL > now)
-                    .Select(u => u.Url)
+                List<string> results;
+
+                if (urlType == "URL")
+                {
+                    results = await deltaRaumiDb.UrlDataModels
+                    .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id)
+                    .Select(u => $"{u.Url}")
                     .ToListAsync();
+                }
+                else
+                {
+                    results = await deltaRaumiDb.UrlDataModels
+                    .Where(u => u.UrlType == urlType && u.TTL > now)
+                    .Select(u => $"{u.Url}")
+                    .ToListAsync();
+                }
+                
 
                 if (results.Count == 0)
                 {

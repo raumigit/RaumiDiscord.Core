@@ -9,7 +9,7 @@ namespace RaumiDiscord.Core.Server.DataContext
         public DbSet<GuildBaseData> GuildBases { get; set; }
         public DbSet<UserBaseData> UserBases { get; set; }
         public DbSet<UserGuildData> UserGuildData { get; set; }
-        public DbSet<UrlDetaModel> UrlDetaModels { get; set; } = null!;
+        public DbSet<UrlDataModel> UrlDataModels { get; set; } = null!;
 
         private DatabaseType databaseType = DatabaseType.Sqlite;
 
