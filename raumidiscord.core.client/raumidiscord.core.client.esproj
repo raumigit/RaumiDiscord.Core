@@ -13,6 +13,7 @@
     <TypeScriptConfiguration Remove="src\apps\**" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="public\defaultavatars\" />
     <Folder Include="src\assets\audio\" />
     <Folder Include="src\assets\img\" />
     <Folder Include="tools\assets\" />
