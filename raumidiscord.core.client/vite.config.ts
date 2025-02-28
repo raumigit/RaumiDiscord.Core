@@ -43,8 +43,8 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                main: resolve(__dirname, 'src/index.html'),
-                toolpage: resolve(__dirname,'tools/index.html'),
+                main: resolve(__dirname, './index.html'),
+                toolpage: resolve(__dirname,'./tools/index.html'),
             },
         },
     },
@@ -60,10 +60,14 @@ export default defineConfig({
                 target,
                 secure: false
             },
-            '^/dashbord': {
+            '^/api': {
                 target,
                 secure: false
-            }
+            },
+            //'^/tools': {
+            //    target,
+            //    secure: false
+            //}
         },
         port: 39888,
         https: {

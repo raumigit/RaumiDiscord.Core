@@ -24,7 +24,7 @@ const initialValues = [
 // UrlListコンポーネント
 export const Todo = () => {
     // UrlListアイテムオブジェクトの配列を管理するstate
-    const [todos, setTodos] = useState<TodoItem[]>(initialValues);
+    const [todos] = useState<TodoItem[]>(initialValues);
 
     return (
         <div>

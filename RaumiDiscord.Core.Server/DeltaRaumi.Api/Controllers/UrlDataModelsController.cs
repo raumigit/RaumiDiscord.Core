@@ -8,51 +8,51 @@ using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DataContext;
 
-namespace RaumiDiscord.Core.Server.Api.Controllers
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UrlDetaModelsController : ControllerBase
+    public class UrlDataModelsController : ControllerBase
     {
         private readonly DeltaRaumiDbContext _context;
 
-        public UrlDetaModelsController(DeltaRaumiDbContext context)
+        public UrlDataModelsController(DeltaRaumiDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/UrlDetaModels
+        // GET: api/UrlDataModels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UrlDetaModel>>> GeturlDetaModels()
+        public async Task<ActionResult<IEnumerable<UrlDataModel>>> GetUrlDataModels()
         {
-            return await _context.UrlDetaModels.ToListAsync();
+            return await _context.UrlDataModels.ToListAsync();
         }
 
-        // GET: api/UrlDetaModels/5
+        // GET: api/UrlDataModels/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UrlDetaModel>> GetUrlDetaModel(uint id)
+        public async Task<ActionResult<UrlDataModel>> GetUrlDataModel(uint id)
         {
-            var urlDetaModel = await _context.UrlDetaModels.FindAsync(id);
+            var urlDataModel = await _context.UrlDataModels.FindAsync(id);
 
-            if (urlDetaModel == null)
+            if (urlDataModel == null)
             {
                 return NotFound();
             }
 
-            return urlDetaModel;
+            return urlDataModel;
         }
 
-        // PUT: api/UrlDetaModels/5
+        // PUT: api/UrlDataModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUrlDetaModel(uint id, UrlDetaModel urlDetaModel)
+        public async Task<IActionResult> PutUrlDataModel(uint id, UrlDataModel urlDataModel)
         {
-            if (id != urlDetaModel.Id)
+            if (id != urlDataModel.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(urlDetaModel).State = EntityState.Modified;
+            _context.Entry(urlDataModel).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace RaumiDiscord.Core.Server.Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UrlDetaModelExists(id))
+                if (!UrlDataModelExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace RaumiDiscord.Core.Server.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/UrlDetaModels
+        // POST: api/UrlDataModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<UrlDetaModel>> PostUrlDetaModel(UrlDetaModel urlDetaModel)
+        public async Task<ActionResult<UrlDataModel>> PostUrlDataModel(UrlDataModel urlDataModel)
         {
-            _context.UrlDetaModels.Add(urlDetaModel);
+            _context.UrlDataModels.Add(urlDataModel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUrlDetaModel", new { id = urlDetaModel.Id }, urlDetaModel);
+            return CreatedAtAction("GetUrlDataModel", new { id = urlDataModel.Id }, urlDataModel);
         }
 
-        // DELETE: api/UrlDetaModels/5
+        // DELETE: api/UrlDataModels/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUrlDetaModel(uint id)
+        public async Task<IActionResult> DeleteUrlDataModel(uint id)
         {
-            var urlDetaModel = await _context.UrlDetaModels.FindAsync(id);
-            if (urlDetaModel == null)
+            var urlDataModel = await _context.UrlDataModels.FindAsync(id);
+            if (urlDataModel == null)
             {
                 return NotFound();
             }
 
-            _context.UrlDetaModels.Remove(urlDetaModel);
+            _context.UrlDataModels.Remove(urlDataModel);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool UrlDetaModelExists(uint id)
+        private bool UrlDataModelExists(uint id)
         {
-            return _context.UrlDetaModels.Any(e => e.Id == id);
+            return _context.UrlDataModels.Any(e => e.Id == id);
         }
     }
 }

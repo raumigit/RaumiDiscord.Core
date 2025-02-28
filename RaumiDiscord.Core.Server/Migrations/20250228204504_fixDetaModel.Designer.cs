@@ -11,14 +11,14 @@ using RaumiDiscord.Core.Server.DataContext;
 namespace RaumiDiscord.Core.Server.Migrations
 {
     [DbContext(typeof(DeltaRaumiDbContext))]
-    [Migration("20250129072238_InitModel")]
-    partial class InitModel
+    [Migration("20250228204504_fixDetaModel")]
+    partial class fixDetaModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.DiscordComponentModel", b =>
                 {
@@ -91,10 +91,13 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.ToTable("GuildBases");
                 });
 
-            modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.UrlDetaModel", b =>
+            modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.UrlDataModel", b =>
                 {
                     b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<ulong?>("DiscordUser")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("TTL")

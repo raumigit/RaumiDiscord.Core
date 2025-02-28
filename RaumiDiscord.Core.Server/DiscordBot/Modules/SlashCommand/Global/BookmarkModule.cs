@@ -1,9 +1,11 @@
-﻿using Discord.Interactions;
+﻿using Discord.Commands;
+using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DataContext;
 using System.Linq;
 using System.Text.RegularExpressions;
+using SummaryAttribute = Discord.Interactions.SummaryAttribute;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
@@ -19,7 +21,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 
         [SlashCommand("hoyocode", "HoYoverseで使えるギフトコードを出力します")]
         public async Task HoYoCode(
-            [Summary("Get","有効なコードを出力します。Setを使えばURLを共有できます。")]
+            [Summary("action","Get:有効なコードを出力します。Set:URLを共有できます。")]
             [Choice("Get","get")]
             [Choice("Set","set")]
             string action,
@@ -30,13 +32,14 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             [Choice("ZenlessZoneZero","ZZZ")]
             string urlType,
             string url = null,
+            [Summary("ttl","有効期限を設定します。yyyy/MM/dd-HH:mm:sszzz形式で入力してください。")]
             string ttl = null)
         {
             if (action == "set")
             {
                 if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(ttl))
                 {
-                    await RespondAsync("URLと有効期限を指定してください。(有効期限：yyyy/mm/dd-hh:mm:sszzz)", ephemeral: true);
+                    await RespondAsync("URLと有効期限を指定してください。(有効期限：yyyy/MM/dd-HH:mm:sszzz)", ephemeral: true);
                     return;
                 }
                 if (!DateTimeOffset.TryParseExact(ttl, "yyyy/MM/dd-HH:mm:sszzz", null, System.Globalization.DateTimeStyles.None, out DateTimeOffset expirationTime) && expirationTime.UtcDateTime <= DateTime.UtcNow)
@@ -74,37 +77,51 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     }
                     await LoggingService.LogGeneral($"URLがCodeだったため修正しました。");
                 }
-                
 
 
+                ulong discordUser = Context.User.Id;
 
                 // UnixTime 形式に変換
                 long unixExpirationTime = expirationTime.ToUnixTimeSeconds();
 
-                var newEntry = new UrlDetaModel
+                var newEntry = new UrlDataModel
                 {
                     Url = url,
                     UrlType = urlType,
+                    DiscordUser = discordUser,
                     TTL = expirationTime.UtcDateTime
                 };
 
-                var Url_record = deltaRaumiDb.UrlDetaModels.Where(k => k.Url == url).ToList();
+                var Url_record = deltaRaumiDb.UrlDataModels.Where(k => k.Url == url).ToList();
                 if (Url_record.Any())
                 {
-                    await RespondAsync("既に登録されています。",ephemeral:true);
+                    await RespondAsync("既に登録されています。", ephemeral: true);
                     return;
                 }
-                deltaRaumiDb.UrlDetaModels.Add(newEntry);
+                deltaRaumiDb.UrlDataModels.Add(newEntry);
                 await deltaRaumiDb.SaveChangesAsync();
-                await RespondAsync($"登録完了: {urlType} - {url} (期限: <t:{unixExpirationTime}:R>)");
+                await RespondAsync($"登録完了: {urlType} - {url} (期限: <t:{unixExpirationTime}:R>)<@{discordUser}>");
             }
             else if (action == "get")
             {
                 var now = DateTime.UtcNow;
-                var results = await deltaRaumiDb.UrlDetaModels
-                    .Where(u => u.UrlType == urlType && u.TTL > now)
-                    .Select(u => u.Url)
+                List<string> results;
+
+                if (urlType == "URL")
+                {
+                    results = await deltaRaumiDb.UrlDataModels
+                    .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id)
+                    .Select(u => $"{u.Url}")
                     .ToListAsync();
+                }
+                else
+                {
+                    results = await deltaRaumiDb.UrlDataModels
+                    .Where(u => u.UrlType == urlType && u.TTL > now)
+                    .Select(u => $"{u.Url}")
+                    .ToListAsync();
+                }
+                
 
                 if (results.Count == 0)
                 {
@@ -112,7 +129,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     return;
                 }
 
-                await RespondAsync(string.Join("\n", results));
+                await RespondAsync(string.Join("\n", results),ephemeral:true);
             }
             
         }
