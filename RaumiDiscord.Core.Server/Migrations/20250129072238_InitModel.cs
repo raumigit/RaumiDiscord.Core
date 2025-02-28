@@ -51,7 +51,7 @@ namespace RaumiDiscord.Core.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UrlDetaModels",
+                name: "UrlDataModels",
                 columns: table => new
                 {
                     Id = table.Column<uint>(type: "INTEGER", nullable: false)
@@ -62,7 +62,7 @@ namespace RaumiDiscord.Core.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UrlDetaModels", x => x.Id);
+                    table.PrimaryKey("PK_UrlDataModels", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,7 +131,7 @@ namespace RaumiDiscord.Core.Server.Migrations
                 name: "Components");
 
             migrationBuilder.DropTable(
-                name: "UrlDetaModels");
+                name: "UrlDataModels");
 
             migrationBuilder.DropTable(
                 name: "UserGuildData");
