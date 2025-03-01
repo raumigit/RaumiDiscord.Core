@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using SummaryAttribute = Discord.Interactions.SummaryAttribute;
 
+
+
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
     public class BookmarkModule : InteractionModuleBase<SocketInteractionContext>
@@ -40,6 +42,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(ttl))
                 {
                     await RespondAsync("URLと有効期限を指定してください。(有効期限：yyyy/MM/dd-HH:mm:sszzz)", ephemeral: true);
+
+
                     return;
                 }
                 if (!DateTimeOffset.TryParseExact(ttl, "yyyy/MM/dd-HH:mm:sszzz", null, System.Globalization.DateTimeStyles.None, out DateTimeOffset expirationTime) && expirationTime.UtcDateTime <= DateTime.UtcNow)

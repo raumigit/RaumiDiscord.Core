@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Hosting;
+
+ï»¿using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.DataContext;
 using RaumiDiscord.Core.Server.DiscordBot;
@@ -11,14 +12,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-//ƒT[ƒrƒX‚ÉDataContext‚ğ“o˜^‚·‚é
+//ã‚µãƒ¼ãƒ“ã‚¹ã«DataContextã‚’ç™»éŒ²ã™ã‚‹
 builder.Services.AddDbContext<DeltaRaumiDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.WebHost.UseUrls("http://0.0.0.0:6440");
+if (!builder.Environment.IsDevelopment())
+{
+    builder.WebHost.UseUrls("http://0.0.0.0:6440");
+}
+
 
 var app = builder.Build();
 
@@ -32,7 +37,7 @@ app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
-    
+
 }
 
 app.UseSwagger();
@@ -42,13 +47,14 @@ app.UseSwaggerUI(options =>
     //options.RoutePrefix = string.Empty;
 });
 
+
 app.MapControllers();
 
 Task? task = Task.Run(() =>
 {
     try
     {
-        Console.WriteLine("Deltaraumi_loadŒÄ‚Ño‚µÏ‚İ");
+        Console.WriteLine("Deltaraumi_loadå‘¼ã³å‡ºã—æ¸ˆã¿");
         Deltaraumi_Discordbot.Deltaraumi_load(args);
     }
     catch (Exception ex)
