@@ -1,0 +1,68 @@
+name: Feature request
+description: 新機能のリクエストを行うためのテンプレート
+labels: [triage, enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!IMPORTANT]
+        > 条件はすべて**必須**です。 これらの条件のいずれかに従わない場合、あなたのissueはコメントなしでクローズされる場合があります。
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: |
+        テンプレートの誤用を防ぐためにも一読したうえでチェックを入れてください。
+      options:
+      options:
+        - label: 機能をリクエストしています
+          required: true
+        - label: このリポジトリ[RaumiDiscord.Core](https://github.com/raumigit/RaumiDiscord.Core/issues?q=is%3Aissue%20)(検索した上)で報告されていません。
+          required: true
+        - label: 私はこのプロジェクトのstable、unstable、またはmasterの最新バージョンを使用しています。 可能であれば、問題を提起する前に最新バージョンにアップデートしてください。
+          required: true
+        - label: このレポートは1つの機能リクエストにのみ対応しています。複数の機能リクエストをしたい場合は、それぞれ別のレポートを作成してください。
+          required: true
+  - type: markdown
+    id: preliminary-information
+    attributes:
+      value: |
+        ### 一般的な予備情報
+
+        このissueを作成する際には、以下の点に留意してください。:
+
+        1. テンプレートに可能な限り記入すること。
+        2. できるだけ詳しく説明すること。 何が起こっているかを他の人が知っていると思い込まないこと。
+        3. すべてを読みやすく、構造化すること。 理解しにくい稚拙なレポートを読んで喜ぶ人はいません。
+        4. レポートが公開されている限り、あなたのレポートから目を離さないでください。
+        5. フィールドの情報を空欄にする場合は、空欄のままにしてください。 空のフィールドに`n/a`などと書くのは避けましょう。
+  - type: textarea
+    id: description
+    attributes:
+      label: 理解しやすい言葉で説明してください
+      description: 書いた内容は簡潔で正確ですか？また、複数の機能をリクエストしていないかは一度確認してください
+      placeholder: 追加情報、提案された解決策、および可能な限り多くのコンテキストと例を提供します
+    validations:
+      required: true
+  - type: checkboxes
+    id: verbose
+    attributes:
+      label: バージョン情報
+      description: |
+        絶対に提供できない場合を除き、これは必須です。提供できない場合は、その理由を説明してください。
+      options:
+        - label: 貼り付けられているのはDiscordBotが出力したバージョンです。
+        - label: 貼り付けられているのはWebダッシュボードのバージョンです。
+          required: false
+        - label: Discordクライアントのバージョンです。(必ず入力してください。)
+  - type: textarea
+    id: env
+    attributes:
+      label: バージョン情報
+      description: |
+        It should start like this:
+      placeholder: |
+        stable 369195 (9bac023) Host 1.0.9182 x64 (58558) Build Override: N/A Windows 10 64-bit (10.0.19045)
+        バージョン：0.1.1.5 (2025/02/14-18:35)
+        Version： 0.1.1.5 (9e72004)
+      
