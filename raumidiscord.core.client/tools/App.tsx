@@ -1,6 +1,7 @@
 import { useState, useEffect, ChangeEvent, } from "react";
 import axios from "axios";
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
 import { Fab, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Select from '@mui/material/Select';
@@ -130,26 +131,67 @@ function createData(
         url, urltype, ttl, discordUser };
 }
 
+function getQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    const urlParam = params.get('url') || '';
+    const urlTypeParam = params.get('urlType') || 'URL';
+    const ttlParam = params.get('ttl') || '';
+    
+    return { urlParam, urlTypeParam, ttlParam };
+}
+
 export const App = () => {
 
-  const [urlCodes, setUrlCodes] = useState<UrlCodes[]>([]);
+    const [urlCodes, setUrlCodes] = useState<UrlCodes[]>([]);
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+    const search = useParams().search;
+    const query = new URLSearchParams(search);
+ 
 
     // テキストボックスの文字列を管理するstate
     const [text, setText] = useState("");
 
     const [urltype, setUrltype] = React.useState('');
+
+    // ページロード時にURLパラメータを処理
+    useEffect(() => {
+        const { urlParam, urlTypeParam, ttlParam } = getQueryParams();
+    
+        // URLパラメータが存在する場合、フォームに設定
+        if (urlParam) {
+            setText(urlParam);
+        }
+    
+        if (urlTypeParam) {
+            setUrltype(urlTypeParam);
+        }
+    
+        if (ttlParam) {
+            try {
+                setValue(dayjs(ttlParam));
+            } catch (e) {
+                console.error("Invalid date format in URL parameter:", e);
+            }
+        }
+    
+        // 自動的に追加処理を行うかどうかのパラメータ(autoAdd=true)がある場合
+        const autoAdd = new URLSearchParams(window.location.search).get('autoAdd');
+        if (autoAdd === 'true' && urlParam) {
+            // URLパラメータがある場合に自動追加
+            handleAdd();
+        }
+    }, []);
 
     // テキストボックス入力時の処理
     const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,15 +200,23 @@ export const App = () => {
     };
 
     const handleAdd = async () => {
+        // 日時がnullの場合のデフォルト値を設定
+        const timeLimit = value ? value.format('YYYY-MM-DDTHH:mm:ss') : dayjs.utc().add(7, 'day').format('YYYY-MM-DDTHH:mm:ss');
+    
         // 新しいアイテムのオブジェクトを作成（idはDB側で自動採番するため省略）
-        const newCodes = { url: text, urltype: 'URL', timeLimit:'2025-03-24T15:59:59' };
+        const newCodes = { url: text, urlType: urltype, timeLimit: timeLimit };
 
         try {
-            // APIにPOSTリクエストし、レスポンスから登録したTodoアイテムオブジェクトを取り出す
+            // APIにPOSTリクエストし、レスポンスから登録したアイテムオブジェクトを取り出す
             const { data } = await axios.post('../api/UrlDataModels', newCodes);
 
             // 既存のアイテムと新規登録したアイテムを合体させてstateにセット
             setUrlCodes([...urlCodes, data]);
+      
+            // 追加後に履歴をきれいにする（URLパラメータを削除）
+            if (window.location.search) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
         } catch (e) {
             console.error(e);
         }
@@ -238,14 +288,14 @@ export const App = () => {
                     sx={{ width: "100%", maxWidth: 270, marginRight: 2, marginBottom: 2 }}
                     required
                     size="small"
-                    id="standard-basic" 
+                    id="standard-basic"
                     label="URL/Code"
                     variant="standard"
-                    onChange={onchange}
+                    onChange={handleChangeInput}
                     value={text}
                 />
                 <FormControl>
-                <InputLabel id="demo-simple-select-label">URLType</InputLabel>
+                    <InputLabel id="demo-simple-select-label">URLType</InputLabel>
                     <Select
                         sx={{ minWidth: 200, marginRight: 2, marginBottom: 2 }}
                         size="small"
@@ -261,7 +311,7 @@ export const App = () => {
                         <MenuItem value={"ZZZ"}>ゼンレスゾーンゼロ</MenuItem>
                     </Select>
                 </FormControl>
-                <Fab variant="extended" size="small" color="primary" onClick={onclick} sx={{marginRight: 2, marginBottom: 2 }}>
+                <Fab variant="extended" size="small" color="primary" onClick={onclick} sx={{ marginRight: 2, marginBottom: 2 }}>
                     <SendIcon sx={{ mr: 1 }} />
                     追加
                 </Fab>
@@ -273,56 +323,56 @@ export const App = () => {
                     </LocalizationProvider>
                 </div>
             </div>
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-  {urlCodes
-    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    .map((row) => {
-      return (
-        <TableRow hover role="checkbox" tabIndex={-1} key={row.id || row.url}>
-          {columns.map((column) => {
-            const value = row[column.id];
-            return (
-              <TableCell key={column.id} align={column.align}>
-                {column.renderCell ? column.renderCell(value, row) : (
-                  column.format && typeof value === 'number'
-                    ? column.format(value)
-                    : value
-                )}
-              </TableCell>
-            );
-          })}
-        </TableRow>
-      );
-    })}
-</TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50, 100]}
-        component="div"
-        count={urlCodes.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                <TableContainer sx={{ maxHeight: 440 }}>
+                    <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                                {columns.map((column) => (
+                                    <TableCell
+                                        key={column.id}
+                                        align={column.align}
+                                        style={{ minWidth: column.minWidth }}
+                                    >
+                                        {column.label}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {urlCodes
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((row) => {
+                                    return (
+                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id || row.url}>
+                                            {columns.map((column) => {
+                                                const value = row[column.id];
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        {column.renderCell ? column.renderCell(value, row) : (
+                                                            column.format && typeof value === 'number'
+                                                                ? column.format(value)
+                                                                : value
+                                                        )}
+                                                    </TableCell>
+                                                );
+                                            })}
+                                        </TableRow>
+                                    );
+                                })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[10, 25, 50, 100]}
+                    component="div"
+                    count={urlCodes.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </Paper>
         </div>
     );
 };
