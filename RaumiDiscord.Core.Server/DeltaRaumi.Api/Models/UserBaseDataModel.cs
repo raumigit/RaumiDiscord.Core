@@ -11,7 +11,7 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// </summary>
         /// 注意：SocketMessage Author.Idで取得してください。
         [Key]
-        public required ulong UserId { get; set; }
+        public required string UserId { get; set; }
 
         /// <summary>
         /// このユーザーのユーザー名を取得または設定します。

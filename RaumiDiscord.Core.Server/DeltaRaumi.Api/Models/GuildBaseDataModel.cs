@@ -11,7 +11,7 @@ namespace RaumiDiscord.Core.Server.Api.Models
         ///  ギルドのIdを取得または設定します。
         /// </summary>
         [Key]
-        public required ulong GuildId { get; set; }
+        public required string GuildId { get; set; }
 
         /// <summary>
         ///  ギルドの名前を取得または設定します。
@@ -31,12 +31,12 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// <summary>
         ///  ギルドオーナーの取得または設定します。
         /// </summary>
-        public ulong OwnerID { get; set; }
+        public string OwnerID { get; set; }
 
         /// <summary>
         ///  ウェルカムチャンネルのIdを取得または設定します。
         /// </summary>
-        public ulong? WelcomeChannnelID { get; set; }
+        public string? WelcomeChannnelID { get; set; }
 
         /// <summary>
         ///  ギルドの作成日時を取得または設定します。

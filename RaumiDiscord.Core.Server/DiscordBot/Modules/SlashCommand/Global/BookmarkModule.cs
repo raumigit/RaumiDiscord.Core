@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using SummaryAttribute = Discord.Interactions.SummaryAttribute;
 
 
+
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
     public class BookmarkModule : InteractionModuleBase<SocketInteractionContext>
@@ -41,6 +42,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(ttl))
                 {
                     await RespondAsync("URLと有効期限を指定してください。(有効期限：yyyy/MM/dd-HH:mm:sszzz)", ephemeral: true);
+
 
                     return;
                 }
@@ -81,7 +83,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 }
 
 
-                ulong discordUser = Context.User.Id;
+                string discordUser = Context.User.Id.ToString();
 
                 // UnixTime 形式に変換
                 long unixExpirationTime = expirationTime.ToUnixTimeSeconds();
@@ -112,7 +114,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 if (urlType == "URL")
                 {
                     results = await deltaRaumiDb.UrlDataModels
-                    .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id)
+                    .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id.ToString())
                     .Select(u => $"{u.Url}")
                     .ToListAsync();
                 }
