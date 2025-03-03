@@ -180,10 +180,10 @@ class SlashCommandInterationService
 
         var msg = await command_arg.FollowupAsync("DeltaRaumiを撫でる？", components: componentBuilder.Build());
 
-        model.ChannelId = command_arg.Channel.Id;
-        model.MessageId = msg.Id;
+        model.ChannelId = command_arg.Channel.Id.ToString();
+        model.MessageId = msg.Id.ToString();
         model.DeltaRaumiComponentType = "DeltaraumiPat";
-        model.OwnerId = command_arg.User.Id;
+        model.OwnerId = command_arg.User.Id.ToString();
 
         DbContext.Components.Add(model);
         await DbContext.SaveChangesAsync();
@@ -214,10 +214,10 @@ class SlashCommandInterationService
 
         var msg = await command_arg.FollowupAsync("何を聞きたいんだい？:", components: componentBuilder.Build());
 
-        model.ChannelId = command_arg.Channel.Id;
-        model.MessageId = msg.Id;
+        model.ChannelId = command_arg.Channel.Id.ToString();
+        model.MessageId = msg.Id.ToString();
         model.DeltaRaumiComponentType = "FAQ-Menu";
-        model.OwnerId = command_arg.User.Id;
+        model.OwnerId = command_arg.User.Id.ToString();
 
         DbContext.Components.Add(model);
 
