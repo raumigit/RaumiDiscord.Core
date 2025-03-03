@@ -23,9 +23,8 @@ jobs:
       - name: generate a release note and a version tag
         uses: release-drafter/release-drafter@v6
         with:
-          tag: ${{ env.RELEASE_TAG }}
-          name: v${{ env.RELEASE_TAG }}
-          version: ${{ env.RELEASE_TAG }}
+          config-name: release-drafter.yaml
+          commitish: main
           publish: false
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
