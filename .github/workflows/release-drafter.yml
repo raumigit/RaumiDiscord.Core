@@ -23,7 +23,7 @@ jobs:
       - name: generate a release note and a version tag
         uses: release-drafter/release-drafter@v6
         with:
-          config-name: release-drafter.yaml
+          config-name: release-drafter.yml
           commitish: main
           publish: false
     env:
