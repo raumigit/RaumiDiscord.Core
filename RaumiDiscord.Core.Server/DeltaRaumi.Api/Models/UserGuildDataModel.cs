@@ -13,9 +13,9 @@ namespace RaumiDiscord.Core.Server.Api.Models
         public required UserBaseData UserBaseData { get; set; }
         
         
-        public ulong GuildId { get; set; }
+        public string GuildId { get; set; }
         
-        public ulong UserId { get; set; }
+        public string UserId { get; set; }
         public string? GuildAvatarId { get; set; }
         public int GuildUserFlags { get; set; }
         public DateTime JoinedAt {  get; set; }

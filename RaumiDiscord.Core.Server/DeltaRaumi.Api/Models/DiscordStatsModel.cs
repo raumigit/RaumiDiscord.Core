@@ -2,6 +2,6 @@
 {
     public class DiscordStatsModel
     {
-        public ulong discorduserid { get; set; }
+        public string discorduserid { get; set; }
     }
 }
