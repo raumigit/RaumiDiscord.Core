@@ -34,7 +34,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Models.Configuration
             public string CoeiroinkAppPath { get; set; }
             public string LLMAppPath { get; set; }
             public string ffmpegPath { get; set; }
-
             public string ytdlpAppPath { get; set; }
         }
         public class SystemLogSettings

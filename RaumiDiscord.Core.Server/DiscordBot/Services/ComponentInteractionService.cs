@@ -70,7 +70,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             switch (model.DeltaRaumiComponentType)
             {
                 case "FAQ-Menu":
-                    if (component.User.Id != model.OwnerId)
+                    if (component.User.Id.ToString() != model.OwnerId)
                     {
                         await component.RespondAsync("**許可されていない動作**：このメニューは他ユーザーによって制御されています。", ephemeral: true);
                         return;
