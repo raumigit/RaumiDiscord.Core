@@ -41,6 +41,17 @@ type Props = {
     onClick: () => Promise<void>;
 };
 
+// UTCプラグインを読み込み
+dayjs.extend(utc);
+// timezoneプラグインを読み込み
+dayjs.extend(timezone);
+// 日本語化
+dayjs.locale('ja');
+// タイムゾーンのデフォルトをJST化
+dayjs.tz.setDefault('Asia/Tokyo');
+
+
+
 const initialValues = [
     {
         id: 1,
@@ -62,7 +73,7 @@ interface Column {
     minWidth?: number;
     align?: 'right';
     format?: (value: number) => string;
-    renderCell?;
+    renderCell?: (value: any, row?: any) => React.ReactNode;
 }
 
 const columns: Column[] = [
@@ -70,11 +81,11 @@ const columns: Column[] = [
         id: 'url',
         label: 'URL',
         minWidth: 200,
-        // renderCell: (params) => (
-        //     <Link href={params} target="_blank" rel="noopener noreferrer">
-        //       {params}
-        //     </Link>
-        //   ),
+        renderCell: (value, row) => (
+            <Link href={value} target="_blank" rel="noopener noreferrer">
+                {value}
+            </Link>
+        ),
     },
     {
         id: 'urlType',
@@ -85,11 +96,24 @@ const columns: Column[] = [
         id:'ttl',
         label: '有効期限',
         minWidth: 100,
+        renderCell: (value) => {
+            const localDate = dayjs.tz(value,'utc').tz().format('YYYY/MM/DD HH:mm:ss');
+
+            return localDate;
+        },
     },
     {
         id:'discordUser',
         label: 'DiscordUser',
         minWidth: 100,
+        renderCell: (value) => {
+            // Map Discord user IDs to usernames
+            const userMap = {
+                "558636367106539521": "raumi2019"
+            };
+            
+            return userMap[value] || value;
+        },
     }
 ];
 
@@ -200,11 +224,10 @@ export const App = () => {
         setUrltype(event.target.value);
     };
 
-    dayjs.extend(utc);
-    dayjs.extend(timezone);
     const [value, setValue] = React.useState<Dayjs | null>(
-        dayjs.utc('2025-03-24T16:00:00'),
+        dayjs.utc(),
     );
+    
 
     return (
         <div>
@@ -245,7 +268,7 @@ export const App = () => {
                 <div>
                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                         <Stack spacing={2} sx={{ maxWidth: 270, marginRight: 2, marginBottom: 2, margintop: 2 }}>
-                            <DateTimePicker format="YYYY/MM/DD HH:MM:ss" value={value} onChange={setValue} timezone="system" />
+                            <DateTimePicker format="YYYY/MM/DD HH:mm:ss" value={value} onChange={setValue} timezone="system" />
                         </Stack>
                     </LocalizationProvider>
                 </div>
@@ -267,25 +290,27 @@ export const App = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {urlCodes
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.urlType}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                          <TableCell key={column.id} align={column.align} component="a" href={row.url} target="_blank">
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
+  {urlCodes
+    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    .map((row) => {
+      return (
+        <TableRow hover role="checkbox" tabIndex={-1} key={row.id || row.url}>
+          {columns.map((column) => {
+            const value = row[column.id];
+            return (
+              <TableCell key={column.id} align={column.align}>
+                {column.renderCell ? column.renderCell(value, row) : (
+                  column.format && typeof value === 'number'
+                    ? column.format(value)
+                    : value
+                )}
+              </TableCell>
+            );
+          })}
+        </TableRow>
+      );
+    })}
+</TableBody>
         </Table>
       </TableContainer>
       <TablePagination
