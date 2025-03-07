@@ -1,43 +1,36 @@
-name: Release Drafter
+name: Create Release Note
 
 on:
-  push:
-    # オプション。デフォルトはすべて。
+  pull_request:
+    # PRが閉じたタイミングで実行
+    types:
+      - closed
+    # mainブランチのみを対象とする
     branches:
       - main
-      - master
-
-  # pull_requestイベントはオートラベリングにのみ必要です。
-  pull_request:
-    # アクションが扱うのは以下のタイプだけですが、デフォルトですべてにすることもできます。
-    types: [opened, reopened, synchronize]
-  # pull_request_targetイベントは、autolabelerがフォークからのPRをサポートするために必要です。
-  # pull_request_target:
-  #   types: [opened, reopened, synchronize]
 
 permissions:
   contents: write
 
 jobs:
-  update_release_draft:
+  release:
     permissions:
-      # githubリリースを作成するには、書き込み権限が必要です。
+      # write permission is required to create a github release
       contents: write
-      # オートラベラーには書き込み許可が必要
-      # そうでない場合は、少なくとも
+      # リリースノートを書くためwrite用のpermissionを付与
       pull-requests: write
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release')
     runs-on: ubuntu-latest
     steps:
-      # (オプション) GitHub Enterprise では GHE_HOST 変数の設定が必要です。
-      #- name: Set GHE_HOST
-      #  run: |
-      #    echo "GHE_HOST=${GITHUB_SERVER_URL##https:\/\/}" >> $GITHUB_ENV
-
-      # プルリクエストが "master "にマージされる際に、次のリリースノートを作成します。
-      - uses: release-drafter/release-drafter@v6
-        # (オプション) .github/ からの相対パスで、使用する設定名を指定します。デフォルト: release-drafter.yml
-        # with:
-        #   config-name: my-config.yml
-        #   disable-autolabeler: true
+      - name: Create Release Tag And Note
         env:
+          # このトークンは自動生成されるのでsecretsを登録する必要ない
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # PRのタイトルと内容をRelease内容に追加する
+          RELEASE_TAG: ${{ github.event.pull_request.title }}
+        uses: release-drafter/release-drafter@v5
+        with:
+          tag: ${{ env.RELEASE_TAG }}
+          name: Release ${{ env.RELEASE_TAG }}
+          version: ${{ env.RELEASE_TAG }}
+          publish: false
