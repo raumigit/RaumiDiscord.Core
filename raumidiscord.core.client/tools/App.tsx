@@ -103,7 +103,10 @@ export const App = () => {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [text, setText] = useState("");
     const [urltype, setUrltype] = React.useState('URL');
-    const [value, setValue] = React.useState<Dayjs | null>(dayjs.utc().add(7, 'day'));
+    // Modify the initialization for the value state to use local time:
+    const [value, setValue] = React.useState<Dayjs | null>(
+        dayjs().tz('Asia/Tokyo').add(7, 'day')
+    );
     
     // モーダル関連のstate
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -131,11 +134,9 @@ export const App = () => {
             label: 'URL',
             minWidth: 200,
             renderCell: (value, row) => {
-                const displayUrl = row.urlType === 'URL' ? value : 
-                    (URL_TYPE_BASES[row.urlType] ? URL_TYPE_BASES[row.urlType] + value : value);
                 return (
-                    <Link href={displayUrl} target="_blank" rel="noopener noreferrer">
-                        {displayUrl}
+                    <Link href={value} target="_blank" rel="noopener noreferrer">
+                        {value}
                     </Link>
                 );
             },
@@ -146,16 +147,16 @@ export const App = () => {
             minWidth: 50,
         },
         {
-            id:'ttl',
+            id: 'ttl',
             label: '有効期限',
             minWidth: 100,
             renderCell: (value) => {
-                const localDate = dayjs.tz(value,'utc').tz().format('YYYY/MM/DD HH:mm:ss');
+                const localDate = dayjs.tz(value, 'utc').tz().format('YYYY/MM/DD HH:mm:ss');
                 return localDate;
             },
         },
         {
-            id:'discordUser',
+            id: 'discordUser',
             label: 'DiscordUser',
             minWidth: 100,
             renderCell: (value) => {
@@ -212,7 +213,9 @@ export const App = () => {
         setEditingItem(item);
         setText(item.url);
         setUrltype(item.urlType);
-        setValue(dayjs.tz(item.ttl, 'utc'));
+        // Convert the stored UTC time to local time for display
+        setValue(dayjs.utc(item.ttl).tz('Asia/Tokyo'));
+  
         handleOpenEditModal();
     };
     
@@ -240,17 +243,17 @@ export const App = () => {
     // バリデーション関数
     const validateForm = (): boolean => {
         let valid = true;
-        const newErrors = {
-            url: '',
-            urlType: '',
-            ttl: ''
-        };
+        const newErrors = { url: '', urlType: '', ttl: '' };
         
         // URLタイプのバリデーション
         if (!urltype) {
             newErrors.urlType = 'URLタイプは必須です';
             valid = false;
         }
+
+        // URL または コードのバリデーション
+        const isValidUrl = text.startsWith('http://') || text.startsWith('https://');
+        const isValidCode = /^[A-Z0-9]+$/.test(text);
         
         // URLバリデーション
         if (!text) {
@@ -264,9 +267,8 @@ export const App = () => {
             }
         } else {
             // コード形式のバリデーション（GI, HSR, ZZZ）
-            const codeRegex = /^[A-Z0-9]+$/;
-            if (!codeRegex.test(text)) {
-                newErrors.url = 'コードは大文字アルファベットと数字のみ使用できます';
+            if (!isValidUrl && !isValidCode) {
+                newErrors.url = 'URL（http:// または https://）または コード（大文字アルファベットと数字のみ）を入力してください';
                 valid = false;
             }
         }
@@ -289,18 +291,22 @@ export const App = () => {
         if (!validateForm()) {
             return;
         }
-        
+
+            
         // 日時がnullの場合のデフォルト値を設定
-        const timeLimit = value ? value.format('YYYY-MM-DDTHH:mm:ss') : dayjs.utc().add(7, 'day').format('YYYY-MM-DDTHH:mm:ss');
+        const timeLimit = value
+            ? value.tz('Asia/Tokyo').utc().format('YYYY-MM-DDTHH:mm:ss')
+            : dayjs().tz('Asia/Tokyo').add(7, 'day').utc().format('YYYY-MM-DDTHH:mm:ss');
         
         // URLを適切に処理
         let processedUrl = text;
-        
-        // もしURLタイプがURL以外の場合、ベースURLは保存せず、コードのみを保存
-        // API側でベースURLと結合する必要はなし
+
+        if (urltype !== 'URL' && URL_TYPE_BASES[urltype] && !text.startsWith('http')) {
+            processedUrl = `${URL_TYPE_BASES[urltype]}${text}`;
+        }
     
         // 新しいアイテムのオブジェクトを作成
-        const newCodes = { url: processedUrl, urlType: urltype, timeLimit: timeLimit };
+        const newCodes = { url: processedUrl, urlType: urltype, ttl: timeLimit };
 
         try {
             // APIにPOSTリクエスト
@@ -331,9 +337,10 @@ export const App = () => {
                 message: '追加中にエラーが発生しました',
                 severity: 'error'
             });
-        }
+        };
     };
     
+
     // データ更新処理
     const handleUpdate = async () => {
         if (!validateForm() || !editingItem?.id) {
@@ -341,16 +348,21 @@ export const App = () => {
         }
         
         // 日時の処理
-        const timeLimit = value ? value.format('YYYY-MM-DDTHH:mm:ss') : dayjs.utc().add(7, 'day').format('YYYY-MM-DDTHH:mm:ss');
+        const timeLimit = value
+            ? value.tz('Asia/Tokyo').utc().format('YYYY-MM-DDTHH:mm:ss')
+            : dayjs().tz('Asia/Tokyo').add(7, 'day').utc().format('YYYY-MM-DDTHH:mm:ss');
         
         // URLを適切に処理
         let processedUrl = text;
+        if (urltype !== 'URL' && URL_TYPE_BASES[urltype]) {
+            processedUrl = `${URL_TYPE_BASES[urltype]}${text}`;
+        }
         
         // 更新対象のアイテムを作成
-        const updatedItem = { 
+        const updatedItem = {
             ...editingItem,
-            url: processedUrl, 
-            urlType: urltype, 
+            url: processedUrl,
+            urlType: urltype,
             timeLimit: timeLimit,
             ttl: timeLimit // APIの期待する形式に合わせる
         };
@@ -360,8 +372,8 @@ export const App = () => {
             await axios.put(`../api/UrlDataModels/${editingItem.id}`, updatedItem);
 
             // stateを更新
-            const updatedCodes = urlCodes.map(code => 
-                code.id === editingItem.id ? {...code, url: processedUrl, urlType: urltype, ttl: timeLimit} : code
+            const updatedCodes = urlCodes.map(code =>
+                code.id === editingItem.id ? { ...code, url: processedUrl, urlType: urltype, ttl: timeLimit } : code
             );
             setUrlCodes(updatedCodes);
             
@@ -387,7 +399,7 @@ export const App = () => {
     
     // スナックバーを閉じる
     const handleCloseSnackbar = () => {
-        setSnackbar({...snackbar, open: false});
+        setSnackbar({ ...snackbar, open: false });
     };
 
     // ページ初期表示時の処理
@@ -564,11 +576,11 @@ export const App = () => {
                             <div>
                                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                                     <Stack spacing={2} sx={{ maxWidth: 270, marginRight: 2, marginBottom: 2, margintop: 2 }}>
-                                        <DateTimePicker 
-                                            format="YYYY/MM/DD HH:mm:ss" 
-                                            value={value} 
-                                            onChange={setValue} 
-                                            timezone="system"
+                                        <DateTimePicker
+                                            format="YYYY/MM/DD HH:mm:ss"
+                                            value={value}
+                                            onChange={setValue}
+                                            timezone="Asia/Tokyo"
                                             slotProps={{
                                                 textField: {
                                                     error: !!errors.ttl,
@@ -637,11 +649,11 @@ export const App = () => {
                             <div>
                                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                                     <Stack spacing={2} sx={{ maxWidth: 270, marginRight: 2, marginBottom: 2, margintop: 2 }}>
-                                        <DateTimePicker 
-                                            format="YYYY/MM/DD HH:mm:ss" 
-                                            value={value} 
-                                            onChange={setValue} 
-                                            timezone="system"
+                                        <DateTimePicker
+                                            format="YYYY/MM/DD HH:mm:ss"
+                                            value={value}
+                                            onChange={setValue}
+                                            timezone="Asia/Tokyo"
                                             slotProps={{
                                                 textField: {
                                                     error: !!errors.ttl,
@@ -674,5 +686,6 @@ export const App = () => {
         </div>
     );
 };
+
 
 export default App;
