@@ -20,7 +20,7 @@ jobs:
       - name: checkout project
         uses: actions/checkout@v4.2.2
       - name: generate a release note and a version tag
-        uses: release-drafter/release-drafter@v6.0.0
+        uses: release-drafter/release-drafter@v6.1.0
         with:
           tag: v${{ inputs.release_version }}
           publish: false
