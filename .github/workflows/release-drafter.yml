@@ -1,10 +1,7 @@
 name: Release (master)
 on:
-  workflow_dispatch:
-    inputs:
-      release_version:
-        description: "release version"
-        required: true
+  push:
+    branches: [main]
 
 
 permissions:
