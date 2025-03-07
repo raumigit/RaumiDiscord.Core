@@ -1,9 +1,11 @@
 name: Release (master)
 on:
-  push:
-    # オプション。デフォルトはすべて。
-    branches:
-      - master
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "release version"
+        required: true
+
 
 permissions:
   contents: write
