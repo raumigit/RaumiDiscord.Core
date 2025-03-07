@@ -1,32 +1,38 @@
-import { useState, useEffect, ChangeEvent, } from "react";
-import axios from "axios";
-import * as React from 'react';
-import { useParams } from 'react-router-dom';
-import { Fab, TextField } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import dayjs, { Dayjs } from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import MenuIcon from '@mui/icons-material/Menu';
 import SendIcon from '@mui/icons-material/Send';
+import { Fab, TextField } from "@mui/material";
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import IconButton from '@mui/material/IconButton';
+import InputLabel from '@mui/material/InputLabel';
+import Link from "@mui/material/Link";
+import MenuItem from '@mui/material/MenuItem';
+import Modal from '@mui/material/Modal';
+import Paper from '@mui/material/Paper';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
 import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { TableVirtuoso, TableComponents } from 'react-virtuoso';
-import Link from "@mui/material/Link";
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import axios from "axios";
+import dayjs, { Dayjs } from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+import * as React from 'react';
+import { ChangeEvent, useEffect, useState, } from "react";
+import { useParams } from 'react-router-dom';
+
 
 type UrlCodes = {
     id?: number;
@@ -74,7 +80,7 @@ interface Column {
     minWidth?: number;
     align?: 'right';
     format?: (value: number) => string;
-    renderCell?: (value: any, row?: any) => React.ReactNode;
+    renderCell?: (value: never, row?: never) => React.ReactNode;
 }
 
 const columns: Column[] = [
@@ -130,6 +136,19 @@ function createData(
     return {
         url, urltype, ttl, discordUser };
 }
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 360,
+  bgcolor: 'background.paper',
+  border: '2px solid #7bb3ee',
+  boxShadow: 24,
+  p: 2,
+};
+
 
 function getQueryParams() {
     const params = new URLSearchParams(window.location.search);
@@ -248,6 +267,10 @@ export const App = () => {
         }
     };
 
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
     // ページ初期表示時の処理
     useEffect(() => {
         // APIからデータを取得する関数を定義
@@ -281,8 +304,88 @@ export const App = () => {
 
     return (
         <div>
+            <Box sx={{ flexGrow: 1 }}>
+                <AppBar position="static">
+                    <Toolbar>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{ mr: 2 }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                            ＞
+                        </Typography>
+                        <Button color="inherit">Login</Button>
+                    </Toolbar>
+                </AppBar>
+            </Box>
             <h1 id="tableLabel">HoYoTool</h1>
             <p>このコンポーネントは、サーバーからデータを取得しています。</p>
+            <div>
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            新しく追加する
+                        </Typography>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <div>
+                                <TextField
+                                    sx={{ width: "100%", maxWidth: 270, marginRight: 2, marginBottom: 2 }}
+                                    required
+                                    size=""
+                                    id="standard-basic"
+                                    label="URL"
+                                    variant="standard"
+                                    onChange={handleChangeInput}
+                                    value={text}
+                                />
+                                <FormControl>
+                                    <InputLabel id="demo-simple-select-label">URLType</InputLabel>
+                                    <Select
+                                        sx={{ minWidth: 270, marginRight: 2, marginBottom: 2 }}
+                                        size=""
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={urltype}
+                                        label="URLType"
+                                        onChange={handleChangeSelect}
+                                    >
+                                        <MenuItem value={"URL"}>URL</MenuItem>
+                                        <MenuItem value={"GI"}>原神</MenuItem>
+                                        <MenuItem value={"HSR"}>崩壊：スターレイル</MenuItem>
+                                        <MenuItem value={"ZZZ"}>ゼンレスゾーンゼロ</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                
+                                <div>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                        <Stack spacing={2} sx={{ maxWidth: 270, marginRight: 2, marginBottom: 2, margintop: 2 }}>
+                                            <DateTimePicker format="YYYY/MM/DD HH:mm:ss" value={value} onChange={setValue} timezone="system" />
+                                        </Stack>
+                                    </LocalizationProvider>
+                                </div>
+                                
+                                <Box justifyContent="flex-end" display="flex">
+                                    <Fab variant="extended" size="" color="primary" onClick={handleOpen} sx={{ marginRight: 1, marginBottom: 1 }} >
+                                        <SendIcon sx={{ mr: 1 }} />
+                                        追加
+                                    </Fab>
+                                </Box>
+                                <Typography align='left' sx={{ mr: 1 }} color='textSecondary'>枠外を押して閉じる</Typography>
+                            </div>
+                        </Typography>
+                    </Box>
+                </Modal>
+            </div>
             <div>
                 <TextField
                     sx={{ width: "100%", maxWidth: 270, marginRight: 2, marginBottom: 2 }}
@@ -311,7 +414,7 @@ export const App = () => {
                         <MenuItem value={"ZZZ"}>ゼンレスゾーンゼロ</MenuItem>
                     </Select>
                 </FormControl>
-                <Fab variant="extended" size="small" color="primary" onClick={onclick} sx={{ marginRight: 2, marginBottom: 2 }}>
+                <Fab variant="extended" size="small" color="primary" onClick={handleOpen} sx={{ marginRight: 2, marginBottom: 2 }}>
                     <SendIcon sx={{ mr: 1 }} />
                     追加
                 </Fab>
