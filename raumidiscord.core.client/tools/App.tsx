@@ -64,7 +64,7 @@ interface Column {
     minWidth?: number;
     align?: 'right';
     format?: (value: number) => string;
-    renderCell?: (value: any, row?: any) => React.ReactNode;
+    renderCell?: (value: string, row?: any) => React.ReactNode;
 }
 
 // URLタイプごとのベースURL定義
