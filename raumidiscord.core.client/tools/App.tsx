@@ -1,4 +1,4 @@
-import EditIcon from '@mui/icons-material/Edit';
+﻿import EditIcon from '@mui/icons-material/Edit';
 import MenuIcon from '@mui/icons-material/Menu';
 import SendIcon from '@mui/icons-material/Send';
 import { Fab, TextField } from "@mui/material";
@@ -64,7 +64,7 @@ interface Column {
     minWidth?: number;
     align?: 'right';
     format?: (value: number) => string;
-    renderCell?: (value: any, row?: any) => React.ReactNode;
+    renderCell?: (value: string, row?: any) => React.ReactNode;
 }
 
 // URLタイプごとのベースURL定義
@@ -253,7 +253,7 @@ export const App = () => {
 
         // URL または コードのバリデーション
         const isValidUrl = text.startsWith('http://') || text.startsWith('https://');
-        const isValidCode = /^[A-Z0-9]+$/.test(text);
+        const isValidCode = /^[A-Za-z0-9]+$/.test(text);
         
         // URLバリデーション
         if (!text) {
@@ -354,7 +354,7 @@ export const App = () => {
         
         // URLを適切に処理
         let processedUrl = text;
-        if (urltype !== 'URL' && URL_TYPE_BASES[urltype]) {
+        if (urltype !== 'URL' && URL_TYPE_BASES[urltype] && !processedUrl.startsWith("http")) {
             processedUrl = `${URL_TYPE_BASES[urltype]}${text}`;
         }
         
