@@ -1,33 +1,36 @@
-name: Release (master)
+name: Create Release Note
+
 on:
-  push:
-    # オプション。デフォルトはすべて。
+  pull_request:
+    # PRが閉じたタイミングで実行
+    types:
+      - closed
+    # mainブランチのみを対象とする
     branches:
-      - master
+      - main
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   release:
     permissions:
-      # githubリリースを作成するには、書き込み権限が必要です。
+      # write permission is required to create a github release
       contents: write
-      # オートラベリングには書き込みパーミッションが必要です。
-      # そうでない場合は、少なくとも読み込みパーミッションが必要
+      # リリースノートを書くためwrite用のpermissionを付与
       pull-requests: write
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release')
     runs-on: ubuntu-latest
     steps:
-      - name: checkout project
-        uses: actions/checkout@v4.2.2
-      - name: generate a release note and a version tag
+      - name: Create Release Tag And Note
+        env:
+          # このトークンは自動生成されるのでsecretsを登録する必要ない
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # PRのタイトルと内容をRelease内容に追加する
+          RELEASE_TAG: ${{ github.event.pull_request.title }}
         uses: release-drafter/release-drafter@v6
         with:
           tag: ${{ env.RELEASE_TAG }}
-          name: v${{ env.RELEASE_TAG }}
+          name: Release ${{ env.RELEASE_TAG }}
           version: ${{ env.RELEASE_TAG }}
           publish: false
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-      
