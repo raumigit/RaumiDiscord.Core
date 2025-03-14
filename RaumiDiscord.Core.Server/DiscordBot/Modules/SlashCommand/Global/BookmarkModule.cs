@@ -75,7 +75,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                         Console.WriteLine($"URL->{url}");
                     }
 
-                    if (Regex.IsMatch(url, "^[A-Z0-9]+$"))
+                    if (Regex.IsMatch(url, "^[A-Za-z0-9]+$"))
                     {
                         url = baseUrl + url;
                     }
