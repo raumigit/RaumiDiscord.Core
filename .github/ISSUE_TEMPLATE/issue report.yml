@@ -61,7 +61,7 @@ body:
         
         
     validations:
-      required: true
+      required: false
   - type: textarea
     id: actual-behavior
     attributes:
@@ -86,7 +86,6 @@ body:
       label: DeltaRaumi バージョン
       description: DeltaRaumiのバージョンは？
       options:
-        - 0.0.1.27
         - Master
         - Unstable
         - Older*
@@ -134,7 +133,7 @@ body:
         - ブラウザ [例：Firefox 91、Chrome 93、Safari 13］
         - ハードウェアアクセラレーション**： [例：なし、VAAPI、NVENC など]。
         - GPUモデル**： [例：なし、UHD630、GTX1050など]。
-        - インストールされているプラグイン [例：なし、ファンアート、アニメなど].
+        - インストールされているプラグイン [例：なし、など].
         - **リバースプロキシ**： [例：なし、nginx、apacheなど］
         - ベースURL**： [例：なし、あり：/example].
         - ネットワーク**： [例：ホスト、ブリッジ/NAT］
@@ -146,7 +145,6 @@ body:
         - Clients:
         - Browser:
         - FFmpeg Version:
-        - Playback Method:
         - Hardware Acceleration:
         - GPU Model:
         - Plugins:
