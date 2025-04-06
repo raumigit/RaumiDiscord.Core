@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /RaumiDiscord.Core.Server/Resources/Data/DeltaRaumiData.db
+/RaumiDiscord.Core.Server/Assets
+/RaumiDiscord.Core.Server/Temp/Discordicon/128
+/RaumiDiscord.Core.Server/Tests/namecard
