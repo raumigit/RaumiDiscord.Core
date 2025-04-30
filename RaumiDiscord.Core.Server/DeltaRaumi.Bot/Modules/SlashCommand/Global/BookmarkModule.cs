@@ -13,9 +13,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
     public class BookmarkModule : InteractionModuleBase<SocketInteractionContext>
     {
-        private readonly LoggingService LoggingService;
+        private readonly ImprovedLoggingService LoggingService;
         private readonly DeltaRaumiDbContext deltaRaumiDb;
-        public BookmarkModule(DeltaRaumiDbContext deltaRaumiDb,LoggingService logger)
+        public BookmarkModule(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logger)
         {
             this.deltaRaumiDb = deltaRaumiDb;
             this.LoggingService = logger;
@@ -42,7 +42,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(ttl))
                 {
                     await RespondAsync("URLと有効期限を指定してください。(有効期限：yyyy/MM/dd-HH:mm:sszzz)", ephemeral: true);
-
 
                     return;
                 }
@@ -79,7 +78,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     {
                         url = baseUrl + url;
                     }
-                    await LoggingService.LogGeneral($"URLがCodeだったため修正しました。");
+                    await LoggingService.Log($"URLがCodeだったため修正しました。", "hoyocode");
                 }
 
 
@@ -100,11 +99,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 if (Url_record.Any())
                 {
                     await RespondAsync("既に登録されています。", ephemeral: true);
+                    await LoggingService.Log($"登録済みのコード：{Url_record}", "hoyocode");
                     return;
                 }
                 deltaRaumiDb.UrlDataModels.Add(newEntry);
                 await deltaRaumiDb.SaveChangesAsync();
-                await RespondAsync($"登録完了: {urlType} - {url} (期限: <t:{unixExpirationTime}:R>)<@{discordUser}>");
+                await RespondAsync($"登録完了: {urlType} - {url} (期限: <t:{unixExpirationTime}:R>) 登録者：<@{discordUser}>");
+                await LoggingService.Log($"登録されたコード：{url}", "hoyocode");
             }
             else if (action == "get")
             {

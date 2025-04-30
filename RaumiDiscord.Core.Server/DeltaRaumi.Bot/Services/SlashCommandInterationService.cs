@@ -19,7 +19,7 @@ class SlashCommandInterationService
 {
     private readonly DeltaRaumiDbContext DbContext;
     private readonly DiscordSocketClient Client;
-    private readonly LoggingService LoggingService;
+    private readonly ImprovedLoggingService LoggingService;
     //private bool commandUpgrade = false;
 
     private ulong guildID { get; set; }
@@ -36,7 +36,7 @@ class SlashCommandInterationService
     private IAudioClient _audioClient;
 
 
-    public SlashCommandInterationService(DiscordSocketClient client, LoggingService logger, DeltaRaumiDbContext dbContext)
+    public SlashCommandInterationService(DiscordSocketClient client, ImprovedLoggingService logger, DeltaRaumiDbContext dbContext)
     {
         this.DbContext = dbContext;
         this.Client = client;
@@ -66,12 +66,13 @@ class SlashCommandInterationService
             //    await JoinVC(command_arg);
             //    break;
             default:
-                await LoggingService.LogGeneral($"このコマンドはギルドコマンドに存在しないためギルドコマンドとして実行されませんでした: {command_arg.CommandName}");
+
+                await LoggingService.Log($"このコマンドはギルドコマンドに存在しないためギルドコマンドとして実行されませんでした: {command_arg.CommandName}", "SlashCommandExcuted", ImprovedLoggingService.LogLevel.Warning);
                 break;
         }
     }
 
-    
+
 
     private async Task Client_GuildAvailadle(SocketGuild guild_arg)
     {
@@ -86,21 +87,21 @@ class SlashCommandInterationService
             }
             else
             {
-                await LoggingService.LogGeneral("ギルドコマンドの更新がスキップされました。");
+                await LoggingService.Log("ギルドコマンドの更新がスキップされました。", "Startup");
             }
         }
         catch (HttpException e)
         {
             //前回の謎の苦渋からHttpエラーをどうにかして吐くように変更(本来あるべき姿)
-            await LoggingService.LogGeneral($"コマンドの追加中にエラーが発生しました", LoggingService.LogGeneralSeverity.Error);
-            await LoggingService.LogGeneral(e.ToString(), LoggingService.LogGeneralSeverity.Fatal);
-            await LoggingService.LogGeneral(Newtonsoft.Json.JsonConvert.SerializeObject(e.Errors, Newtonsoft.Json.Formatting.Indented), LoggingService.LogGeneralSeverity.Fatal);
+            await LoggingService.Log($"コマンドの追加中にエラーが発生しました", "Startup", ImprovedLoggingService.LogLevel.Fatal);
+            await LoggingService.Log(e.ToString(), "Startup", ImprovedLoggingService.LogLevel.Fatal);
+            await LoggingService.Log(Newtonsoft.Json.JsonConvert.SerializeObject(e.Errors, Newtonsoft.Json.Formatting.Indented), "Startup", ImprovedLoggingService.LogLevel.Fatal);
             Environment.Exit(1);
             //続行させてもいいけどぶち切ったほうが良さそうと判断
         }
     }
 
-    
+
 
     /// <summary>
     /// ギルドコマンドを設定するためのリストが作られます。
@@ -123,7 +124,7 @@ class SlashCommandInterationService
         commands.Add(patBuilder);
         #endregion
 
-        
+
 
         List<SlashCommandProperties> slashCommandBuildCommands = new List<SlashCommandProperties>();
         foreach (SlashCommandBuilder builder1 in commands)

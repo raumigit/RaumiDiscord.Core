@@ -12,14 +12,14 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
 #nullable disable
         private readonly DiscordSocketClient Client;
         private readonly DeltaRaumiDbContext DeltaRaumiDbContext;
-        private readonly LoggingService LoggingService;
+        private readonly ImprovedLoggingService LoggingService;
 
         private Discord.Color RaumiMainColor = new Discord.Color(0x7bb3ee);
         private Discord.Color RaumiSubColor = new Discord.Color(0xf02443);
 
         public Configuration configuration { get; set; }
 
-        public ComponentInteractionService(DiscordSocketClient client, DeltaRaumiDbContext deltaRaumiDbContext, LoggingService loggingService)
+        public ComponentInteractionService(DiscordSocketClient client, DeltaRaumiDbContext deltaRaumiDbContext, ImprovedLoggingService loggingService)
         {
             Client = client;
             DeltaRaumiDbContext = deltaRaumiDbContext;
@@ -52,7 +52,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                     await component.FollowupAsync(embed: builder.Build(), ephemeral: true) ;
                     break;
                 default:
-                    await LoggingService.LogGeneral("通常では到達できないエラー(E-5900)",LoggingService.LogGeneralSeverity.Error);
+                    await LoggingService.Log("通常では到達できないエラー(E-5900)", "InteractionButton", ImprovedLoggingService.LogLevel.Error);
                     break;
             }
         }
@@ -113,7 +113,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                             builder.WithAuthor(component.User);
                             builder.WithTitle("サーバーの状態");
                             builder.WithDescription(
-                                "バージョン：0.1.2.2 (2025-03-14-21:43)\n " +
+                                "バージョン：0.1.2.3 (2025-04-16-5:10)\n " +
                                 "外部連携：null\n" +
                                 "読み上げエンジン：null\n" +
                                 "WebGUI：null" +

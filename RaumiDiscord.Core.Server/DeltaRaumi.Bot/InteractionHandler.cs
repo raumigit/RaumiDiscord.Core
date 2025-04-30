@@ -12,19 +12,25 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         private readonly InteractionService _handler;
         private readonly IServiceProvider _services;
         private readonly List<ulong> _guildIds; // ギルドIDリスト
+        private readonly ImprovedLoggingService _logger; // 追加: ロギングサービス
 
-        //private readonly IConfiguration _configuration;
 
-        public InteractionHandler(DiscordSocketClient client, InteractionService handler, IServiceProvider services, IConfiguration config, List<ulong>? guildIds)
+        public InteractionHandler(
+            DiscordSocketClient client,
+            InteractionService handler,
+            IServiceProvider services,
+            IConfiguration config,
+            List<ulong>? guildIds,
+            ImprovedLoggingService logger) // 追加: ロギングサービスのパラメータ
         {
             _client = client;
-            this._handler = handler;
+            _handler = handler;
             _services = services;
             _guildIds = guildIds;
-            //_configuration = config;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger)); // ロギングサービスをnullチェック
         }
 
-        public static Task Log(LogMessage msg) => Task.Run(() => Console.WriteLine(msg.ToString()));
+        
 
         public async Task InitializeAsync()
         {
@@ -40,13 +46,31 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
             // コマンド実行の結果も処理します
             _handler.InteractionExecuted += HandleInteractionExecute;
-            await Log(new LogMessage(LogSeverity.Info, "InteractionHandler", $"Completed"));
+            await _logger.Log("Initialization completed", "InteractionHandler", ImprovedLoggingService.LogLevel.Info);
         }
 
         private Task LogAsync(LogMessage log)
         {
-            Console.WriteLine(new LogMessage(LogSeverity.Info, "Log", $"{log}"));
+            // LogMessageをImprovedLoggingServiceに変換して使用
+            ImprovedLoggingService.LogLevel level = DiscordLoggingAdapter.ConvertDiscordLogLevel(log.Severity);
+            
+            _logger.Log($"{log.Message} | {log.Exception}", $"{log.Source}", level);
             return Task.CompletedTask;
+        }
+
+        // Discord SDKのログレベルを変換するヘルパーメソッド
+        private ImprovedLoggingService.LogLevel ConvertDiscordLogLevel(LogSeverity severity)
+        {
+            return severity switch
+            {
+                LogSeverity.Critical => ImprovedLoggingService.LogLevel.Fatal,
+                LogSeverity.Error => ImprovedLoggingService.LogLevel.Error,
+                LogSeverity.Warning => ImprovedLoggingService.LogLevel.Warning,
+                LogSeverity.Info => ImprovedLoggingService.LogLevel.Info,
+                LogSeverity.Debug => ImprovedLoggingService.LogLevel.Debug,
+                LogSeverity.Verbose => ImprovedLoggingService.LogLevel.Verbose,
+                _ => ImprovedLoggingService.LogLevel.Info
+            };
         }
 
         private async Task RegisterCommandsAsync()
@@ -54,7 +78,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             // グローバルコマンド登録
             await RegisterGlobalCommandsAsync();
 
-            // ギルドごとのコマンド登録
+            // ギルドごとのコマンド登録(実行はしない)
             //foreach (var guildId in _guildIds)
             //{
             //    await RegisterGuildCommandsAsync(guildId);
@@ -64,14 +88,14 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         private async Task RegisterGlobalCommandsAsync()
         {
             await _handler.RegisterCommandsGloballyAsync();
-            await Log(new LogMessage(LogSeverity.Info, "InteractionHandler", "Registered global commands"));
+            await _logger.Log("Registered global commands", "InteractionHandler", ImprovedLoggingService.LogLevel.Info);
         }
 
-        public async Task RegisterGuildCommandsAsync(ulong guildId)
-        {
-            await _handler.RegisterCommandsToGuildAsync(guildId);
-            await Log(new LogMessage(LogSeverity.Info, "InteractionHandler", $"Registered commands for guild: {guildId}"));
-        }
+        //public async Task RegisterGuildCommandsAsync(ulong guildId)
+        //{
+        //    await _handler.RegisterCommandsToGuildAsync(guildId);
+        //    await Log(new LogMessage(LogSeverity.Info, "InteractionHandler", $"Registered commands for guild: {guildId}"));
+        //}
 
         private async Task HandleInteraction(SocketInteraction interaction)
         {
@@ -89,15 +113,18 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                     switch (result.Error)
                     {
                         case InteractionCommandError.UnmetPrecondition:
-                            // 埋め込む
-                            await Log(new LogMessage(LogSeverity.Warning, "InteractionHandler", $"{result.ErrorReason}"));
+                            // 警告をログに記録
+                            await _logger.Log($"{result.ErrorReason}", "InteractionHandler", ImprovedLoggingService.LogLevel.Warning);
                             break;
                         default:
                             break;
                     }
             }
-            catch
+            catch (Exception ex)
             {
+                // エラーをログに記録
+                await _logger.Log($"Error handling interaction: {ex.Message}", "InteractionHandler", ImprovedLoggingService.LogLevel.Error);
+
                 // スラッシュコマンドの実行が失敗した場合、元の対話確認が残る可能性が高くなります。元の対話確認を削除することをおすすめします。
                 // 応答を返すか、少なくともコマンドの実行中に問題が発生したことをユーザーに知らせます。
                 if (interaction.Type is InteractionType.ApplicationCommand)
@@ -111,8 +138,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 switch (result.Error)
                 {
                     case InteractionCommandError.UnmetPrecondition:
-                        // implement
-                        Log(new LogMessage(LogSeverity.Warning, "InteractionHandler", $"{result.ErrorReason}"));
+                        // 警告をロギングサービスに記録
+                        _logger.Log(result.ErrorReason, "InteractionHandler", ImprovedLoggingService.LogLevel.Warning);
                         break;
                     default:
                         break;

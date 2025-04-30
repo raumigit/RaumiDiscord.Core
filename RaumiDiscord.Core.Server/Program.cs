@@ -1,9 +1,10 @@
-
+﻿
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.DataContext;
 using RaumiDiscord.Core.Server.DiscordBot;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,13 @@ app.UseSwaggerUI(options =>
 
 
 app.MapControllers();
+if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+{
+    Console.Error.WriteLine("このシステムのターゲットはWindowsのため予期されない動作を停止します。");
+    // crashReport :
+    Environment.Exit(-1);
+    return;
+}
 
 Task? task = Task.Run(() =>
 {

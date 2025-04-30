@@ -14,20 +14,20 @@
   <ItemGroup>
     <Compile Remove="DeltaRaumi.Common\**" />
     <Compile Remove="DeltaRaumi.Controller\**" />
-    <Compile Remove="DiscordBot\Configuration\**" />
-    <Compile Remove="DiscordBot\SysFile\**" />
+    <Compile Remove="DeltaRaumi.Bot\Configuration\**" />
+    <Compile Remove="DeltaRaumi.Bot\SysFile\**" />
     <Content Remove="DeltaRaumi.Common\**" />
     <Content Remove="DeltaRaumi.Controller\**" />
-    <Content Remove="DiscordBot\Configuration\**" />
-    <Content Remove="DiscordBot\SysFile\**" />
+    <Content Remove="DeltaRaumi.Bot\Configuration\**" />
+    <Content Remove="DeltaRaumi.Bot\SysFile\**" />
     <EmbeddedResource Remove="DeltaRaumi.Common\**" />
     <EmbeddedResource Remove="DeltaRaumi.Controller\**" />
-    <EmbeddedResource Remove="DiscordBot\Configuration\**" />
-    <EmbeddedResource Remove="DiscordBot\SysFile\**" />
+    <EmbeddedResource Remove="DeltaRaumi.Bot\Configuration\**" />
+    <EmbeddedResource Remove="DeltaRaumi.Bot\SysFile\**" />
     <None Remove="DeltaRaumi.Common\**" />
     <None Remove="DeltaRaumi.Controller\**" />
-    <None Remove="DiscordBot\Configuration\**" />
-    <None Remove="DiscordBot\SysFile\**" />
+    <None Remove="DeltaRaumi.Bot\Configuration\**" />
+    <None Remove="DeltaRaumi.Bot\SysFile\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,7 +49,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="Nett" Version="0.15.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.2.efcore.9.0.0" />
+    <PackageReference Include="SixLabors.Fonts" Version="2.1.2" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
     <PackageReference Include="SQLite" Version="3.13.0" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.0.0" />
@@ -63,7 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DiscordBot\Data\Interfaces\" />
+    <Folder Include="DeltaRaumi.Bot\Data\Interfaces\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

@@ -2,7 +2,7 @@
 using Discord.Interactions;
 using Discord.WebSocket;
 
-namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Local
+namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
     //public class VoiceChangeRegionModule
 
@@ -47,13 +47,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Local
             SocketVoiceChannel? voiceChannel = null)
         {
             var user = Context.User as SocketGuildUser;
-            if (user == null || (!user.GuildPermissions.ManageChannels && !user.Roles.Any(r => r.Permissions.ManageChannels)))
+            if (user == null || !user.GuildPermissions.ManageChannels && !user.Roles.Any(r => r.Permissions.ManageChannels))
             {
                 await RespondAsync("このコマンドを使用するのに必要な権限がありません。", ephemeral: true);
                 return;
             }
 
-            var userVoiceChannel = (user.VoiceChannel as SocketVoiceChannel);
+            var userVoiceChannel = user.VoiceChannel as SocketVoiceChannel;
             if (voiceChannel == null)
             {
                 voiceChannel = userVoiceChannel;
@@ -79,7 +79,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Local
             IParameterInfo parameter,
             IServiceProvider services)
         {
-            var guild = (context.Guild as SocketGuild);
+            var guild = context.Guild as SocketGuild;
             if (guild == null)
                 return Task.FromResult(AutocompletionResult.FromSuccess());
 

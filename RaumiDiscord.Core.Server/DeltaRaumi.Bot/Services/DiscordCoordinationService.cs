@@ -9,10 +9,10 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         private readonly DiscordSocketClient Client;
         private readonly SlashCommandInterationService SlashCommandService;
         private readonly ComponentInteractionService ComponentInteractionService;
-        private readonly LoggingService LoggingService;
+        private readonly ImprovedLoggingService LoggingService;
         private readonly WelcomeMessageService WelcomeMessageService;
         public Configuration config { get; set; }
-        public DiscordCoordinationService(DiscordSocketClient client, SlashCommandInterationService slashCommandService, ComponentInteractionService componentInteractionService, LoggingService loggingService, WelcomeMessageService welcomeMessageService)
+        public DiscordCoordinationService(DiscordSocketClient client, SlashCommandInterationService slashCommandService, ComponentInteractionService componentInteractionService, ImprovedLoggingService loggingService, WelcomeMessageService welcomeMessageService)
         {
             Client = client;
             SlashCommandService = slashCommandService;
@@ -27,10 +27,10 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         {
             config = new Configuration().GetConfig();
             string game = config.Setting?.CustomStatusGame ?? "null";
-            Console.WriteLine(game??="null!");
+            Console.WriteLine(game ??= "null!");
             await Client.SetGameAsync(game);
-            await LoggingService.LogGeneral("Startup Complete");
-            await LoggingService.LogGeneral($"Logged in as {Client.CurrentUser.Username}");
+            await LoggingService.Log("Startup Complete", "Startup");
+            await LoggingService.Log($"Logged in as {Client.CurrentUser.Username}", "Startup");
         }
     }
 }
