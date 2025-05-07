@@ -4,11 +4,19 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Services
 {
+    /// <summary>
+    /// MessageServiceは、Discordのメッセージを処理するためのサービスです。
+    /// </summary>
     public class MessageService
     {
         private readonly ImprovedLoggingService _logger;
         private readonly DiscordSocketClient _client;
 
+        /// <summary>
+        /// MessageServiceのコンストラクター
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="logging"></param>
         public MessageService(DiscordSocketClient client, ImprovedLoggingService logging)
         {
             _client = client;
@@ -18,7 +26,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             //_client.MessageReceived += GetMessageReceivedAsync;
         }
 
-
+        /// <summary>
+        /// GetMessageReceivedAsyncは、メッセージを受信したときに呼び出されるメソッドです。
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public async Task GetMessageReceivedAsync(SocketMessage message)
         {
             if (true)
@@ -68,6 +80,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                 
             }
         }
+
+        /// <summary>
+        /// LevelsHandlerは、メッセージを受信したときにレベルアップの処理を行います。
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public async Task LevelsHandler(SocketMessage message)
         {
             await LevelService.LevelsProsessAsync(message);

@@ -17,20 +17,44 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers
         /// </summary>
         public enum LogLevel
         {
-            Fatal,  // システムが停止するような致命的なエラー
-            Error,  // 機能が正常に動作しないエラー
-            Alert,  // 緊急対応が必要な状況
-            Warning, // 警告が必要な状況
-            Notice, // 重要だが緊急ではない通知
-            Info,   // 通常の情報メッセージ
-            Debug,  // デバッグ情報
-            Verbose // 詳細なデバッグ情報
+            /// <summary>
+            /// 致命的なエラー。システムが停止するようなエラー
+            /// </summary>
+            Fatal,
+            /// <summary>
+            /// エラー。機能が正常に動作しないエラー
+            /// </summary>
+            Error,
+            /// <summary>
+            /// 警告。注意が必要な状況
+            /// </summary>
+            Alert,
+            /// <summary>
+            /// 警告。注意が必要な状況
+            /// </summary>
+            Warning,
+            /// <summary>
+            /// 通知。重要だが緊急ではない通知
+            /// </summary>
+            Notice,
+            /// <summary>
+            /// 情報。通常の情報メッセージ
+            /// </summary>
+            Info,
+            /// <summary>
+            /// デバッグ情報。開発者向けの詳細な情報
+            /// </summary>
+            Debug,
+            /// <summary>
+            /// 詳細なデバッグ情報。開発者向けの詳細な情報
+            /// </summary>
+            Verbose
         }
 
         /// <summary>
         /// ロギングサービスのコンストラクター
         /// </summary>
-        public ImprovedLoggingService(string logDirectory = null)
+        public ImprovedLoggingService(string? logDirectory = null)
         {
             // ログディレクトリの設定（指定がなければデフォルトディレクトリを使用）
             _logDirectory = logDirectory ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");

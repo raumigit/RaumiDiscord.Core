@@ -4,14 +4,17 @@ using System.Diagnostics;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
+    /// <summary>
+    /// VoiceChannelJoinModuleは、ボイスチャンネルに参加するためのモジュールです。
+    /// </summary>
     public class VoiceChannelJoinModule : InteractionModuleBase<SocketInteractionContext>
     {
         /// <summary>
         /// 音声チャンネルに参加します。
         /// </summary>
         /// <returns>非同期操作を表すタスク</returns>
-        [SlashCommand("join","BOTをボイスチャンネルに呼び出す",runMode: Discord.Interactions.RunMode.Async)]
-        public async Task BotJoinAsync(IVoiceChannel channel =null)
+        [SlashCommand("join", "BOTをボイスチャンネルに呼び出す", runMode: Discord.Interactions.RunMode.Async)]
+        public async Task BotJoinAsync(IVoiceChannel? channel = null)
         {
             channel = channel ?? (Context.User as IGuildUser)?.VoiceChannel;
             if (channel == null)
@@ -24,7 +27,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             //throw new NotImplementedException();
         }
 
-        private Process CreateStream(string path)
+        private static Process CreateStream(string path)
         {
             return Process.Start(new ProcessStartInfo
             {

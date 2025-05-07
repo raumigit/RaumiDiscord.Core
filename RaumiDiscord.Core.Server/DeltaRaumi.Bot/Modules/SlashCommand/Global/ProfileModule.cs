@@ -7,11 +7,20 @@ using SixLabors.ImageSharp.Processing;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
+    /// <summary>
+    ///     ProfileModuleは、ユーザーのプロフィールに関する操作を提供します。
+    /// </summary>
     public class ProfileModule 
     {
+        /// <summary>
+        ///     Profileは、ユーザーのプロフィールに関する操作を提供します。
+        /// </summary>
         [Group("profile", "プロフィールに関する操作が行えます。")]
-        public class profile : InteractionModuleBase<SocketInteractionContext>
+        public class Profile : InteractionModuleBase<SocketInteractionContext>
         {
+            /// <summary>
+            ///     プロフィールカードを生成するかどうかのフラグ
+            /// </summary>
             public bool fileUpload = false;
 
             //[SlashCommand("generate", "名刺を出力します。")]
@@ -100,8 +109,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             //    //throw new NotImplementedException();
             //}
 
+            /// <summary>
+            /// /// プロフィールカードを生成します。
+            /// </summary>
+            /// <param name="comment"></param>
+            /// <returns></returns>
             [SlashCommand("generate", "プロフィールカードを出力します。コメントをオプションで追加できます。")]
-            public async Task Generate([Summary("Coment", "自由にコメントをいれることができます。")] string comment = null)
+            public async Task Generate([Summary("Coment", "自由にコメントをいれることができます。")] string? comment = null)
             {
                 
                 string background = @".\Assets\Image\default_bg.png";
@@ -198,6 +212,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 }
             }
 
+            /// <summary>
+            /// プロフィールの背景をデフォルトの画像に変更します。
+            /// </summary>
+            /// <returns></returns>
+            /// <exception cref="NotImplementedException"></exception>
             [SlashCommand("default-bg", "背景をデフォルトの画像へ変更します。")]
             public async Task DefaultBg() 
             {
@@ -205,6 +224,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 throw new NotImplementedException();
             }
 
+            /// <summary>
+            /// プロフィールの背景を指定したURLの画像に変更します。
+            /// </summary>
+            /// <param name="BackgraundUrl"></param>
+            /// <returns></returns>
+            /// <exception cref="NotImplementedException"></exception>
             [SlashCommand("set-bg", "背景をコマンド経由で設定します。")]
             public async Task SetBg([Summary("BackgraundUrl", "Urlで背景画像を設定することができます。")] string BackgraundUrl)
             {
@@ -212,7 +237,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 await FollowupAsync("実装までお待ち下さい。");
                 throw new NotImplementedException();
             }
-            
+
+            /// <summary>
+            /// /// プロフィールの詳細な編集がWebから行えます。
+            /// </summary>
+            /// <returns></returns>
+            /// <exception cref="NotImplementedException"></exception>
             [SlashCommand("edit-web", "Webからプロフィールの詳細な編集ができます。")]
             public async Task EditWeb()
             {

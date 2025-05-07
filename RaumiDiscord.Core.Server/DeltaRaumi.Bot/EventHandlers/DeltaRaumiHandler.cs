@@ -12,27 +12,27 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
             //_provider = provider;
         }
         /// <summary>
-        ///     Gets the client.
+        /// Gets the client.
         /// </summary>
         private DiscordSocketClient _client { get; }
 
         /// <summary>
-        ///     Gets the event.
+        /// Gets the event.
         /// </summary>
         private DeltaRaumiEventHandler _event { get; }
 
         /// <summary>
-        ///     Gets the provider.
+        /// Gets the provider.
         /// </summary>
-        //private IServiceProvider _provider { get; }
+        private IServiceProvider _provider { get; }
 
         /// <summary>
-        ///     Initializes and logs the bot in.
+        /// Initializes and logs the bot in.
         /// </summary>
         /// <returns>
         ///     The <see cref="Task" />.
         /// </returns>
-        public async Task InitializeAsync()
+        public Task InitializeAsync()
         {
 
             // These are our EventSetup, each time one of these is triggered it runs the corresponding method. Ie, the bot receives a PartnerMessage we run Event.MessageReceivedAsync
@@ -42,6 +42,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
             
             //_client.ReactionAdded += _event.ReactionAddedAsync;　//<-使わない
             _client.MessageReceived += _event.MessageReceivedAsync;
+            return Task.CompletedTask;
 
             //_client.UserJoined += user => Events.UserJoinedAsync(_provider.GetRequiredService<DatabaseHandler>().Execute<GuildModel>(DatabaseHandler.Operation.LOAD, null, user.Guild.Id), user);
             //_client.UserLeft += user => Events.UserLeftAsync(_provider.GetRequiredService<DatabaseHandler>().Execute<GuildModel>(DatabaseHandler.Operation.LOAD, null, user.Guild.Id), user);

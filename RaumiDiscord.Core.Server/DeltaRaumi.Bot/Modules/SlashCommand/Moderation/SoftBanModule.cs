@@ -4,8 +4,18 @@ using Discord.WebSocket;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Modules.SlashCommand.Moderation
 {
+    /// <summary>
+    /// SoftBanModuleは、ユーザーをソフトバンするためのモジュールです。
+    /// </summary>
     public class SoftBanModule : InteractionModuleBase<SocketInteractionContext>
     {
+        /// <summary>
+        /// SoftBanModuleは、ユーザーをソフトバンするためのモジュールです。
+        /// </summary>
+        /// <param name="member"></param>
+        /// <param name="reason"></param>
+        /// <param name="daysToDelete"></param>
+        /// <returns></returns>
         [SlashCommand("softban", "Kicking a user deleting the last x days of messages.")]
         public async Task SoftBanAsync(
         [Summary("member", "ソフトBANを行うメンバー."), DoHierarchyCheck]

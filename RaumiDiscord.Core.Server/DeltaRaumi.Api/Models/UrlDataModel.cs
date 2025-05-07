@@ -1,5 +1,8 @@
 ﻿namespace RaumiDiscord.Core.Server.Api.Models
 {
+    /// <summary>
+    /// URLデータモデルを表します。
+    /// </summary>
     public class UrlDataModel
     {
         /// <summary>

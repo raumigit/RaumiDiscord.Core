@@ -1,5 +1,8 @@
 ﻿namespace RaumiDiscord.Core.Server.Api.Models
 {
+    /// <summary>
+    /// Discordコンポーネントモデルを表します。
+    /// </summary>
     public class DiscordComponentModel
     {
         /// <summary>

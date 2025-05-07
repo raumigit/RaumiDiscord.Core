@@ -5,7 +5,9 @@ using Discord.WebSocket;
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
     //public class VoiceChangeRegionModule
-
+    /// <summary>
+    /// VoiceChangeRegionModuleは、ボイスチャンネルのリージョンを変更するためのモジュールです。
+    /// </summary>
     public class VoiceChangeRegionModule : InteractionModuleBase<SocketInteractionContext>
     {
         private static readonly Dictionary<string, string?> RegionOptions = new()
@@ -24,7 +26,12 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             { "us-south", "us-south"},
             { "us-west", "us-west"}
         };
-
+        /// <summary>
+        /// VCのリージョンを変更します。
+        /// </summary>
+        /// <param name="region"></param>
+        /// <param name="voiceChannel"></param>
+        /// <returns></returns>
         [SlashCommand("vc-region", "VCのリージョンを変更します。")]
         public async Task SetVoiceCommand(
             [Summary("region", "リージョンを選択")]
@@ -70,9 +77,19 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             await RespondAsync($"チャンネル `{voiceChannel.Name}` のリージョンを `{selectedRegion ??"Auto"}`に変更しました。");
         }
     }
-
+    /// <summary>
+    /// VoiceChannelAutocompleteHandlerは、ボイスチャンネルのオートコンプリートを処理するクラスです。
+    /// </summary>
     public class VoiceChannelAutocompleteHandler : AutocompleteHandler
     {
+        /// <summary>
+        /// Generates suggestions for the voice channel autocomplete interaction.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="autocompleteInteraction"></param>
+        /// <param name="parameter"></param>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public override Task<AutocompletionResult> GenerateSuggestionsAsync(
             IInteractionContext context,
             IAutocompleteInteraction autocompleteInteraction,

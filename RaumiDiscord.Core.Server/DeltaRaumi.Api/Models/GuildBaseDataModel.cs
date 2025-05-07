@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RaumiDiscord.Core.Server.Api.Models
 {
+    /// <summary>
+    /// ギルドの基本データを表します。
+    /// </summary>
     public class GuildBaseData
     {
         /// <summary>

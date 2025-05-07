@@ -6,20 +6,18 @@ using RaumiDiscord.Core.Server.DiscordBot.Services;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 {
+    /// <summary>
+    ///     DeltaRaumiEventHandlerは、Discordのイベントを処理するためのクラスです。
+    /// </summary>
     public class DeltaRaumiEventHandler
     {
         /// <summary>
-        /// true = check and update all missing servers on start.
+        /// DeltaRaumiEventHandlerは、Discordのイベントを処理するためのクラスです。
         /// </summary>
-        private bool guildCheck = true;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DeltaRaumiEventHandler"/> class.
-        /// </summary>
-        /// <param name="client">
-        /// The client.
-        /// </param>
-        /// <param>
+        /// <param name="client"></param>
+        /// <param name="stat"></param>
+        /// <param name="logger"></param>
+        /// <param name="message"></param>
         public DeltaRaumiEventHandler(DiscordSocketClient client,StatService stat, ImprovedLoggingService logger,MessageService message)
         {
             SocketGuild guild; 
@@ -58,7 +56,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
             throw new NotImplementedException();
         }
         
-        internal async Task LeftGuildAsync(SocketGuild guild)
+        internal Task LeftGuildAsync(SocketGuild guild)
         {
             throw new NotImplementedException();
         }

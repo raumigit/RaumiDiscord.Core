@@ -2,6 +2,9 @@
 
 namespace RaumiDiscord.Core.Server.Api.Models
 {
+    /// <summary>
+    /// Discordの統計データを表すモデルクラスです。
+    /// </summary>
     public class DiscordStatsModel
     {
         /// <summary>

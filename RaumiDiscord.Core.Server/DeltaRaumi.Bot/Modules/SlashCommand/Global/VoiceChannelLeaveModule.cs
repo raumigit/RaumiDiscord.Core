@@ -2,8 +2,15 @@
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
+    /// <summary>
+    /// VoiceChannelLeaveModuleは、ボイスチャンネルから離脱するためのモジュールです。
+    /// </summary>
     public class VoiceChannelLeaveModule : InteractionModuleBase<SocketInteractionContext>
     {
+        /// <summary>
+        /// BOTをVCから切断します
+        /// </summary>
+        /// <returns></returns>
         [SlashCommand("leave", "BOTをVCから切断します")]
         public async Task BotLeaveAsync()
         {

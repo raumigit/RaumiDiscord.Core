@@ -2,6 +2,9 @@
 
 namespace RaumiDiscord.Core.Server.Api.Models
 {
+    /// <summary>
+    /// ユーザーの基本データを表します。
+    /// </summary>
     public class UserBaseData
     {
         /// <summary>

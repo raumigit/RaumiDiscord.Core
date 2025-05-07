@@ -3,8 +3,16 @@ using Discord.Interactions;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.MessageCommand
 {
+    /// <summary>
+    /// MentionRespondModuleは、メンションに対する応答を行うモジュールです。
+    /// </summary>
     public class MentionRespondModule
     {
+        /// <summary>
+        /// メンションコマンドに応じて、特定のメッセージを返します。
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         [MessageCommand("@Raumi#1195")]
         public async Task MentiononlyCommand(IMessage message)
         {

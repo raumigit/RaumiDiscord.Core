@@ -5,18 +5,28 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 {
+    /// <summary>
+    /// UrlDataModelのコントローラー
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class UrlDataModelsController : ControllerBase
     {
         private readonly DeltaRaumiDbContext _context;
-
+        /// <summary>
+        /// UrlDataModelsControllerのコンストラクタ
+        /// </summary>
+        /// <param name="context"></param>
         public UrlDataModelsController(DeltaRaumiDbContext context)
         {
             _context = context;
         }
 
         // GET: api/UrlDataModels
+        /// <summary>
+        /// UrlDataModelの一覧を取得します。
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UrlDataModel>>> GetUrlDataModels()
         {
@@ -24,6 +34,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
         }
 
         // GET: api/UrlDataModels/5
+        /// <summary>
+        /// UrlDataModelを取得します。
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<UrlDataModel>> GetUrlDataModel(uint id)
         {
@@ -39,6 +54,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 
         // PUT: api/UrlDataModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// UrlDataModelを更新します。
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="urlDataModel"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUrlDataModel(uint id, UrlDataModel urlDataModel)
         {
@@ -70,6 +91,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 
         // POST: api/UrlDataModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// UrlDataModelを追加します。
+        /// </summary>
+        /// <param name="urlDataModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<UrlDataModel>> PostUrlDataModel(UrlDataModel urlDataModel)
         {
@@ -80,6 +106,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
         }
 
         // DELETE: api/UrlDataModels/5
+        /// <summary>
+        /// UrlDataModelを削除します。
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUrlDataModel(uint id)
         {

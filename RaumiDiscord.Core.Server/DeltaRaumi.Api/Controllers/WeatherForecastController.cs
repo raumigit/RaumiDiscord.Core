@@ -3,6 +3,9 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Api.Models;
 
 namespace RaumiDiscord.Core.Server.Api.Controllers
 {
+    /// <summary>
+    /// 天気予報を取得するためのコントローラー
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
@@ -13,12 +16,18 @@ namespace RaumiDiscord.Core.Server.Api.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
-
+        /// <summary>
+        /// WeatherForecastControllerのコンストラクタ
+        /// </summary>
+        /// <param name="logger"></param>
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
         }
-
+        /// <summary>
+        /// 天気予報を取得する
+        /// </summary>
+        /// <returns></returns>
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {

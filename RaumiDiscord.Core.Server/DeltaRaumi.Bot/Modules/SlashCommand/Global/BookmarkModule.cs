@@ -10,16 +10,37 @@ using SummaryAttribute = Discord.Interactions.SummaryAttribute;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
+    /// <summary>
+    /// BookmarkModuleは、URLの登録と取得を行うモジュールです。
+    /// </summary>
     public class BookmarkModule : InteractionModuleBase<SocketInteractionContext>
     {
+        /// <summary>
+        /// BookmarkModuleは、URLの登録と取得を行うモジュールです。
+        /// </summary>
         private readonly ImprovedLoggingService LoggingService;
         private readonly DeltaRaumiDbContext deltaRaumiDb;
+
+        /// <summary>
+        /// BookmarkModuleのコンストラクタ
+        /// </summary>
+        /// <param name="deltaRaumiDb"></param>
+        /// <param name="logger"></param>
         public BookmarkModule(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logger)
         {
             this.deltaRaumiDb = deltaRaumiDb;
             this.LoggingService = logger;
         }
 
+        /// <summary>
+        /// HoYoverseのギフトコードを登録・取得するコマンド
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="urlType"></param>
+        /// <param name="url"></param>
+        /// <param name="ttl"></param>
+        /// <param name="publishAttri"></param>
+        /// <returns></returns>
         [SlashCommand("hoyocode", "HoYoverseで使えるギフトコードを出力します")]
         public async Task HoYoCode(
             [Summary("action","Get:有効なコードを出力します。Set:URLを共有できます。")]
@@ -32,9 +53,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             [Choice("HonkaiStarRail","HSR")]
             [Choice("ZenlessZoneZero","ZZZ")]
             string urlType,
-            string url = null,
+            string? url = null,
             [Summary("ttl","有効期限を設定します。yyyy/MM/dd-HH:mm:sszzz形式で入力してください。")]
-            string ttl = null,
+            string? ttl = null,
             [Summary("publish","コードの公開を指定します。")]
             [Choice("false",0)]
             [Choice("true",1)]

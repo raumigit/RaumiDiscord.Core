@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RaumiDiscord.Core.Server.Api.Models
 {
+    /// <summary>
+    /// ユーザーのギルドデータを表します。
+    /// </summary>
     [Keyless]
     public class UserGuildData
     {

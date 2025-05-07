@@ -155,9 +155,10 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             }
         }
 
-        private async Task InitializeAsync()
+        private Task InitializeAsync()
         {
-           
+            return Task.CompletedTask;
+
             //throw new NotImplementedException();
         }
 
