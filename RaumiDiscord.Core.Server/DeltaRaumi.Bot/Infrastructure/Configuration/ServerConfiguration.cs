@@ -1,6 +1,4 @@
-﻿using RaumiDiscord.Core.Server.DiscordBot.Data;
-
-namespace RaumiDiscord.Core.Server.DeltaRaumi.Models.Configuration
+﻿namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Infrastructure.Configuration
 {
     public class ServerConfiguration : BaseApplicationConfiguration
     {

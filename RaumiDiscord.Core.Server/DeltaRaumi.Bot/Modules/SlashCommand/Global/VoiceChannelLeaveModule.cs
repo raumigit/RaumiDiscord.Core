@@ -1,8 +1,4 @@
-﻿using Discord;
-using Discord.WebSocket;
-using Discord.Commands;
-using Discord.Interactions;
-using System.Threading.Tasks;
+﻿using Discord.Interactions;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {

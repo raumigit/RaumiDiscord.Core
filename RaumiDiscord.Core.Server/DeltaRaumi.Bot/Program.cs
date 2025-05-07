@@ -1,9 +1,6 @@
-﻿
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using RaumiDiscord.Core.Server.DataContext;
+﻿using Microsoft.EntityFrameworkCore;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using RaumiDiscord.Core.Server.DiscordBot;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);

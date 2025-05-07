@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.Api.Models;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Infrastructure.Configuration;
 
-namespace RaumiDiscord.Core.Server.DataContext
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
 {
     public class DeltaRaumiDbContext : DbContext
     {
@@ -21,7 +22,7 @@ namespace RaumiDiscord.Core.Server.DataContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            switch (this.databaseType)
+            switch (databaseType)
             {
                 case DatabaseType.MariaDb:
                     optionsBuilder.UseMySql(MySqlConfig.FromConfigFile().GetConnectionString(), new MariaDbServerVersion("11.6.2"));

@@ -1,4 +1,4 @@
-﻿namespace RaumiDiscord.Core.Server.DiscordBot.Data
+﻿namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
 {
     internal class Directories
     {

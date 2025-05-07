@@ -3,7 +3,7 @@ using Discord.WebSocket;
 using System.Drawing;
 using System.Threading.Channels;
 
-namespace RaumiDiscord.Core.Server.DiscordBot.Services
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
 {
     public class VoicertcregionService
     {

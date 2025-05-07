@@ -1,10 +1,10 @@
 ﻿#nullable disable
 
 using Newtonsoft.Json;
-using RaumiDiscord.Core.Server.DiscordBot.Data;
+using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
 using System.Text;
 
-namespace RaumiDiscord.Core.Server.DataContext
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Infrastructure.Configuration
 {
     public class MySqlConfig
     {
@@ -18,7 +18,7 @@ namespace RaumiDiscord.Core.Server.DataContext
         private string DatabaseNameOverride { get; set; }
 
 
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public MySqlConfig()
         {
             //コードがない
@@ -29,7 +29,7 @@ namespace RaumiDiscord.Core.Server.DataContext
         /// <param name="database">Database name</param>
         public MySqlConfig(string database)
         {
-            this.DatabaseNameOverride = database;
+            DatabaseNameOverride = database;
         }
 
         public string GetConnectionString()
@@ -39,7 +39,7 @@ namespace RaumiDiscord.Core.Server.DataContext
             builder.Append("; Port=");
             builder.Append(Port);
             builder.Append("; Database=");
-            if (string.IsNullOrEmpty(this.DatabaseNameOverride))
+            if (string.IsNullOrEmpty(DatabaseNameOverride))
                 builder.Append(Database);
             else builder.Append(DatabaseNameOverride);
             builder.Append("; Uid=");
@@ -65,7 +65,7 @@ namespace RaumiDiscord.Core.Server.DataContext
                 config.Database = "Database";
                 config.Username = "Username";
                 config.Password = "Password";
-                File.WriteAllText(Directories.MySqlConfigPath, JsonConvert.SerializeObject(config, Newtonsoft.Json.Formatting.Indented));
+                File.WriteAllText(Directories.MySqlConfigPath, JsonConvert.SerializeObject(config, Formatting.Indented));
                 return config;
             }
             else return JsonConvert.DeserializeObject<MySqlConfig>(File.ReadAllText(Directories.MySqlConfigPath));

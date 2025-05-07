@@ -1,4 +1,4 @@
-namespace RaumiDiscord.Core.Server
+﻿namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Models
 {
     public class WeatherForecast
     {

@@ -1,11 +1,9 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using System;
-using System.Threading.Tasks;
 //using RaumiDiscord.Core.Server.Logging;
 
-namespace RaumiDiscord.Core.Server.DiscordBot
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers
 {
     /// <summary>
     /// ImprovedLoggingServiceとDiscordクライアントを接続するアダプター

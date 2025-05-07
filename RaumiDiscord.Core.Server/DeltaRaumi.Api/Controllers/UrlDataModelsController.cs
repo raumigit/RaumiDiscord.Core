@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.Api.Models;
-using RaumiDiscord.Core.Server.DataContext;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 {

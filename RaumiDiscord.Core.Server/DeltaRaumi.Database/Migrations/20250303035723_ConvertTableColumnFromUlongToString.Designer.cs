@@ -4,21 +4,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RaumiDiscord.Core.Server.DataContext;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
+
 
 #nullable disable
 
 namespace RaumiDiscord.Core.Server.Migrations
 {
     [DbContext(typeof(DeltaRaumiDbContext))]
-    [Migration("20250129072238_InitModel")]
-    partial class InitModel
+    [Migration("20250303035723_ConvertTableColumnFromUlongToString")]
+    partial class ConvertTableColumnFromUlongToString
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.DiscordComponentModel", b =>
                 {
@@ -26,8 +27,9 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<ulong>("ChannelId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("ChannelId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("TEXT");
@@ -35,11 +37,13 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.Property<string>("DeltaRaumiComponentType")
                         .HasColumnType("TEXT");
 
-                    b.Property<ulong>("MessageId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("MessageId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<ulong>("OwnerId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("CustomId");
 
@@ -48,9 +52,8 @@ namespace RaumiDiscord.Core.Server.Migrations
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.GuildBaseData", b =>
                 {
-                    b.Property<ulong>("GuildId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("GuildId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("BannerUrl")
                         .HasColumnType("TEXT");
@@ -74,8 +77,9 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.Property<int>("MemberCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<ulong>("OwnerID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("OwnerID")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("PremiumSubscriptionCount")
                         .HasColumnType("INTEGER");
@@ -83,19 +87,22 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.Property<int>("PremiumTier")
                         .HasColumnType("INTEGER");
 
-                    b.Property<ulong?>("WelcomeChannnelID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("WelcomeChannnelID")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("GuildId");
 
                     b.ToTable("GuildBases");
                 });
 
-            modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.UrlDetaModel", b =>
+            modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.UrlDataModel", b =>
                 {
                     b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("DiscordUser")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("TTL")
                         .HasColumnType("TEXT");
@@ -113,9 +120,8 @@ namespace RaumiDiscord.Core.Server.Migrations
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.UserBaseData", b =>
                 {
-                    b.Property<ulong>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AvatarId")
                         .HasColumnType("TEXT");
@@ -148,8 +154,9 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.Property<string>("GuildAvatarId")
                         .HasColumnType("TEXT");
 
-                    b.Property<ulong>("GuildId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("GuildId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("GuildLebel")
                         .HasColumnType("INTEGER");
@@ -166,8 +173,9 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.Property<int>("TotalMessage")
                         .HasColumnType("INTEGER");
 
-                    b.Property<ulong>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasIndex("GuildId");
 

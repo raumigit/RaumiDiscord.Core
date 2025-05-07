@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using RaumiDiscord.Core.Server.DiscordBot.Data;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old;
+using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Services
 {

@@ -1,10 +1,10 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using System.Reflection;
-using static Nett.TomlObjectFactory;
 
-namespace RaumiDiscord.Core.Server.DiscordBot
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 {
     internal class InteractionHandler
     {

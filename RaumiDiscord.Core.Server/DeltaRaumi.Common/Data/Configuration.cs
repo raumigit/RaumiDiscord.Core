@@ -1,13 +1,8 @@
 ﻿using Discord;
-using Discord.WebSocket;
 using Nett;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using NuGet.Configuration;
-using static RaumiDiscord.Core.Server.DeltaRaumi.Models.Configuration.ServerConfiguration;
-using static RaumiDiscord.Core.Server.DiscordBot.Data.Configuration;
+using static RaumiDiscord.Core.Server.DeltaRaumi.Bot.Infrastructure.Configuration.ServerConfiguration;
 
-namespace RaumiDiscord.Core.Server.DiscordBot.Data
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
 {
     class Configuration
     {

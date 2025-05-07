@@ -1,7 +1,5 @@
-﻿using Discord.Commands;
-using Discord.Interactions;
-using System.ComponentModel;
-using System.Reflection.Metadata;
+﻿using Discord.Interactions;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {

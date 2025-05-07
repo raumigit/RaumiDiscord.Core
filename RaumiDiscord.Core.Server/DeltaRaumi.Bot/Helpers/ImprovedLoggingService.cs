@@ -1,12 +1,8 @@
-﻿using Discord.Commands;
-using Discord.WebSocket;
-using Discord;
-using System;
-using System.IO;
+﻿using Discord;
+using Discord.Commands;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace RaumiDiscord.Core.Server.DiscordBot
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers
 {
     /// <summary>
     /// 汎用的なロギングサービス：コンソールとファイルの両方にログを出力します

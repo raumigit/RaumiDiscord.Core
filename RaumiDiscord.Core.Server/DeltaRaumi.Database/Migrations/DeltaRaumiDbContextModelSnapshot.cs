@@ -3,7 +3,8 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RaumiDiscord.Core.Server.DataContext;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
+
 
 #nullable disable
 

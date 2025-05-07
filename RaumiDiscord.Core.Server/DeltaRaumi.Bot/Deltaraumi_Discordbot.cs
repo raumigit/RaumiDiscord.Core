@@ -1,18 +1,16 @@
-﻿using Discord.WebSocket;
-using Discord;
-using Nett;
-using Newtonsoft.Json.Linq;
-using RaumiDiscord.Core.Server.DiscordBot.Services;
+﻿using Discord;
 using Discord.Commands;
-using Microsoft.EntityFrameworkCore;
-using RaumiDiscord.Core.Server.DiscordBot.Data;
-using Discord.Net;
-using RaumiDiscord.Core.Server.DataContext;
-using Discord.Rest;
 using Discord.Interactions;
-using Microsoft.Extensions.DependencyInjection;
-using System.Globalization;
-using System.Reflection;
+using Discord.Net;
+using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old;
+using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
+using RaumiDiscord.Core.Server.DiscordBot.Services;
 
 namespace RaumiDiscord.Core.Server.DiscordBot
 {
@@ -33,16 +31,16 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         private IServiceProvider? _services;
         private static IConfiguration _configuration;
         public static Configuration? _Config { get; set; }
-        public static SqlMode AppSqlMode { get; set; }
-        public static ImprovedLoggingService _logger;
 
+        public static ImprovedLoggingService _logger;
+        public static SqlMode AppSqlMode { get; set; }
         public enum SqlMode { Sqlite, MariaDb }
         private DiscordCoordinationService? DiscordCoordinationService;
 
         public Deltaraumi_Discordbot()
         {
             _logger = new ImprovedLoggingService();
-            
+
         }
 
 
@@ -83,7 +81,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                     //AlwaysDownloadUsers = true
 
                 });
-                _client.Log += LogAsync;
+                await InitializeAsync();
+
                 _configuration = new ConfigurationBuilder()
                 .AddEnvironmentVariables(prefix: "DC_")
                 .AddJsonFile("appsettings.json", optional: true)
@@ -94,8 +93,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
                 var dbContext = _services.GetRequiredService<DeltaRaumiDbContext>();
                 this.DiscordCoordinationService = _services.GetRequiredService<DiscordCoordinationService>();
-                
-                
+                //_client.Log += LogAsync;
+
+                guildIDs = _client.Guilds.Select(guild => guild.Id).ToList();
+                await _services.GetRequiredService<InteractionHandler>().InitializeAsync();
+
+
+                await _services.GetRequiredService<DeltaRaumiHandler>().InitializeAsync();
 
                 //起動時に新しいデータベース移行を適用する
                 var migrations = await dbContext.Database.GetPendingMigrationsAsync();
@@ -105,6 +109,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                     await dbContext.Database.MigrateAsync();
                     Console.WriteLine("Done.");
                 }
+
 
                 await _logger.Log("初期化が完了", "Startup");
 
@@ -125,13 +130,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                     Environment.Exit(1);
                 }
 
-                _client.MessageReceived += MessageReceivedAsync;
+
+                //_client.MessageReceived += MessageReceivedAsync;
                 _client.MessageUpdated += MessageUpdated;
                 //_client.MessageDeleted += MessegeDeleted;
                 //まもなく分離　分離後はサービスプロバイダに登録予定
 
-                guildIDs = _client.Guilds.Select(guild => guild.Id).ToList();
-                await _services.GetRequiredService<InteractionHandler>().InitializeAsync();
+                
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 await _logger.Log("DeltaRaumi接続中", "Startup", ImprovedLoggingService.LogLevel.Notice);
@@ -141,13 +146,19 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             }
             catch (Exception e)
             {
-                await _logger.Log("e.Message", "Startup", ImprovedLoggingService.LogLevel.Fatal);
-                await _logger.Log("===============================", "Startup", ImprovedLoggingService.LogLevel.Fatal);
-                await _logger.Log("e.StackTrace", "Startup", ImprovedLoggingService.LogLevel.Fatal);
+                await _logger.Log($"{e.Message}\n{e.StackTrace}", "Startup", ImprovedLoggingService.LogLevel.Fatal);
+                //await _logger.Log("===============================", "Startup", ImprovedLoggingService.LogLevel.Fatal);
+                //await _logger.Log($"", "Startup", ImprovedLoggingService.LogLevel.Fatal);
 
 
                 Environment.Exit(1);
             }
+        }
+
+        private async Task InitializeAsync()
+        {
+           
+            //throw new NotImplementedException();
         }
 
 
@@ -211,7 +222,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             // LogMessageをImprovedLoggingServiceに変換して使用
             ImprovedLoggingService.LogLevel level = DiscordLoggingAdapter.ConvertDiscordLogLevel(log.Severity);
             _logger.Log($"{log.Message}", $"{log.Source}", level);
-            
+
             return Task.CompletedTask;
         }
 
@@ -223,16 +234,19 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             .AddSingleton(_client)
             .AddSingleton(_configuration)
             .AddSingleton<CommandService>()
-            .AddSingleton<ImprovedLoggingService>()
-            .AddSingleton<SlashCommandInterationService>()
-            .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
-            .AddSingleton<InteractionHandler>()
-            .AddSingleton<WelcomeMessageService>()
             .AddSingleton<ComponentInteractionService>()
+            .AddSingleton<DeltaRaumiHandler>()
             .AddSingleton<DiscordCoordinationService>()
-            .AddSingleton<VoicertcregionService>()
-            .AddSingleton<MessageResiveService>()
             .AddSingleton<DiscordLoggingAdapter>()
+            .AddSingleton<DeltaRaumiEventHandler>()
+            .AddSingleton<InteractionHandler>()
+            .AddSingleton<ImprovedLoggingService>()
+            .AddSingleton<MessageService>()
+            .AddSingleton<SlashCommandInterationService>()
+            .AddSingleton<StatService>()
+            .AddSingleton<VoicertcregionService>()
+            .AddSingleton<WelcomeMessageService>()
+            .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
             .AddSingleton(provider => _client.Guilds.Select(guild => guild.Id).ToList())
             .BuildServiceProvider();
     }

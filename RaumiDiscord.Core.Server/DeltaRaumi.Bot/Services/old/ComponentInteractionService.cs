@@ -1,11 +1,11 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using RaumiDiscord.Core.Server.Api.Models;
-using RaumiDiscord.Core.Server.DataContext;
-using RaumiDiscord.Core.Server.DiscordBot;
-using RaumiDiscord.Core.Server.DiscordBot.Data;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
+using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 
-namespace RaumiDiscord.Core.Server.DiscordBot.Services
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
 {
     class ComponentInteractionService
     {
@@ -14,8 +14,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         private readonly DeltaRaumiDbContext DeltaRaumiDbContext;
         private readonly ImprovedLoggingService LoggingService;
 
-        private Discord.Color RaumiMainColor = new Discord.Color(0x7bb3ee);
-        private Discord.Color RaumiSubColor = new Discord.Color(0xf02443);
+        private Color RaumiMainColor = new Color(0x7bb3ee);
+        private Color RaumiSubColor = new Color(0xf02443);
 
         public Configuration configuration { get; set; }
 

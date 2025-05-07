@@ -1,7 +1,5 @@
 ﻿using Discord;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
 
 namespace RaumiDiscord.Core.Server.Api.Models
 {
@@ -68,5 +66,10 @@ namespace RaumiDiscord.Core.Server.Api.Models
         ///  このギルドのギルドブーストのティアを取得または設定します。
         /// </summary>
         public PremiumTier PremiumTier { get; set; }
+        /// <summary>
+        /// ログチャンネルのIdを取得または設定します。
+        /// チャンネルに送信することのできるログのすべてがここから送信されます。
+        /// </summary>
+        public string LogChannel {  get; set; }
     }
 }

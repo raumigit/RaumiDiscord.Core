@@ -1,7 +1,6 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
-using Discord;
-using Discord.Net;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Modules.SlashCommand.Moderation
 {

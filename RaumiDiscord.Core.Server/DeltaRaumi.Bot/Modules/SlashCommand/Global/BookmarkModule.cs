@@ -1,9 +1,8 @@
-﻿using Discord.Commands;
-using Discord.Interactions;
+﻿using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.Api.Models;
-using RaumiDiscord.Core.Server.DataContext;
-using System.Linq;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using System.Text.RegularExpressions;
 using SummaryAttribute = Discord.Interactions.SummaryAttribute;
 
@@ -35,7 +34,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             string urlType,
             string url = null,
             [Summary("ttl","有効期限を設定します。yyyy/MM/dd-HH:mm:sszzz形式で入力してください。")]
-            string ttl = null)
+            string ttl = null,
+            [Summary("publish","コードの公開を指定します。")]
+            [Choice("false",0)]
+            [Choice("true",1)]
+            bool publishAttri=false)
         {
             if (action == "set")
             {
@@ -79,6 +82,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                         url = baseUrl + url;
                     }
                     await LoggingService.Log($"URLがCodeだったため修正しました。", "hoyocode");
+                    //ゲームのコードは強制的に公開
+                    publishAttri=true;
                 }
 
 
@@ -92,7 +97,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     Url = url,
                     UrlType = urlType,
                     DiscordUser = discordUser,
-                    TTL = expirationTime.UtcDateTime
+                    TTL = expirationTime.UtcDateTime,
+                    publish= publishAttri
                 };
 
                 var Url_record = deltaRaumiDb.UrlDataModels.Where(k => k.Url == url).ToList();
@@ -119,6 +125,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     .Select(u => $"{u.Url}")
                     .ToListAsync();
                 }
+                else if (urlType == "URL" && publishAttri == true)
+                {
+                    results = await deltaRaumiDb.UrlDataModels
+                    .Where(u => u.UrlType == urlType && publishAttri == true)
+                    .Select(u => $"{u.Url}")
+                    .ToListAsync();
+                }
                 else
                 {
                     results = await deltaRaumiDb.UrlDataModels
@@ -126,7 +139,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     .Select(u => $"{u.Url}")
                     .ToListAsync();
                 }
-                
+
 
                 if (results.Count == 0)
                 {
@@ -134,9 +147,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     return;
                 }
 
-                await RespondAsync(string.Join("\n", results),ephemeral:true);
+                await RespondAsync(string.Join("\n", results), ephemeral: true);
             }
-            
+
         }
     }
 }
