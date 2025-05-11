@@ -24,7 +24,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
         /// <returns></returns>
         public Task UserStatDetection(SocketMessage Message)
         {
-            Console.WriteLine("StatService"+Message.Content);
+            Console.WriteLine("StatService OK");
             return Task.CompletedTask;
         }
     }

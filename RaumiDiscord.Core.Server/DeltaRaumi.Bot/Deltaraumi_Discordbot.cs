@@ -8,7 +8,9 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old;
+using RaumiDiscord.Core.Server.DeltaRaumi.Common;
 using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using RaumiDiscord.Core.Server.DiscordBot.Services;
 
@@ -93,7 +95,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
                 var dbContext = _services.GetRequiredService<DeltaRaumiDbContext>();
                 this.DiscordCoordinationService = _services.GetRequiredService<DiscordCoordinationService>();
-                //_client.Log += LogAsync;
+                _client.Log += LogAsync;
 
                 guildIDs = _client.Guilds.Select(guild => guild.Id).ToList();
                 await _services.GetRequiredService<InteractionHandler>().InitializeAsync();
@@ -132,11 +134,10 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
 
                 //_client.MessageReceived += MessageReceivedAsync;
-                _client.MessageUpdated += MessageUpdated;
+                //_client.MessageUpdated += MessageUpdated;
                 //_client.MessageDeleted += MessegeDeleted;
                 //まもなく分離　分離後はサービスプロバイダに登録予定
 
-                
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 await _logger.Log("DeltaRaumi接続中", "Startup", ImprovedLoggingService.LogLevel.Notice);
@@ -147,9 +148,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             catch (Exception e)
             {
                 await _logger.Log($"{e.Message}\n{e.StackTrace}", "Startup", ImprovedLoggingService.LogLevel.Fatal);
-                //await _logger.Log("===============================", "Startup", ImprovedLoggingService.LogLevel.Fatal);
-                //await _logger.Log($"", "Startup", ImprovedLoggingService.LogLevel.Fatal);
-
 
                 Environment.Exit(1);
             }
@@ -160,53 +158,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             return Task.CompletedTask;
 
             //throw new NotImplementedException();
-        }
-
-
-        //複雑なメソッド：https://www.codefactor.io/repository/github/raumigit/raumidiscord.core/file/master/RaumiDiscord.Core.Server/DiscordBot/Deltaraumi_Discordbot.cs
-        private async Task MessageReceivedAsync(SocketMessage message)
-        {
-
-            Console.WriteLine($"*ReceivedServer:");
-            Console.WriteLine($"|ReceivedChannel:{message.Channel}");
-            Console.WriteLine($"|ReceivedUser:{message.Author}");
-            Console.WriteLine($"|MessageReceived:{message.Content}");
-            Console.WriteLine($"|CleanContent:{message.CleanContent}");
-            Console.WriteLine($"|>EmbedelMessage:{message.Embeds}");
-
-            //ボットは自分自身に応答してはなりません。
-            if (message.Author.Id == _client.CurrentUser.Id)
-                return;
-
-            if (message.Content == "!ping")
-            {
-
-            }
-
-            try
-            {
-                //サイクロマティック複雑度が高く、保守用意性が50切ってるので要修正
-                string contentbase = "@Raumi#1195 *";
-                switch (message.CleanContent)
-                {
-                    case "@Raumi#1195":
-                        await message.Channel.SendMessageAsync("なに？");
-                        break;
-
-                    case string match when System.Text.RegularExpressions.Regex.IsMatch(message.CleanContent, contentbase):
-
-                        await message.Channel.SendMessageAsync("該当するメッセージコマンドはないっぽい…");
-                        break;
-                    default:
-                        break;
-                }
-            }
-            catch (Exception e)
-            {
-                await _logger.Log("メッセージ送信エラー　(E-M4001)", "MessageReceive", ImprovedLoggingService.LogLevel.Warning);
-                await _logger.Log($"{e}", "MessageReceive", ImprovedLoggingService.LogLevel.Warning);
-
-            }
         }
 
         private static async Task MessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
@@ -227,28 +178,42 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             return Task.CompletedTask;
         }
 
-
-
-        private IServiceProvider BuildServices()
-        => new ServiceCollection()
+        private IServiceProvider BuildServices() => new ServiceCollection()
+            // データベースコンテキスト - Scopedが最適（リクエストごとに新しいインスタンス）
             .AddDbContext<DeltaRaumiDbContext>()
+
+            // 設定やクライアントなどの基本的なシングルトン
             .AddSingleton(_client)
             .AddSingleton(_configuration)
-            .AddSingleton<CommandService>()
-            .AddSingleton<ComponentInteractionService>()
-            .AddSingleton<DeltaRaumiHandler>()
-            .AddSingleton<DiscordCoordinationService>()
-            .AddSingleton<DiscordLoggingAdapter>()
-            .AddSingleton<DeltaRaumiEventHandler>()
-            .AddSingleton<InteractionHandler>()
             .AddSingleton<ImprovedLoggingService>()
-            .AddSingleton<MessageService>()
+            .AddSingleton<DiscordLoggingAdapter>()
+
+            // Discord関連のコアサービス
+            .AddSingleton<CommandService>()
+            .AddSingleton<InteractionService>(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
+            .AddSingleton<ComponentInteractionService>()
+            .AddSingleton<InteractionHandler>()
             .AddSingleton<SlashCommandInterationService>()
+
+            // イベントハンドラー
+            .AddSingleton<DeltaRaumiHandler>()
+            .AddSingleton<DeltaRaumiEventHandler>()
+
+            // 状態を維持する必要があるコア機能サービス
+            .AddSingleton<DiscordCoordinationService>()
+            .AddSingleton<MessageService>()
+            .AddSingleton<ScheduledTask>()
             .AddSingleton<StatService>()
             .AddSingleton<VoicertcregionService>()
             .AddSingleton<WelcomeMessageService>()
-            .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
+
+            // リクエストごとに新しいインスタンスが必要なサービス
+            .AddScoped<DataEnsure>()
+            .AddScoped<LevelService>()
+
+            // Guild IDsのコレクション
             .AddSingleton(provider => _client.Guilds.Select(guild => guild.Id).ToList())
+
             .BuildServiceProvider();
     }
 }

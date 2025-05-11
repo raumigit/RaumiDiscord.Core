@@ -19,7 +19,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
         /// BookmarkModuleは、URLの登録と取得を行うモジュールです。
         /// </summary>
         private readonly ImprovedLoggingService LoggingService;
-        private readonly DeltaRaumiDbContext deltaRaumiDb;
+        private readonly DeltaRaumiDbContext deltaRaumiDB;
 
         /// <summary>
         /// BookmarkModuleのコンストラクタ
@@ -28,7 +28,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
         /// <param name="logger"></param>
         public BookmarkModule(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logger)
         {
-            this.deltaRaumiDb = deltaRaumiDb;
+            this.deltaRaumiDB = deltaRaumiDb;
             this.LoggingService = logger;
         }
 
@@ -119,18 +119,18 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     UrlType = urlType,
                     DiscordUser = discordUser,
                     TTL = expirationTime.UtcDateTime,
-                    publish= publishAttri
+                    Publish= publishAttri
                 };
 
-                var Url_record = deltaRaumiDb.UrlDataModels.Where(k => k.Url == url).ToList();
+                var Url_record = deltaRaumiDB.UrlDataModels.Where(k => k.Url == url).ToList();
                 if (Url_record.Any())
                 {
                     await RespondAsync("既に登録されています。", ephemeral: true);
                     await LoggingService.Log($"登録済みのコード：{Url_record}", "hoyocode");
                     return;
                 }
-                deltaRaumiDb.UrlDataModels.Add(newEntry);
-                await deltaRaumiDb.SaveChangesAsync();
+                deltaRaumiDB.UrlDataModels.Add(newEntry);
+                await deltaRaumiDB.SaveChangesAsync();
                 await RespondAsync($"登録完了: {urlType} - {url} (期限: <t:{unixExpirationTime}:R>) 登録者：<@{discordUser}>");
                 await LoggingService.Log($"登録されたコード：{url}", "hoyocode");
             }
@@ -141,21 +141,21 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 
                 if (urlType == "URL")
                 {
-                    results = await deltaRaumiDb.UrlDataModels
+                    results = await deltaRaumiDB.UrlDataModels
                     .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id.ToString())
                     .Select(u => $"{u.Url}")
                     .ToListAsync();
                 }
                 else if (urlType == "URL" && publishAttri == true)
                 {
-                    results = await deltaRaumiDb.UrlDataModels
+                    results = await deltaRaumiDB.UrlDataModels
                     .Where(u => u.UrlType == urlType && publishAttri == true)
                     .Select(u => $"{u.Url}")
                     .ToListAsync();
                 }
                 else
                 {
-                    results = await deltaRaumiDb.UrlDataModels
+                    results = await deltaRaumiDB.UrlDataModels
                     .Where(u => u.UrlType == urlType && u.TTL > now)
                     .Select(u => $"{u.Url}")
                     .ToListAsync();

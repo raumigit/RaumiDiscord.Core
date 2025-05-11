@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 {
@@ -39,9 +40,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
             //_client.Log += _event.LogAsync;
             _client.JoinedGuild += _event.JoinedGuildAsync;
             _client.LeftGuild += _event.LeftGuildAsync;
-            
+
             //_client.ReactionAdded += _event.ReactionAddedAsync;　//<-使わない
             _client.MessageReceived += _event.MessageReceivedAsync;
+            _client.MessageUpdated += _event.MessageUpdated;
+            _client.MessageDeleted += _event.MessageDeleted;
+
             return Task.CompletedTask;
 
             //_client.UserJoined += user => Events.UserJoinedAsync(_provider.GetRequiredService<DatabaseHandler>().Execute<GuildModel>(DatabaseHandler.Operation.LOAD, null, user.Guild.Id), user);

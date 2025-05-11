@@ -1,6 +1,9 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
+using NuGet.Protocol;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services;
+using System.Diagnostics.Metrics;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Services
 {
@@ -22,6 +25,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             _client = client;
             _logger = logging;
 
+
             // イベントハンドラを登録
             //_client.MessageReceived += GetMessageReceivedAsync;
         }
@@ -40,7 +44,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                 Console.WriteLine($"|ReceivedUser:{message.Author}");
                 Console.WriteLine($"|MessageReceived:{message.Content}");
                 Console.WriteLine($"|CleanContent:{message.CleanContent}");
-                Console.WriteLine($"|>EmbedelMessage:{message.Embeds.ToString}");
+                Console.WriteLine($"|>EmbedelMessage:{message.Embeds.ToJson()}");
             }
             
 
@@ -81,6 +85,39 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             }
         }
 
+        
+
+        internal async Task GetMessageUpdatedAsync(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel socketMessageChannel)
+        {
+            // メッセージがキャッシュになかった場合、ダウンロードすると `after` のコピーが取得されます。
+            var message = await before.GetOrDownloadAsync();
+            bool embedsChanged = !Enumerable.SequenceEqual(
+            message.Embeds.Select(e => e.ToString()),
+            after.Embeds.Select(e => e.ToString())
+    );
+            if (embedsChanged)
+            {
+                return;
+            }
+            else if (message.Content != after.Content)
+            {
+                Console.WriteLine($"{message.Channel}|{message.Author}\n{message.Author}:```diff\n- {message}\n! {after}\n```");
+                
+            }
+        }
+
+        internal async Task GetMessageDeletedAsync(Cacheable<IMessage, ulong> before, Cacheable<IMessageChannel, ulong> cachedChannel)
+        {
+            if (!before.HasValue)
+                return;
+
+            // メッセージがキャッシュになかった場合、ダウンロードすると `after` のコピーが取得されます。
+            IMessageChannel channel = await cachedChannel.GetOrDownloadAsync();
+            var message = before.Value;
+            Console.WriteLine($"{channel.Name}|{message.Author}\n{message.Author}:```diff\n- {message}\n```");
+        }
+
+
         /// <summary>
         /// LevelsHandlerは、メッセージを受信したときにレベルアップの処理を行います。
         /// </summary>
@@ -88,7 +125,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         /// <returns></returns>
         public async Task LevelsHandler(SocketMessage message)
         {
-            await LevelService.LevelsProsessAsync(message);
+
+            //LevelService levelService = new LevelService();
+            //await levelService.LevelsProsessAsync(message);
         }
+
+        
     }
 }
