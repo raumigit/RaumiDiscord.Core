@@ -32,6 +32,6 @@
         /// <summary>
         /// 保存されたURLの公開状態を取得または設定します。
         /// </summary>
-        public bool publish { get; set; }
+        public bool Publish { get; set; }
     }
 }

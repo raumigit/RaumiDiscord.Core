@@ -15,12 +15,12 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// <summary>
         /// 統計データが関連するギルドの一意識別子を取得または設定します。
         /// </summary>
-        public string guildid { get; set; }
+        public string guildId { get; set; }
 
         /// <summary>
         /// 統計データが関連するユーザーの一意識別子を取得または設定します。
         /// </summary>
-        public string userid { get; set; }
+        public string userId { get; set; }
 
         /// <summary>
         /// 統計データが作成された日時を取得または設定します。

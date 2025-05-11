@@ -5,7 +5,7 @@ namespace RaumiDiscord.Core.Server.Api.Models
     /// <summary>
     /// ユーザーの基本データを表します。
     /// </summary>
-    public class UserBaseData
+    public class UserBaseDataModel
     {
         /// <summary>
         /// このユーザーのIdを取得または設定します。
@@ -41,9 +41,9 @@ namespace RaumiDiscord.Core.Server.Api.Models
         public bool IsWebhook { get; set; }
 
         /// <summary>
-        /// このユーザーのレベルを取得または設定します。
+        /// このユーザーのExpを取得または設定します。
         /// </summary>
-        public int Level { get; set; }
+        public int Exp { get; set; }
 
         /// <summary>
         /// このユーザーの誕生日を取得または設定します。

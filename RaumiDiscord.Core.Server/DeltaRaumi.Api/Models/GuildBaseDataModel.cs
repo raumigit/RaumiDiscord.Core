@@ -6,7 +6,7 @@ namespace RaumiDiscord.Core.Server.Api.Models
     /// <summary>
     /// ギルドの基本データを表します。
     /// </summary>
-    public class GuildBaseData
+    public class GuildBaseDataModel
     {
         /// <summary>
         ///  ギルドのIdを取得または設定します。

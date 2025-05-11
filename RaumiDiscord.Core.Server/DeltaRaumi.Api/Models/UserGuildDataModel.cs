@@ -7,19 +7,19 @@ namespace RaumiDiscord.Core.Server.Api.Models
     /// ユーザーのギルドデータを表します。
     /// </summary>
     [Keyless]
-    public class UserGuildData
+    public class UserGuildDataModel
     {
         /// <summary>
         /// ギルドの基本データへの外部キー参照を取得または設定します。
         /// </summary>
         [ForeignKey("GuildId")]
-        public required GuildBaseData GuildBaseData { get; set; }
+        public required GuildBaseDataModel GuildBaseData { get; set; }
 
         /// <summary>
         /// ユーザーの基本データへの外部キー参照を取得または設定します。
         /// </summary>
         [ForeignKey("UserId")]
-        public required UserBaseData UserBaseData { get; set; }
+        public required UserBaseDataModel UserBaseData { get; set; }
 
         /// <summary>
         /// ギルドの一意識別子を取得または設定します。
@@ -52,9 +52,14 @@ namespace RaumiDiscord.Core.Server.Api.Models
         public DateTime TimedOutUntil { get; set; }
 
         /// <summary>
-        /// ユーザーのギルド内でのレベルを取得または設定します。
+        /// ユーザーのギルド内でのExpを取得または設定します。
         /// </summary>
-        public int GuildLevel { get; set; }
+        public int Guild_Exp { get; set; }
+
+        /// <summary>
+        /// ユーザーが最後に経験値を得た時間を取得または設定します。
+        /// </summary>
+        public DateTime Latest_Exp { get; set; }
 
         /// <summary>
         /// ユーザーがギルド内で送信したメッセージの総数を取得または設定します。

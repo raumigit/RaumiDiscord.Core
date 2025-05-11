@@ -17,17 +17,17 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         /// <summary>
         /// ユーザーの基本データモデルのデータセットを取得または設定します。
         /// </summary>
-        public DbSet<GuildBaseData> GuildBases { get; set; }
+        public DbSet<GuildBaseDataModel> GuildBases { get; set; }
 
         /// <summary>
         /// ユーザーのベースデータモデルのデータセットを取得または設定します。
         /// </summary>
-        public DbSet<UserBaseData> UserBases { get; set; }
+        public DbSet<UserBaseDataModel> UserBases { get; set; }
 
         /// <summary>
         /// ユーザーのギルドデータモデルのデータセットを取得または設定します。
         /// </summary>
-        public DbSet<UserGuildData> UserGuildData { get; set; }
+        public DbSet<UserGuildDataModel> UserGuildData { get; set; }
 
         /// <summary>
         /// URLデータモデルのデータセットを取得または設定します。
