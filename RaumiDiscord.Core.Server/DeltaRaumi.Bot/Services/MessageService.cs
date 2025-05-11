@@ -1,8 +1,11 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using NuGet.Protocol;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using System.Diagnostics.Metrics;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Services
@@ -14,16 +17,21 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
     {
         private readonly ImprovedLoggingService _logger;
         private readonly DiscordSocketClient _client;
-
+        private DeltaRaumiDbContext _deltaRaumiDb;
+        private readonly DataEnsure _dataEnsure;
+        private readonly LevelService _levelService;
         /// <summary>
         /// MessageServiceのコンストラクター
         /// </summary>
         /// <param name="client"></param>
         /// <param name="logging"></param>
-        public MessageService(DiscordSocketClient client, ImprovedLoggingService logging)
+        public MessageService(DiscordSocketClient client, ImprovedLoggingService logging, DeltaRaumiDbContext deltaRaumiDb, DataEnsure dataEnsure, LevelService levelService)
         {
             _client = client;
             _logger = logging;
+            _deltaRaumiDb = deltaRaumiDb;
+            _dataEnsure = dataEnsure;
+            _levelService = levelService;
 
 
             // イベントハンドラを登録
@@ -125,9 +133,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         /// <returns></returns>
         public async Task LevelsHandler(SocketMessage message)
         {
-
-            //LevelService levelService = new LevelService();
-            //await levelService.LevelsProsessAsync(message);
+            await _levelService.LevelsProsessAsync(message);
         }
 
         

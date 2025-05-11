@@ -17,7 +17,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
         private readonly ImprovedLoggingService _logger;
         private readonly DeltaRaumiDbContext _deltaRaumiDB;
         private readonly DiscordSocketClient _client;
-        private readonly Database.DataEnsure _dataEnsure;
+        private readonly DataEnsure _dataEnsure;
         private readonly Random _random;
 
 
@@ -29,18 +29,18 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
         /// <param name="logging">ロギングサービス</param>
         /// <param name="deltaRaumiDb">データベースコンテキスト</param>
         /// <param name="dataEnsure">データベースヘルパー</param>
-        public LevelService(DiscordSocketClient client, ImprovedLoggingService logging, DeltaRaumiDbContext deltaRaumiDb,DataEnsure dataEnsure )
+        public LevelService(
+            DiscordSocketClient client,
+            ImprovedLoggingService logging,
+            DeltaRaumiDbContext deltaRaumiDb,
+            DataEnsure dataEnsure)
         {
             _client = client;
             _logger = logging;
             _deltaRaumiDB = deltaRaumiDb;
             _dataEnsure = dataEnsure;
             _random = new Random();
-            // イベントハンドラを登録
-            //_client.MessageReceived += LevelsProsessAsync;
         }
-
-        
 
         /// <summary>
         /// LevelsProsessAsyncは、メッセージを処理し、レベルアップの処理を行います。
@@ -60,7 +60,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             var guild = guildChannel.Guild as SocketGuild;
             var guildUser = message.Author as SocketGuildUser;
 
-            var ensure = new Database.DataEnsure();
+            var ensure = new DataEnsure(_deltaRaumiDB,_logger,_client);
 
             if (guild == null || guildUser == null)
             {
@@ -70,7 +70,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             try
             {
                 // GuildBaseDataの確認と初期化
-                var guildData = await _dataEnsure.EnsureGuildBaseDataExistsAsync(guild);
+                var guildData = await _dataEnsure.EnsureGuildBaseDataExistsAsync(guild); //
 
                 // UserBaseDataの確認と初期化
                 var userData = await _dataEnsure.EnsureUserBaseDataExistsAsync(guildUser);
@@ -90,7 +90,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                 await _logger.Log($"レベリング処理中にエラーが発生しました: {ex.Message}","LevelService",ImprovedLoggingService.LogLevel.Error);
             }
 
-            //Console.WriteLine("Level OK");
+            Console.WriteLine("Level OK");
             //return Task.CompletedTask;
         }
 

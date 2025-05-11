@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RaumiDiscord.Core.Server.Api.Models
@@ -6,9 +7,11 @@ namespace RaumiDiscord.Core.Server.Api.Models
     /// <summary>
     /// ユーザーのギルドデータを表します。
     /// </summary>
-    [Keyless]
+    
     public class UserGuildDataModel
     {
+        
+
         /// <summary>
         /// ギルドの基本データへの外部キー参照を取得または設定します。
         /// </summary>
@@ -20,6 +23,12 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// </summary>
         [ForeignKey("UserId")]
         public required UserBaseDataModel UserBaseData { get; set; }
+
+        /// <summary>
+        /// ギルドユーザーを管理する一意のID
+        /// </summary>
+        [Key]
+        public Guid guId { get; set; }
 
         /// <summary>
         /// ギルドの一意識別子を取得または設定します。

@@ -73,6 +73,6 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// ログチャンネルのIdを取得または設定します。
         /// チャンネルに送信することのできるログのすべてがここから送信されます。
         /// </summary>
-        public string LogChannel {  get; set; }
+        public string? LogChannel {  get; set; }
     }
 }

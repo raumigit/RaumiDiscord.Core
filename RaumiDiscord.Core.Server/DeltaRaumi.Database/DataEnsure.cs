@@ -24,18 +24,16 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
         /// </summary>
         /// <param name="deltaRaumiDb">データベースコンテキスト</param>
         /// <param name="logging">ロギングサービス</param>
-        public DataEnsure(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logging)
+        /// <param name="client"></param>
+        public DataEnsure(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logging ,DiscordSocketClient client) 
         {
             _deltaRaumiDB = deltaRaumiDb;
             _logger = logging;
-            //_client = client;
+            _client = client;
             //_guild = guild;
         }
 
-        public DataEnsure()
-        {
-        }
-
+       
         //private void CompletionUrlDataModelAsync()
         //{
         //}
@@ -133,14 +131,14 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
                 IconUrl = guild.IconUrl,
                 BannerUrl = guild.BannerUrl,
                 OwnerID = guild.OwnerId.ToString(),
-                WelcomeChannnelID = guild.SystemChannel?.Id.ToString(),
+                WelcomeChannnelID = null,
                 CreatedAt = guild.CreatedAt.UtcDateTime,
                 Description = guild.Description,
                 MaxUploadLimit = guild.MaxUploadLimit,
                 MemberCount = guild.MemberCount,
                 PremiumSubscriptionCount = guild.PremiumSubscriptionCount,
                 PremiumTier = guild.PremiumTier,
-                LogChannel = guild.SystemChannel?.Id.ToString() ?? ""
+                LogChannel = null
             };
 
             _deltaRaumiDB.GuildBases.Add(guildData);
