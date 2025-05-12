@@ -34,6 +34,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         /// </summary>
         public DbSet<UrlDataModel> UrlDataModels { get; set; } = null!;
 
+        /// <summary>
+        /// ユーザーのギルド統計データモデルのデータセットを取得または設定します。
+        /// </summary>
+        public DbSet<UserGuildStatsModel> UserGuildStats { get; set; }
+
         private DatabaseType databaseType = DatabaseType.Sqlite;
 
 

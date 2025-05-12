@@ -1,30 +1,32 @@
 ﻿using NUlid;
+using System.ComponentModel.DataAnnotations;
 
 namespace RaumiDiscord.Core.Server.Api.Models
 {
     /// <summary>
     /// Discordの統計データを表すモデルクラスです。
     /// </summary>
-    public class DiscordStatsModel
+    public class UserGuildStatsModel
     {
         /// <summary>
         /// 統計データの一意識別子としてUlidを取得または設定します。
         /// </summary>
-        public Ulid ulid { get; set; }
+        [Key]
+        public Guid StatUlid { get; set; }
 
         /// <summary>
         /// 統計データが関連するギルドの一意識別子を取得または設定します。
         /// </summary>
-        public string guildId { get; set; }
+        public string GuildId { get; set; }
 
         /// <summary>
         /// 統計データが関連するユーザーの一意識別子を取得または設定します。
         /// </summary>
-        public string userId { get; set; }
+        public string UserId { get; set; }
 
         /// <summary>
         /// 統計データが作成された日時を取得または設定します。
         /// </summary>
-        public DateTime createdAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }
