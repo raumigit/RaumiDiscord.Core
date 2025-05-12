@@ -113,7 +113,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
                             builder.WithAuthor(component.User);
                             builder.WithTitle("サーバーの状態");
                             builder.WithDescription(
-                                "バージョン：0.1.2.3 (2025-04-16-5:10)\n " +
+                                "バージョン：0.1.3.1 (2025-05-11-18:08)\n " +
                                 "外部連携：null\n" +
                                 "読み上げエンジン：null\n" +
                                 "WebGUI：null" +

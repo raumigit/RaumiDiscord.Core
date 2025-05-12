@@ -142,18 +142,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 if (urlType == "URL")
                 {
                     results = await deltaRaumiDB.UrlDataModels
-                    .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id.ToString())
+                    .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id.ToString()|| u.Publish == true)
                     .Select(u => $"{u.Url}")
                     .ToListAsync();
+
+                    
                 }
-                else if (urlType == "URL" && publishAttri == true)
-                {
-                    results = await deltaRaumiDB.UrlDataModels
-                    .Where(u => u.UrlType == urlType && publishAttri == true)
-                    .Select(u => $"{u.Url}")
-                    .ToListAsync();
-                }
-                else
+               else
                 {
                     results = await deltaRaumiDB.UrlDataModels
                     .Where(u => u.UrlType == urlType && u.TTL > now)
