@@ -1,15 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Data;
 
 namespace RaumiDiscord.Core.Server.Api.Models
 {
-    public class UserBaseData
+    /// <summary>
+    /// ユーザーの基本データを表します。
+    /// </summary>
+    public class UserBaseDataModel
     {
         /// <summary>
         /// このユーザーのIdを取得または設定します。
         /// この値はulongである必要があります。
         /// </summary>
-        /// 注意：SocketMessage Author.Idで取得してください。
+        /// <remarks>注意：SocketMessage Author.Idで取得してください。</remarks>
         [Key]
         public required string UserId { get; set; }
 
@@ -31,7 +33,7 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// <summary>
         /// このユーザーがボットとして識別されるかどうかを示す値を取得または設定します。
         /// </summary>
-        public bool Isbot { get; set; }
+        public bool IsBot { get; set; }
 
         /// <summary>
         /// このユーザーが Webhook ユーザーであるかどうかを示す値を取得または設定します。
@@ -39,12 +41,12 @@ namespace RaumiDiscord.Core.Server.Api.Models
         public bool IsWebhook { get; set; }
 
         /// <summary>
-        /// このユーザーのレベル取得または設定します。
+        /// このユーザーのExpを取得または設定します。
         /// </summary>
-        public int Level {  get; set; }
+        public int Exp { get; set; }
 
         /// <summary>
-        /// このユーザーの誕生日の取得または設定します。
+        /// このユーザーの誕生日を取得または設定します。
         /// 年が使われることはありません。
         /// </summary>
         public string? Barthday { get; set; }
