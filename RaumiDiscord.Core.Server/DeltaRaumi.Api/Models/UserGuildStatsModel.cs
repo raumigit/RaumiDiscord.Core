@@ -12,7 +12,7 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// 統計データの一意識別子としてUlidを取得または設定します。
         /// </summary>
         [Key]
-        public Guid StatUlid { get; set; }
+        public Ulid StatUlid { get; set; }
 
         /// <summary>
         /// 統計データが関連するギルドの一意識別子を取得または設定します。

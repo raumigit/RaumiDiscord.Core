@@ -75,13 +75,15 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 
                 var userGuildStats = new UserGuildStatsModel
                 {
-                    StatUlid = Ulid.NewUlid().ToGuid(),
+                    StatUlid = Ulid.NewUlid(),
                     GuildId = guildChannel.Id.ToString(),
                     UserId = guildUser.Id.ToString(),
                     CreatedAt = DateTime.UtcNow,
                 };
 
                 await _deltaRaumiDB.UserGuildStats.AddAsync(userGuildStats);
+                await _logger.Log($"Statの記録が完了", "StatService", ImprovedLoggingService.LogLevel.Verbose);
+
 
             }
             catch (Exception ex)
@@ -90,7 +92,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 
             }
             Console.WriteLine("StatService OK");
-            
         }
     }
 }

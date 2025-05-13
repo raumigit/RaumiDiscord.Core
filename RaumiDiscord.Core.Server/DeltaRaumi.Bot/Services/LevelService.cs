@@ -84,6 +84,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                     // 経験値の付与とメッセージカウントの更新
                     await UpdateUserExperienceAsync(userGuildData, guildUser, guild);
                 }
+                else
+                {
+                    userGuildData.TotalMessage++;
+                    await _deltaRaumiDB.SaveChangesAsync();
+                }
+                
             }
             catch (Exception ex)
             {

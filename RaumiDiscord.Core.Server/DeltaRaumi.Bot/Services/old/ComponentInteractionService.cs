@@ -4,6 +4,7 @@ using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
+using System.Reflection;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
 {
@@ -16,6 +17,9 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
 
         private Color RaumiMainColor = new Color(0x7bb3ee);
         private Color RaumiSubColor = new Color(0xf02443);
+
+        
+        private string Version = $"バージョン:0.1.3.8　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
 
         public Configuration configuration { get; set; }
 
@@ -113,7 +117,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
                             builder.WithAuthor(component.User);
                             builder.WithTitle("サーバーの状態");
                             builder.WithDescription(
-                                "バージョン：0.1.3.1 (2025-05-11-18:08)\n " +
+                                $"{Version}\n " +
                                 "外部連携：null\n" +
                                 "読み上げエンジン：null\n" +
                                 "WebGUI：null" +
