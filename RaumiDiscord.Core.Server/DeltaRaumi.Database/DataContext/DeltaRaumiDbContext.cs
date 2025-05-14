@@ -63,9 +63,9 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         {
             switch (databaseType)
             {
-                case DatabaseType.MariaDb:
-                    optionsBuilder.UseMySql(MySqlConfig.FromConfigFile().GetConnectionString(), new MariaDbServerVersion("11.6.2"));
-                    break;
+                //case DatabaseType.MariaDb:
+                //    optionsBuilder.UseMySql(MySqlConfig.FromConfigFile().GetConnectionString(), new MariaDbServerVersion("11.6.2"));
+                //    break;
 
                 case DatabaseType.Sqlite:
                     if (!File.Exists("Resources\\Data\\DeltaRaumiData.db"))
