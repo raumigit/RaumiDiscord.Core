@@ -45,16 +45,27 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         /// <returns></returns>
         public async Task GetMessageReceivedAsync(SocketMessage message)
         {
+            
+            
+
             if (true)
             {
-                Console.WriteLine($"*ReceivedServer:");
+                if (message.Channel is SocketGuildChannel guildChannel)
+                {
+                    SocketGuild guild=guildChannel.Guild;
+                    Console.WriteLine($"*ReceivedServer:{guild.Name}");
+                }
+                else
+                {
+                    Console.WriteLine($"*ReceivedServer:DM");
+                }
                 Console.WriteLine($"|ReceivedChannel:{message.Channel}");
                 Console.WriteLine($"|ReceivedUser:{message.Author}");
                 Console.WriteLine($"|MessageReceived:{message.Content}");
                 Console.WriteLine($"|CleanContent:{message.CleanContent}");
                 Console.WriteLine($"|>EmbedelMessage:{message.Embeds.ToJson()}");
             }
-            
+
 
             //ボットは自分自身に応答してはなりません。
             if (message.Author.Id == _client.CurrentUser.Id)

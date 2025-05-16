@@ -50,6 +50,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             {
                 return;
             }
+            else
+            {
+                
+            }
 
             var guildChannel = message.Channel as ITextChannel;
             var guild = guildChannel.Guild as SocketGuild;
@@ -76,7 +80,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                 var userGuildStats = new UserGuildStatsModel
                 {
                     StatUlid = Ulid.NewUlid(),
-                    GuildId = guildChannel.Id.ToString(),
+                    GuildId = guild.Id.ToString(),
                     UserId = guildUser.Id.ToString(),
                     CreatedAt = DateTime.UtcNow,
                 };
