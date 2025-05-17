@@ -102,7 +102,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
                     UserBaseData = userData,
                     GuildId = guildId,
                     UserId = userId,
-                    GuildAvatarId = user.GetDisplayAvatarUrl(),
+                    GuildAvatarId = user.GetGuildAvatarUrl()??user.GetAvatarUrl()??user.GetDefaultAvatarUrl(),
                     JoinedAt = user.JoinedAt?.UtcDateTime ?? DateTime.UtcNow,
                     TimedOutUntil = user.TimedOutUntil?.UtcDateTime ?? DateTime.MinValue,
                     Guild_Exp = 0,

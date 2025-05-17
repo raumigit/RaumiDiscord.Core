@@ -1,9 +1,12 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using Color = SixLabors.ImageSharp.Color;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
@@ -125,13 +128,17 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 string discordname = Context.User.Username;
                 string profileImageFlame = @".\Assets\Image\sampleflame.png";
 
-                string avatarUrl = Context.User.GetAvatarUrl(Discord.ImageFormat.Png);
+                string avatarUrl = (Context.User as IGuildUser)?.GetGuildAvatarUrl(ImageFormat.Auto)
+                ?? Context.User.GetAvatarUrl(ImageFormat.Auto)
+                ?? Context.User.GetDefaultAvatarUrl();
+                
                 string avatarPath = $@".\Temp\Discordicon\128\{Context.User.Id}.png";
 
                 Directory.CreateDirectory(@".\Temp\Discordicon\128");
                 Directory.CreateDirectory(@".\Tests\namecard");
 
                 //RaumiDiscord.Core.Server.DiscordBot.Services.ImageGenerator();
+                
 
                 using (HttpClient client = new HttpClient())
                 {
