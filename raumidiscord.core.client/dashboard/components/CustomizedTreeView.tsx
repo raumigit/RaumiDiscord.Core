@@ -1,4 +1,4 @@
-﻿import Box from '@mui/material/Box';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Collapse from '@mui/material/Collapse';
@@ -28,6 +28,7 @@ type ExtendedTreeItemProps = {
   label: string;
 };
 
+//ツリーの実データ
 const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
   {
     id: '1',
@@ -67,7 +68,7 @@ const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
     ],
   },
   { id: '4', label: 'Contact', color: 'blue' },
-  { id: '5', label: 'Help', color: 'blue' },
+  { id: '5', label: 'ヘルプ', color: 'blue' },
 ];
 
 function DotIcon({ color }: { color: string }) {
@@ -182,7 +183,7 @@ export default function CustomizedTreeView() {
     >
       <CardContent>
         <Typography component="h2" variant="subtitle2">
-          Product tree
+          ツリー
         </Typography>
         <RichTreeView
           items={ITEMS}

@@ -1,10 +1,9 @@
-import * as React from 'react';
-import Stack from '@mui/material/Stack';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import CustomDatePicker from './CustomDatePicker';
-import NavbarBreadcrumbs from './NavbarBreadcrumbs';
-import MenuButton from './MenuButton';
+import Stack from '@mui/material/Stack';
 import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
+import CustomDatePicker from './CustomDatePicker';
+import MenuButton from './MenuButton';
+import NavbarBreadcrumbs from './NavbarBreadcrumbs';
 
 import Search from './Search';
 
@@ -27,7 +26,7 @@ export default function Header() {
         <Search />
         <CustomDatePicker />
         <MenuButton showBadge aria-label="Open notifications">
-          <NotificationsRoundedIcon />
+          <NotificationsRoundedIcon /> 
         </MenuButton>
         <ColorModeIconDropdown />
       </Stack>

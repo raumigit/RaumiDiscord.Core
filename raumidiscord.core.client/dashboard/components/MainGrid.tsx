@@ -1,12 +1,11 @@
-import * as React from 'react';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Copyright from '../internals/components/Copyright';
 import ChartUserByCountry from './ChartUserByCountry';
-import CustomizedTreeView from './CustomizedTreeView';
 import CustomizedDataGrid from './CustomizedDataGrid';
+import CustomizedTreeView from './CustomizedTreeView';
 import HighlightedCard from './HighlightedCard';
 import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
@@ -14,9 +13,9 @@ import StatCard, { StatCardProps } from './StatCard';
 
 const data: StatCardProps[] = [
   {
-    title: 'Users',
-    value: '14k',
-    interval: 'Last 30 days',
+    title: 'ユーザー数',
+    value: '270',
+    interval: '直近30日',
     trend: 'up',
     data: [
       200, 24, 220, 260, 240, 380, 100, 240, 280, 240, 300, 340, 320, 360, 340, 380,
@@ -24,9 +23,9 @@ const data: StatCardProps[] = [
     ],
   },
   {
-    title: 'Conversions',
+    title: 'アクティブな活動',
     value: '325',
-    interval: 'Last 30 days',
+    interval: '直近30日',
     trend: 'down',
     data: [
       1640, 1250, 970, 1130, 1050, 900, 720, 1080, 900, 450, 920, 820, 840, 600, 820,
@@ -34,9 +33,9 @@ const data: StatCardProps[] = [
     ],
   },
   {
-    title: 'Event count',
-    value: '200k',
-    interval: 'Last 30 days',
+    title: 'イベントカウント',
+    value: '423',
+    interval: '直近30日',
     trend: 'neutral',
     data: [
       500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620, 510, 530,
@@ -74,7 +73,7 @@ export default function MainGrid() {
         </Grid>
       </Grid>
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Details
+        詳細ステータス
       </Typography>
       <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, lg: 9 }}>

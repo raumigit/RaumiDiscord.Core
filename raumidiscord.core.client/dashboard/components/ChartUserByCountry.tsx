@@ -1,19 +1,19 @@
-import * as React from 'react';
-import { PieChart } from '@mui/x-charts/PieChart';
-import { useDrawingArea } from '@mui/x-charts/hooks';
-import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import { useDrawingArea } from '@mui/x-charts/hooks';
+import { PieChart } from '@mui/x-charts/PieChart';
+import * as React from 'react';
 
 import {
-  IndiaFlag,
-  UsaFlag,
   BrazilFlag,
   GlobeFlag,
+  IndiaFlag,
+  UsaFlag,
 } from '../internals/components/CustomIcons';
 
 const data = [
@@ -129,7 +129,7 @@ export default function ChartUserByCountry() {
     >
       <CardContent>
         <Typography component="h2" variant="subtitle2">
-          Users by country
+        国別のユーザー
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <PieChart
@@ -146,16 +146,14 @@ export default function ChartUserByCountry() {
                 innerRadius: 75,
                 outerRadius: 100,
                 paddingAngle: 0,
-                highlightScope: { faded: 'global', highlighted: 'item' },
+                highlightScope: { fade: 'global', highlight: 'item' },
               },
             ]}
             height={260}
             width={260}
-            slotProps={{
-              legend: { hidden: true },
-            }}
+            hideLegend
           >
-            <PieCenterLabel primaryText="98.5K" secondaryText="Total" />
+            <PieCenterLabel primaryText="98.5K" secondaryText="トータル" />
           </PieChart>
         </Box>
         {countries.map((country, index) => (

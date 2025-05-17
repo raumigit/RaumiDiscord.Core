@@ -1,8 +1,7 @@
-import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
-import { GridCellParams, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
+import { GridCellParams, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 
 type SparkLineData = number[];
 
@@ -146,10 +145,10 @@ export const rows: GridRowsProp = [
   },
   {
     id: 2,
-    pageTitle: 'Product Details - Gadgets',
+    pageTitle: 'メッセージ受信量',
     status: 'Online',
     eventCount: 5653,
-    users: 172240,
+    users: 172,
     viewsPerUser: 9.7,
     averageTime: '2m 30s',
     conversions: [

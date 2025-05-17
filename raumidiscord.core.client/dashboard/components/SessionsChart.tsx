@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
-import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
@@ -47,7 +46,7 @@ export default function SessionsChart() {
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Sessions
+          セッション
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
@@ -64,7 +63,7 @@ export default function SessionsChart() {
             <Chip size="small" color="success" label="+35%" />
           </Stack>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Sessions per day for the last 30 days
+          過去30日間
           </Typography>
         </Stack>
         <LineChart
@@ -74,12 +73,14 @@ export default function SessionsChart() {
               scaleType: 'point',
               data,
               tickInterval: (index, i) => (i + 1) % 5 === 0,
+              height: 24,
             },
           ]}
+          yAxis={[{ width: 50 }]}
           series={[
             {
               id: 'direct',
-              label: 'Direct',
+              label: '直接',
               showMark: false,
               curve: 'linear',
               stack: 'total',
@@ -93,7 +94,7 @@ export default function SessionsChart() {
             },
             {
               id: 'referral',
-              label: 'Referral',
+              label: 'シェア経由',
               showMark: false,
               curve: 'linear',
               stack: 'total',
@@ -107,7 +108,7 @@ export default function SessionsChart() {
             },
             {
               id: 'organic',
-              label: 'Organic',
+              label: '自然',
               showMark: false,
               curve: 'linear',
               stack: 'total',
@@ -121,7 +122,7 @@ export default function SessionsChart() {
             },
           ]}
           height={250}
-          margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
+          margin={{ left: 0, right: 20, top: 20, bottom: 0 }}
           grid={{ horizontal: true }}
           sx={{
             '& .MuiAreaElement-series-organic': {
@@ -134,11 +135,7 @@ export default function SessionsChart() {
               fill: "url('#direct')",
             },
           }}
-          slotProps={{
-            legend: {
-              hidden: true,
-            },
-          }}
+          hideLegend
         >
           <AreaGradient color={theme.palette.primary.dark} id="organic" />
           <AreaGradient color={theme.palette.primary.main} id="referral" />
