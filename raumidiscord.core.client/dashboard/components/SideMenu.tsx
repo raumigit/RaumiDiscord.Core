@@ -68,7 +68,7 @@ export default function SideMenu() {
         <Avatar
           sizes="small"
           alt="raumi2019"
-          src="/static/images/avatar/7.jpg"
+          src="https://cdn.discordapp.com/avatars/558636367106539521/1bcd89ee7d24d5f0c909e61225524ac6.png"
           sx={{ width: 36, height: 36 }}
         />
         <Box sx={{ mr: 'auto' }}>

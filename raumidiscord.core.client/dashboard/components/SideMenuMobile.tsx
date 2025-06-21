@@ -43,7 +43,7 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
             <Avatar
               sizes="small"
               alt="raumi2019"
-              src="/static/images/avatar/7.jpg"
+              src="https://cdn.discordapp.com/avatars/558636367106539521/1bcd89ee7d24d5f0c909e61225524ac6.png"
               sx={{ width: 24, height: 24 }}
             />
             <Typography component="p" variant="h6">
