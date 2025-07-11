@@ -10,7 +10,13 @@ namespace RaumiDiscord.Core.Server.Api.Models
     
     public class UserGuildDataModel
     {
-        
+        /// <summary>
+        /// UserGuildDataModelのコンストラクターです。
+        /// </summary>
+        public UserGuildDataModel()
+        {
+            SetToMention = -1;
+        }
 
         /// <summary>
         /// ギルドの基本データへの外部キー参照を取得または設定します。
@@ -74,5 +80,11 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// ユーザーがギルド内で送信したメッセージの総数を取得または設定します。
         /// </summary>
         public int TotalMessage { get; set; }
+
+        /// <summary>
+        /// ユーザーが受け取ることのできるメンションの上限数を取得または設定します。
+        /// </summary>
+        public int SetToMention { get; set; }
+
     }
 }

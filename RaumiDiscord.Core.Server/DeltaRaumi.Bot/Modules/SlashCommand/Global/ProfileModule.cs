@@ -190,7 +190,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 
                             // 名前をアイコン下に配置
                             ctx.DrawText(discordname, font, Color.White, new PointF(margin, picmargin + margin / 2));
-                            ctx.DrawText("Welcome", font, Color.Cyan, new PointF(margin + 50, iconsize + 48 + margin * 2));
+                            ctx.DrawText($"{Context.Guild.Name}", font, Color.Cyan, new PointF(margin + 50, iconsize + 48 + margin * 2));
                             if (comment != null)
                             {
                                 ctx.DrawText(comment, commentfont, Color.Black, new PointF(margin, backgroundimage.Height - (margin + commentfont.Size)));

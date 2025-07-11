@@ -99,11 +99,14 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
             return Task.CompletedTask;
         }
 
-        internal Task UserJoinedAsync(SocketGuildUser user)
+        internal async Task UserJoinedAsync(SocketGuildUser user)
         {
             // 実装が必要な場合はここに処理を追加
             _loggerService.Log($"User joined: {user.Username}", "UserJoinedAsync");
-            return Task.CompletedTask;
+
+            await _welcome.welcomeCardGenerator(user);
+            
+            //return Task.CompletedTask;
         }
 
         internal Task UserLeftAsync(SocketGuildUser user)

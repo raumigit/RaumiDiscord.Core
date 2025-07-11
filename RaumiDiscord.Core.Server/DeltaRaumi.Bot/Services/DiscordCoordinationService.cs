@@ -13,13 +13,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         private readonly ImprovedLoggingService LoggingService;
         private readonly WelcomeMessageService WelcomeMessageService;
         public Configuration config { get; set; }
-        public DiscordCoordinationService(DiscordSocketClient client, SlashCommandInterationService slashCommandService, ComponentInteractionService componentInteractionService, ImprovedLoggingService loggingService, WelcomeMessageService welcomeMessageService)
+        public DiscordCoordinationService(DiscordSocketClient client, SlashCommandInterationService slashCommandService, ComponentInteractionService componentInteractionService, ImprovedLoggingService loggingService/*, WelcomeMessageService welcomeMessageService*/)
         {
             Client = client;
             SlashCommandService = slashCommandService;
             ComponentInteractionService = componentInteractionService;
             LoggingService = loggingService;
-            WelcomeMessageService = welcomeMessageService;
+            //WelcomeMessageService = welcomeMessageService;
 
             Client.Ready += OnReady;
         }

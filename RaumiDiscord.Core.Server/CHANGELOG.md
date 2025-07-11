@@ -1,8 +1,122 @@
-This file explains how Visual Studio created the project.
+﻿# V0.1
+初期のバージョン
+## 変更履歴
 
-The following steps were used to generate this project:
-- Create new ASP\.NET Core Web API project.
-- Update `launchSettings.json` to register the SPA proxy as a startup assembly.
-- Update project file to add a reference to the frontend project and set SPA properties.
-- Add project to the startup projects list.
-- Write this file.
+## 🌟 ハイライト
+
+- モジュールベースへの変更の準備+実装 @raumigit (#51)
+
+## 🏗️ 改善・強化
+
+- Raumi workspace @raumigit (#88)
+- モジュールベースへの変更の準備+実装 @raumigit (#51)
+- SelectMenuの実装 @raumigit (#13)
+- VCリージョン変更の挙動変更 @raumigit (#9)
+- スラッシュコマンドのRegion部分のマージ @raumigit (#2)
+
+## 📈 バグ修正
+
+- SelectMenuの実装 @raumigit (#13)
+
+## 🧰 メンテナンス
+
+<details>
+<summary>92 changes</summary>
+
+- fix release-drafter.yml @raumigit (#115)
+- v0.1.2 Update README.md @raumigit (#114)
+- fix release-drafter.yml @raumigit (#113)
+- Update material-ui monorepo to v6.4.7 @renovate (#102)
+- Update dependency axios to v1.8.2 @renovate (#106)
+- Update dependency SixLabors.ImageSharp to 3.1.7 [SECURITY] @renovate (#104)
+- Update dependency react-router-dom to v7.3.0 @renovate (#111)
+- Update release-drafter/release-drafter action to v6.1.0 @renovate (#108)
+- Update dependency typescript to ~5.8.0 @renovate (#82)
+- Update dependency vite to v6.2.1 @renovate (#105)
+- Update release-drafter.yml @raumigit (#112)
+- Update release-drafter.yml @raumigit (#110)
+- v0.1.2 @raumigit (#101)
+- Update release-drafter.yml @raumigit (#109)
+- Raumigit patch release drafter @raumigit (#107)
+- Update dependency @types/node to v22.13.9 @renovate (#99)
+- Update dependency typescript-eslint to v8.26.0 @renovate (#100)
+- Update release-drafter.yml @raumigit (#98)
+- Update release-drafter.yml @raumigit (#97)
+- Update release-drafter.yml @raumigit (#96)
+- Raumi workspace web @raumigit (#94)
+- Update release-drafter.yml @raumigit (#93)
+- v0.1.0 @raumigit (#92)
+- Update release-drafter.yml @raumigit (#91)
+- Raumi workspace @raumigit (#90)
+- marge for Raumi\_Workspace\_Web @raumigit (#89)
+- Update dependency @types/node to v22.13.8 @renovate (#86)
+- Raumi workspace web @raumigit (#87)
+- Update dependency eslint-plugin-react-hooks to v5.2.0 @renovate (#81)
+- Update dependency Swashbuckle.AspNetCore to 7.3.1 @renovate (#80)
+- Update dependency vite to v6.2.0 @renovate (#79)
+- Update dependency typescript-eslint to v8.25.0 @renovate (#78)
+- Update eslint monorepo to v9.21.0 @renovate (#75)
+- Update dependency @types/node to v22.13.7 @renovate (#74)
+- Update dependency globals to v16 @renovate (#72)
+- fix DataModel and Bookmaek @raumigit (#85)
+- Raumi workspace @raumigit (#83)
+- webブランチの修正 @raumigit (#73)
+- Update dependency vite to v6.1.1 @renovate (#69)
+- Update dependency typescript-eslint to v8.24.1 @renovate (#68)
+- Update react monorepo to v19.0.10 @renovate (#61)
+- Update feature\_request.yml @raumigit (#67)
+- Update feature\_request.yml @raumigit (#66)
+- Update issue templates @raumigit (#65)
+- Rename feature\_request to feature\_request.yml @raumigit (#64)
+- Update issue report.yml @raumigit (#63)
+- Create feature\_request @raumigit (#62)
+- clientの修正 @raumigit (#60)
+- Raumi workspace web latestmarge @raumigit (#59)
+- fix BookmarkModule.cs @raumigit (#58)
+- Update actions/checkout action to v4.2.2 @renovate (#57)
+- Update release-drafter.yml @raumigit (#56)
+- Update dependency @types/node to v22.13.4 @renovate (#55)
+- Patchupdate (codeversion) @raumigit (#54)
+- masterからのコピー @raumigit (#53)
+- Update dependency @types/node to v22.13.2 @renovate (#52)
+- Update dependency globals to v15.15.0 @renovate (#50)
+- Update dotnet monorepo to 9.0.2 @renovate (#49)
+- Update dependency eslint to v9.20.1 @renovate (#48)
+- Update dependency typescript-eslint to v8.24.0 @renovate (#47)
+- Update dependency eslint-plugin-react-refresh to v0.4.19 @renovate (#46)
+- Update eslint monorepo to v9.20.0 @renovate (#45)
+- Update DeltaRaumiCompileTest.yml @raumigit (#44)
+- StyleCopに基づく微修正 @raumigit (#41)
+- Master->Raumi\_Workspace(同期・更新) @raumigit (#40)
+- Update dependency typescript-eslint to v8.23.0 @renovate (#36)
+- Update dependency @types/node to v22.13.1 @renovate (#37)
+- Update dependency vite to v6.1.0 @renovate (#38)
+- 軽微な修正(文字コード・Listen等その他) @raumigit (#39)
+- fix Configuration @raumigit (#34)
+- Update dependency @types/node to 22.13 @renovate (#33)
+- Merged issue\_template @raumigit (#32)
+- Raumi workspace @raumigit (#31)
+- masterからのマージ(依存関係の更新) @raumigit (#30)
+- バージョンの修正 @raumigit (#29)
+- Update dotnet monorepo to 9.0.1 @renovate (#19)
+- Update dependency @types/node to 22.12 - autoclosed @renovate (#20)
+- Update dependency typescript to ~5.7.0 @renovate (#21)
+- Update dependency typescript-eslint to v8.22.0 @renovate (#22)
+- Update eslint monorepo to v9.19.0 @renovate (#23)
+- Update actions/checkout action to v4 @renovate (#24)
+- Update actions/setup-dotnet action to v4 @renovate (#25)
+- Update dependency Microsoft.VisualStudio.Web.CodeGeneration.Design to v9 @renovate (#26)
+- Update react monorepo to v19 (major) - autoclosed @renovate (#28)
+- Update dependency ubuntu to v24 @renovate (#27)
+- Update dependency vite to v6.0.11 @renovate (#18)
+- Update dependency Discord.Net to 3.17.1 @renovate (#16)
+- Update dependency vite to v6.0.9 [SECURITY] @renovate (#15)
+- Configure Renovate @renovate (#14)
+- 配置の修正とエンティティモデルの構築+ @raumigit (#12)
+- 新しいマイグレーションとトークンパスの統合 @raumigit (#8)
+- 冗長箇所の削除 @raumigit (#5)
+</details>
+
+
+# V0.2
+機能追加
