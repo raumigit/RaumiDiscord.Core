@@ -164,7 +164,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
                 IsWebhook = user.IsWebhook,
                 Exp = 0,
                 Barthday = null, // 初期値はnull、後で設定可
-                SetToMention = -1, // 初期値は-1、後で設定可
+                SetToMention = 0, // 初期値は-1、後で設定可
                 Userstatus = 0
             };
 

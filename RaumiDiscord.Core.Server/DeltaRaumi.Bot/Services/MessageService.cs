@@ -1,9 +1,11 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using NuGet.Protocol;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using System.Diagnostics.Metrics;
@@ -45,9 +47,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         /// <returns></returns>
         public async Task GetMessageReceivedAsync(SocketMessage message)
         {
-            
-            
-
             if (true)
             {
                 if (message.Channel is SocketGuildChannel guildChannel)
@@ -74,7 +73,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             if (message.Content == "!ping")
             {
                 await message.Channel.SendMessageAsync("pon!");
-                
             }
 
             try
@@ -102,6 +100,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                 await _logger.Log($"{e}", "MessageReceive", ImprovedLoggingService.LogLevel.Warning);
                 
             }
+            
         }
 
         

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NUlid;
 using RaumiDiscord.Core.Server.Api.Models;
+using RaumiDiscord.Core.Server.DeltaRaumi.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Infrastructure.Configuration;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
@@ -40,6 +41,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         /// ユーザーのギルド統計データモデルのデータセットを取得または設定します。
         /// </summary>
         public DbSet<UserGuildStatsModel> UserGuildStats { get; set; }
+
 
         private DatabaseType databaseType = DatabaseType.Sqlite;
 

@@ -29,40 +29,10 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        /// <summary>
-        /// メンションされた場合のユーザーのコレクションを取得または設定します。
-        /// </summary>
-        public ICollection<MentionedUsers>? Mentioneds { get; set; }
+        
+        public string MentionedUserId { get; set; }
+        
     }
 
-    /// <summary>
-    /// メンションされたユーザーを表すモデルクラスです。
-    /// </summary>
-    public class MentionedUsers
-    {
-        /// <summary>
-        /// MentionedUsersのコンストラクターです。
-        /// </summary>
-        public MentionedUsers()
-        {
-            Id = Guid.NewGuid();
-            CreatedAt = DateTime.Now;
-        }
-
-        /// <summary>
-        /// メンションしたユーザーの一意の識別子を取得または設定します。
-        /// </summary>
-        [Key]
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// データの作成日時を取得または設定します。
-        /// </summary>
-        public DateTime CreatedAt { get; set; }
-
-        /// <summary>
-        /// メンションされたユーザーのIdを取得または設定します。
-        /// </summary>
-        public int MentionedUserId { get; set; }
-    }
+    
 }
