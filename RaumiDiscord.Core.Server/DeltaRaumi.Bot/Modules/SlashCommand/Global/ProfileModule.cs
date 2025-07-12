@@ -1,9 +1,12 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using Color = SixLabors.ImageSharp.Color;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 {
@@ -125,13 +128,17 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 string discordname = Context.User.Username;
                 string profileImageFlame = @".\Assets\Image\sampleflame.png";
 
-                string avatarUrl = Context.User.GetAvatarUrl(Discord.ImageFormat.Png);
+                string avatarUrl = (Context.User as IGuildUser)?.GetGuildAvatarUrl(ImageFormat.Auto)
+                ?? Context.User.GetAvatarUrl(ImageFormat.Auto)
+                ?? Context.User.GetDefaultAvatarUrl();
+                
                 string avatarPath = $@".\Temp\Discordicon\128\{Context.User.Id}.png";
 
                 Directory.CreateDirectory(@".\Temp\Discordicon\128");
                 Directory.CreateDirectory(@".\Tests\namecard");
 
                 //RaumiDiscord.Core.Server.DiscordBot.Services.ImageGenerator();
+                
 
                 using (HttpClient client = new HttpClient())
                 {
@@ -183,7 +190,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 
                             // 名前をアイコン下に配置
                             ctx.DrawText(discordname, font, Color.White, new PointF(margin, picmargin + margin / 2));
-                            ctx.DrawText("Welcome", font, Color.Cyan, new PointF(margin + 50, iconsize + 48 + margin * 2));
+                            ctx.DrawText($"{Context.Guild.Name}", font, Color.Cyan, new PointF(margin + 50, iconsize + 48 + margin * 2));
                             if (comment != null)
                             {
                                 ctx.DrawText(comment, commentfont, Color.Black, new PointF(margin, backgroundimage.Height - (margin + commentfont.Size)));

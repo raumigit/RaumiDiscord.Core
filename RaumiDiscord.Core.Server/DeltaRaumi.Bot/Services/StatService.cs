@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NUlid;
 using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using System;
@@ -50,6 +51,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             {
                 return;
             }
+            else
+            {
+                
+            }
 
             var guildChannel = message.Channel as ITextChannel;
             var guild = guildChannel.Guild as SocketGuild;
@@ -73,15 +78,17 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 
                 //var userGuilsStatsData = await _dataEnsure.EnsureGuildUserDataDataExistsAsync(guildData, userData, guild, guildUser);
 
-                var userGuildStats = new UserGuildStatsModel
-                {
-                    StatUlid = Ulid.NewUlid(),
-                    GuildId = guildChannel.Id.ToString(),
-                    UserId = guildUser.Id.ToString(),
-                    CreatedAt = DateTime.UtcNow,
-                };
+                //var userGuildStats = new UserGuildStatsModel
+                //{
+                //    StatUlid = Ulid.NewUlid(),
+                //    GuildId = guild.Id.ToString(),
+                //    UserId = guildUser.Id.ToString(),
+                //    CreatedAt = DateTime.UtcNow,
+                //};
+                var handler = new MentionHandling(_deltaRaumiDB, _logger);
+                await handler.pingMentions(message);
 
-                await _deltaRaumiDB.UserGuildStats.AddAsync(userGuildStats);
+                //await _deltaRaumiDB.UserGuildStats.AddAsync(userGuildStats);
                 await _logger.Log($"Statの記録が完了", "StatService", ImprovedLoggingService.LogLevel.Verbose);
 
 

@@ -206,7 +206,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             .AddSingleton<StatService>()
             .AddSingleton<VoicertcregionService>()
             .AddSingleton<WelcomeMessageService>()
-
+            
             // リクエストごとに新しいインスタンスが必要なサービス
             .AddScoped<DataEnsure>()
             .AddScoped<LevelService>()

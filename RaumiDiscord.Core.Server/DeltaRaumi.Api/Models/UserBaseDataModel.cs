@@ -8,6 +8,13 @@ namespace RaumiDiscord.Core.Server.Api.Models
     public class UserBaseDataModel
     {
         /// <summary>
+        /// UserBaseDataModelのコンストラクターです。
+        /// </summary>
+        public UserBaseDataModel()
+        {
+        }
+
+        /// <summary>
         /// このユーザーのIdを取得または設定します。
         /// この値はulongである必要があります。
         /// </summary>
@@ -50,5 +57,15 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// 年が使われることはありません。
         /// </summary>
         public string? Barthday { get; set; }
+
+        /// <summary>
+        /// UserStatusKindに基づいてユーザーのステータスを取得または設定します。
+        ///</summary>
+        public int Userstatus { get; set; }
+
+        /// <summary>
+        /// ユーザーが受け取ることのできるメンションの上限数を取得または設定します。
+        /// </summary>
+        public int SetToMention { get; set; }
     }
 }

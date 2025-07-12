@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NUlid;
 using RaumiDiscord.Core.Server.Api.Models;
+using RaumiDiscord.Core.Server.DeltaRaumi.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Infrastructure.Configuration;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
@@ -40,6 +41,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         /// ユーザーのギルド統計データモデルのデータセットを取得または設定します。
         /// </summary>
         public DbSet<UserGuildStatsModel> UserGuildStats { get; set; }
+
 
         private DatabaseType databaseType = DatabaseType.Sqlite;
 
@@ -89,26 +91,26 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         {
             configurationBuilder
                 .Properties<Ulid>()
-                .HaveConversion<UlidToStringConverter>()
-                .HaveConversion<UlidToBytesConverter>();
+                .HaveConversion<UlidToStringConverter>();
+                //.HaveConversion<UlidToBytesConverter>();
         }
 
-        public class UlidToBytesConverter : ValueConverter<Ulid, byte[]>
-        {
-            private static readonly ConverterMappingHints DefaultHints = new ConverterMappingHints(size: 16);
+        //public class UlidToBytesConverter : ValueConverter<Ulid, byte[]>
+        //{
+        //    private static readonly ConverterMappingHints DefaultHints = new ConverterMappingHints(size: 16);
 
-            public UlidToBytesConverter() : this(null)
-            {
-            }
+        //    public UlidToBytesConverter() : this(null)
+        //    {
+        //    }
 
-            public UlidToBytesConverter(ConverterMappingHints? mappingHints)
-                : base(
-                        convertToProviderExpression: x => x.ToByteArray(),
-                        convertFromProviderExpression: x => new Ulid(x),
-                        mappingHints: DefaultHints.With(mappingHints))
-            {
-            }
-        }
+        //    public UlidToBytesConverter(ConverterMappingHints? mappingHints)
+        //        : base(
+        //                convertToProviderExpression: x => x.ToByteArray(),
+        //                convertFromProviderExpression: x => new Ulid(x),
+        //                mappingHints: DefaultHints.With(mappingHints))
+        //    {
+        //    }
+        //}
 
         public class UlidToStringConverter : ValueConverter<Ulid, string>
         {

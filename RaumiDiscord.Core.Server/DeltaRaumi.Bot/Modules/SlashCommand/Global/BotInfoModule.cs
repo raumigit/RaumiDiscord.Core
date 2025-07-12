@@ -29,6 +29,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
         [SlashCommand("ping", "pingをします")]
         public async Task PingCommand()
         {
+
             await RespondAsync($"DiscordGateway:{Context.Client.Latency}ms");
         }
     }

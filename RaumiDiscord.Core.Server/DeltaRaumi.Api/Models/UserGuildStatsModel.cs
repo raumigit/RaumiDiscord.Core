@@ -28,5 +28,11 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// 統計データが作成された日時を取得または設定します。
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        
+        public string MentionedUserId { get; set; }
+        
     }
+
+    
 }

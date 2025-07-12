@@ -34,5 +34,9 @@
         /// DeltaRaumiコンポーネントのタイプを取得または設定します。
         /// </summary>
         public string? DeltaRaumiComponentType { get; set; }
+
+        public string? LinkCode { get; set; }
+
+        public DateTime? TimeToLive { get; set; } = DateTime.UtcNow.AddMinutes(15);
     }
 }

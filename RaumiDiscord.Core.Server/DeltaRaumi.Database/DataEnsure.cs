@@ -102,7 +102,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
                     UserBaseData = userData,
                     GuildId = guildId,
                     UserId = userId,
-                    GuildAvatarId = user.GetDisplayAvatarUrl(),
+                    GuildAvatarId = user.GetGuildAvatarUrl()??user.GetAvatarUrl()??user.GetDefaultAvatarUrl(),
                     JoinedAt = user.JoinedAt?.UtcDateTime ?? DateTime.UtcNow,
                     TimedOutUntil = user.TimedOutUntil?.UtcDateTime ?? DateTime.MinValue,
                     Guild_Exp = 0,
@@ -154,7 +154,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
         /// </summary>
         private async Task<UserBaseDataModel> CompletionUserBaseModelAsync(SocketGuildUser user)
         {
-            var userData = new UserBaseDataModel
+            var userData = new UserBaseDataModel()
             {
                 UserId = user.Id.ToString(),
                 UserName = user.Username,
@@ -163,7 +163,9 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
                 IsBot = user.IsBot,
                 IsWebhook = user.IsWebhook,
                 Exp = 0,
-                Barthday = null // 初期値はnull、後で設定する必要があれば
+                Barthday = null, // 初期値はnull、後で設定可
+                SetToMention = 0, // 初期値は-1、後で設定可
+                Userstatus = 0
             };
 
             _deltaRaumiDB.UserBases.Add(userData);

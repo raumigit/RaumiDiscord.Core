@@ -15,7 +15,7 @@ namespace RaumiDiscord.Core.Server.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.DiscordComponentModel", b =>
                 {
@@ -33,12 +33,18 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.Property<string>("DeltaRaumiComponentType")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("LinkCode")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("MessageId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OwnerId")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("TimeToLive")
                         .HasColumnType("TEXT");
 
                     b.HasKey("CustomId");
@@ -143,8 +149,14 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.Property<bool>("IsWebhook")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("SetToMention")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("UserName")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Userstatus")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("UserId");
 
@@ -176,6 +188,9 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.Property<DateTime>("Latest_Exp")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("SetToMention")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("TimedOutUntil")
                         .HasColumnType("TEXT");
 
@@ -197,13 +212,17 @@ namespace RaumiDiscord.Core.Server.Migrations
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.Api.Models.UserGuildStatsModel", b =>
                 {
-                    b.Property<byte[]>("StatUlid")
-                        .HasColumnType("BLOB");
+                    b.Property<string>("StatUlid")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("GuildId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MentionedUserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
