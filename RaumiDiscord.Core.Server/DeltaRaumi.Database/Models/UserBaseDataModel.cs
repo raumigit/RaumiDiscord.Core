@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RaumiDiscord.Core.Server.Api.Models
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
 {
     /// <summary>
     /// ユーザーの基本データを表します。

@@ -1,12 +1,9 @@
-﻿
-using Discord;
-using Discord.WebSocket;
+﻿using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using NUlid;
-using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
-using System.Threading.Tasks;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
 {
@@ -14,7 +11,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
     {
         private static ImprovedLoggingService _logger;
         private static DeltaRaumiDbContext _dbContext;
-        
 
         public MentionHandling(DeltaRaumiDbContext dbContext, ImprovedLoggingService loggingService)
         {
@@ -45,11 +41,9 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
                 CreatedAt = createdAt,
                 MentionedUserId = mentionedUserCsv
             };
-            
-                _dbContext.UserGuildStats.Add(newStat);
-                await _dbContext.SaveChangesAsync();
 
-
+            _dbContext.UserGuildStats.Add(newStat);
+            await _dbContext.SaveChangesAsync();
 
             // 直近24時間の記録を取得
             var timeThreshold = DateTime.UtcNow.AddHours(-24);
@@ -98,7 +92,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
                     Console.WriteLine($"DM送信失敗: {ex.Message}");
                 }
             }
-
         }
     }
 }

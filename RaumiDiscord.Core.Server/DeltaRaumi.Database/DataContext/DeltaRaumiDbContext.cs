@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NUlid;
-using RaumiDiscord.Core.Server.Api.Models;
-using RaumiDiscord.Core.Server.DeltaRaumi.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Infrastructure.Configuration;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
 {
@@ -41,6 +40,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         /// ユーザーのギルド統計データモデルのデータセットを取得または設定します。
         /// </summary>
         public DbSet<UserGuildStatsModel> UserGuildStats { get; set; }
+        /// <summary>
+        /// ユーザーアカウントの紐づけ状態を表すモデルのデータセットを取得または設定します。
+        /// </summary>
+        public DbSet<LinkedAccountModel> LinkedAccount { get; set; }
 
 
         private DatabaseType databaseType = DatabaseType.Sqlite;
@@ -77,7 +80,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
                     }
 
                     optionsBuilder.UseSqlite("Data Source=Resources\\Data\\DeltaRaumiData.db;Cache=Shared");
-                    
+
                     break;
 
                 case DatabaseType.InMemory:
@@ -92,7 +95,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
             configurationBuilder
                 .Properties<Ulid>()
                 .HaveConversion<UlidToStringConverter>();
-                //.HaveConversion<UlidToBytesConverter>();
+            //.HaveConversion<UlidToBytesConverter>();
         }
 
         //public class UlidToBytesConverter : ValueConverter<Ulid, byte[]>
@@ -145,7 +148,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         /// <summary>
         /// データベースの種類を定義します。
         /// </summary>
-        public enum DatabaseType 
+        public enum DatabaseType
         {
             /// <summary>
             /// MySQL/MariaDB
@@ -163,7 +166,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
             /// PostgreSQL
             /// </summary>
             PostgreSql
-
         }
     }
 }

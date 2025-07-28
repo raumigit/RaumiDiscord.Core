@@ -15,7 +15,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common
         private Task ScanDatabaseAsync()
         {
             // TODO: DBとキャッシュを比較して不足データを補う処理を書く
-            _logger.Log("DBのスキャンを実行中...","スケジュールタスク");
+            _logger.Log("DBのスキャンを実行中...", "スケジュールタスク");
             return Task.CompletedTask;
         }
 

@@ -3,7 +3,7 @@
     /// <summary>
     /// BaseApplicationConfigurationは、アプリケーションの基本設定を管理するクラスです。
     /// </summary>
-    public class BaseApplicationConfiguration 
+    public class BaseApplicationConfiguration
     {
         /// <summary>
         /// BaseApplicationConfigurationのコンストラクタ

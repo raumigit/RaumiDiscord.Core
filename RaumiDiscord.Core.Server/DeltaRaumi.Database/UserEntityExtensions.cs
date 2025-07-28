@@ -1,5 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using RaumiDiscord.Core.Server.Api.Models;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
 {
@@ -17,9 +17,8 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
             baseEntity.IsBot = isBot;
             baseEntity.IsWebhook = isWebhook;
             baseEntity.Exp = 0; // 初期経験値は0
-            baseEntity.Barthday= null; // 初期誕生日は設定しない
+            baseEntity.Barthday = null; // 初期誕生日は設定しない
             baseEntity.SetToMention = 0; // 初期値は-1
-
         }
     }
 }

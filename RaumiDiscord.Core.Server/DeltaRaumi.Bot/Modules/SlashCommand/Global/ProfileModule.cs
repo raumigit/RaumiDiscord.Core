@@ -13,7 +13,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
     /// <summary>
     ///     ProfileModuleは、ユーザーのプロフィールに関する操作を提供します。
     /// </summary>
-    public class ProfileModule 
+    public class ProfileModule
     {
         /// <summary>
         ///     Profileは、ユーザーのプロフィールに関する操作を提供します。
@@ -120,7 +120,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             [SlashCommand("generate", "プロフィールカードを出力します。コメントをオプションで追加できます。")]
             public async Task Generate([Summary("Coment", "自由にコメントをいれることができます。")] string? comment = null)
             {
-                
                 string background = @".\Assets\Image\default_bg.png";
                 //string discordicon = Context.User.GetAvatarUrl(Discord.ImageFormat.Png).ToString();
                 string fontPath = @".\Assets\fonts\BizinGothic-Regular.ttf"; // フォントファイルを指定
@@ -131,14 +130,14 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 string avatarUrl = (Context.User as IGuildUser)?.GetGuildAvatarUrl(ImageFormat.Auto)
                 ?? Context.User.GetAvatarUrl(ImageFormat.Auto)
                 ?? Context.User.GetDefaultAvatarUrl();
-                
+
                 string avatarPath = $@".\Temp\Discordicon\128\{Context.User.Id}.png";
 
                 Directory.CreateDirectory(@".\Temp\Discordicon\128");
                 Directory.CreateDirectory(@".\Tests\namecard");
 
                 //RaumiDiscord.Core.Server.DiscordBot.Services.ImageGenerator();
-                
+
 
                 using (HttpClient client = new HttpClient())
                 {
@@ -195,7 +194,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                             {
                                 ctx.DrawText(comment, commentfont, Color.Black, new PointF(margin, backgroundimage.Height - (margin + commentfont.Size)));
                             }
-
                         });
 
                         // 画像を保存
@@ -215,7 +213,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 catch (Exception ex)
                 {
                     //await DeleteOriginalResponseAsync();
-                    await FollowupAsync($"生成エラー：\n" + $"```cmd\n{ex}\n```",ephemeral: true);
+                    await FollowupAsync($"生成エラー：\n" + $"```cmd\n{ex}\n```", ephemeral: true);
                 }
             }
 
@@ -225,7 +223,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             /// <returns></returns>
             /// <exception cref="NotImplementedException"></exception>
             [SlashCommand("default-bg", "背景をデフォルトの画像へ変更します。")]
-            public async Task DefaultBg() 
+            public async Task DefaultBg()
             {
                 await FollowupAsync("実装までお待ち下さい");
                 throw new NotImplementedException();
@@ -240,7 +238,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             [SlashCommand("set-bg", "背景をコマンド経由で設定します。")]
             public async Task SetBg([Summary("BackgraundUrl", "Urlで背景画像を設定することができます。")] string BackgraundUrl)
             {
-
                 await FollowupAsync("実装までお待ち下さい。");
                 throw new NotImplementedException();
             }

@@ -1,9 +1,9 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 using System.Reflection;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
@@ -18,8 +18,8 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
         private Color RaumiMainColor = new Color(0x7bb3ee);
         private Color RaumiSubColor = new Color(0xf02443);
 
-        
-        private string Version = $"バージョン:0.1.3.10　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
+
+        private string Version = $"バージョン:0.1.3.13　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
 
         public Configuration configuration { get; set; }
 
@@ -38,7 +38,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
         {
             await component.DeferAsync();
 
-            EmbedBuilder builder= new EmbedBuilder();
+            EmbedBuilder builder = new EmbedBuilder();
             switch (component.Data.CustomId)
             {
                 case "DoPat":
@@ -46,14 +46,14 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
                     builder.WithDescription("あなたはこの狐を撫でてみることにした\nまんざらでもなさそうだ");
                     builder.WithImageUrl("");
                     builder.WithColor(RaumiMainColor);
-                    await component.FollowupAsync(embed: builder.Build(),ephemeral: true) ;
+                    await component.FollowupAsync(embed: builder.Build(), ephemeral: true);
                     break;
                 case "DontPat":
                     builder.WithAuthor(component.User);
                     builder.WithDescription("あなたはこの狐に触ることを拒んだ\nご機嫌ななめだった");
                     builder.WithImageUrl("");
                     builder.WithColor(Color.DarkRed);
-                    await component.FollowupAsync(embed: builder.Build(), ephemeral: true) ;
+                    await component.FollowupAsync(embed: builder.Build(), ephemeral: true);
                     break;
                 default:
                     await LoggingService.Log("通常では到達できないエラー(E-5900)", "InteractionButton", ImprovedLoggingService.LogLevel.Error);
@@ -98,11 +98,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
                             builder.WithTitle("現在の設定値");
                             builder.WithDescription(
                                 $"タイムゾーン：{TimeZoneInfo.Local}\n" +
-                                "使用言語：JA-JP\n"+
-                                "VC状態：--\n"+
-                                "使用DB：SQlite3\n" 
+                                "使用言語：JA-JP\n" +
+                                "VC状態：--\n" +
+                                "使用DB：SQlite3\n"
                                 );
-                            
+
                             builder.WithColor(RaumiMainColor);
                             //builder.WithUrl("");
                             builder.WithCurrentTimestamp();
@@ -112,7 +112,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
                         case "serverstat":
                             DateTime localuptime = configuration.Setting.UpTime;
                             DateTime utcUptime = localuptime.ToUniversalTime();
-                            long unixTime = new DateTimeOffset(utcUptime).ToUnixTimeSeconds(); 
+                            long unixTime = new DateTimeOffset(utcUptime).ToUnixTimeSeconds();
                             //string unixTimestr = unixTime.ToString();
                             builder.WithAuthor(component.User);
                             builder.WithTitle("サーバーの状態");
@@ -127,7 +127,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
                                 "使用DB：SQlite3\n" +
                                 $"致命的なエラー：{configuration.Setting.SystemFatal.ToString()}\n"
                                 );
-                            builder.AddField("UpTime",$"<t:{unixTime.ToString()}:R>");
+                            builder.AddField("UpTime", $"<t:{unixTime.ToString()}:R>");
                             builder.WithColor(RaumiMainColor);
                             builder.WithUrl("");
                             builder.WithCurrentTimestamp();
@@ -178,10 +178,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
                         case "enhancement":
                             builder.WithAuthor(component.User);
                             builder.WithTitle("新しい機能を作る予定は？");
-                            
+
                             builder.WithDescription("現在開発中に機能は以下のとおりです。");
                             builder.AddField("ウェブ側", "- WebGui");
-                            builder.AddField("サーバー側", 
+                            builder.AddField("サーバー側",
                                 "- 名刺(カード)生成機能\n" +
                                 "- stat機能\n" +
                                 "- 誕生日機能\n" +

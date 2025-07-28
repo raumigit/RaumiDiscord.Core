@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RaumiDiscord.Core.Server.DeltaRaumi.Api.Models;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
 namespace RaumiDiscord.Core.Server.Api.Controllers
 {

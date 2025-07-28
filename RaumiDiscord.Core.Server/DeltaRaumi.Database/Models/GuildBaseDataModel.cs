@@ -1,7 +1,7 @@
 ﻿using Discord;
 using System.ComponentModel.DataAnnotations;
 
-namespace RaumiDiscord.Core.Server.Api.Models
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
 {
     /// <summary>
     /// ギルドの基本データを表します。
@@ -73,6 +73,6 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// ログチャンネルのIdを取得または設定します。
         /// チャンネルに送信することのできるログのすべてがここから送信されます。
         /// </summary>
-        public string? LogChannel {  get; set; }
+        public string? LogChannel { get; set; }
     }
 }

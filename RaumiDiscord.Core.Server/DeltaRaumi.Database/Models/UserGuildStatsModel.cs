@@ -1,7 +1,7 @@
 ﻿using NUlid;
 using System.ComponentModel.DataAnnotations;
 
-namespace RaumiDiscord.Core.Server.Api.Models
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
 {
     /// <summary>
     /// Discordの統計データを表すモデルクラスです。
@@ -29,10 +29,8 @@ namespace RaumiDiscord.Core.Server.Api.Models
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        
-        public string MentionedUserId { get; set; }
-        
-    }
 
-    
+        public string MentionedUserId { get; set; }
+
+    }
 }

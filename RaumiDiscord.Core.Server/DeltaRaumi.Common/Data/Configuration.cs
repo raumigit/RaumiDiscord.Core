@@ -22,7 +22,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
 
         public Configuration _Config { get; set; }
 
-        
+
 
         public Configuration GetConfigFromFile()
         {
@@ -95,10 +95,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
                 },
                 appPath = new ConnectionServiceAppPath
                 {
-                    CoeiroinkAppPath="",
-                    LLMAppPath="",
-                    ffmpegPath="",
-                    ytdlpAppPath=""
+                    CoeiroinkAppPath = "",
+                    LLMAppPath = "",
+                    ffmpegPath = "",
+                    ytdlpAppPath = ""
                 },
                 SystemLog = new SystemLogSettings
                 {

@@ -74,7 +74,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
 
             string selectedRegion = RegionOptions[region];
             await voiceChannel.ModifyAsync(vc => vc.RTCRegion = selectedRegion);
-            await RespondAsync($"チャンネル `{voiceChannel.Name}` のリージョンを `{selectedRegion ??"Auto"}`に変更しました。");
+            await RespondAsync($"チャンネル `{voiceChannel.Name}` のリージョンを `{selectedRegion ?? "Auto"}`に変更しました。");
         }
     }
     /// <summary>

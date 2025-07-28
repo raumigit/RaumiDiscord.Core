@@ -5,8 +5,8 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 {
     internal class DeltaRaumiHandler
     {
-       
-        public DeltaRaumiHandler(DiscordSocketClient client, DeltaRaumiEventHandler events) 
+
+        public DeltaRaumiHandler(DiscordSocketClient client, DeltaRaumiEventHandler events)
         {
             _client = client;
             _event = events;
@@ -35,7 +35,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
         /// </returns>
         public Task InitializeAsync()
         {
-
             // These are our EventSetup, each time one of these is triggered it runs the corresponding method. Ie, the bot receives a PartnerMessage we run Event.MessageReceivedAsync
             //_client.Log += _event.LogAsync;
             _client.JoinedGuild += _event.JoinedGuildAsync;

@@ -45,7 +45,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
         }
 
-
         public static void Deltaraumi_load(string[] args)
         {
             Console.WriteLine($"Directories.Config = {Directories.Config}");
@@ -156,8 +155,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         private Task InitializeAsync()
         {
             return Task.CompletedTask;
-
-            //throw new NotImplementedException();
         }
 
         private static async Task MessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
@@ -165,7 +162,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             // メッセージがキャッシュになかった場合、ダウンロードすると `after` のコピーが取得されます。
             var message = await before.GetOrDownloadAsync();
             Console.WriteLine($"{message.Channel}|{message.Author}\n{message.Author}:```diff\n- {message}\n! {after}\n```");
-
         }
 
         //private readonly InteractionHandler;
@@ -206,7 +202,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             .AddSingleton<StatService>()
             .AddSingleton<VoicertcregionService>()
             .AddSingleton<WelcomeMessageService>()
-            
+
             // リクエストごとに新しいインスタンスが必要なサービス
             .AddScoped<DataEnsure>()
             .AddScoped<LevelService>()

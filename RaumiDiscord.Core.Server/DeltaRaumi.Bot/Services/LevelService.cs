@@ -1,10 +1,10 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 using System.Linq;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
@@ -50,7 +50,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
         public async Task LevelsProsessAsync(SocketMessage message)
         {
             // メッセージがDMチャネルからのものか、ボットからのものか、Webhookからのものであれば処理しない
-            if (!(message is SocketUserMessage userMessage) || message.Channel is IDMChannel || 
+            if (!(message is SocketUserMessage userMessage) || message.Channel is IDMChannel ||
                 message.Author.IsBot || message.Author.IsWebhook)
             {
                 return;
@@ -60,7 +60,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             var guild = guildChannel.Guild as SocketGuild;
             var guildUser = message.Author as SocketGuildUser;
 
-            var ensure = new DataEnsure(_deltaRaumiDB,_logger,_client);
+            var ensure = new DataEnsure(_deltaRaumiDB, _logger, _client);
 
             if (guild == null || guildUser == null)
             {
@@ -89,11 +89,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                     userGuildData.TotalMessage++;
                     await _deltaRaumiDB.SaveChangesAsync();
                 }
-                
             }
             catch (Exception ex)
             {
-                await _logger.Log($"レベリング処理中にエラーが発生しました: {ex.Message}","LevelService",ImprovedLoggingService.LogLevel.Error);
+                await _logger.Log($"レベリング処理中にエラーが発生しました: {ex.Message}", "LevelService", ImprovedLoggingService.LogLevel.Error);
             }
 
             Console.WriteLine("Level OK");
@@ -175,11 +174,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                     }
                 }
 
-                await _logger.Log($"ユーザー {user.Username} がレベル {newLevel} にアップしました","LevelService");
+                await _logger.Log($"ユーザー {user.Username} がレベル {newLevel} にアップしました", "LevelService");
             }
             catch (Exception ex)
             {
-                await _logger.Log($"レベルアップ処理中にエラーが発生しました: {ex.Message}", "LevelService",ImprovedLoggingService.LogLevel.Error);
+                await _logger.Log($"レベルアップ処理中にエラーが発生しました: {ex.Message}", "LevelService", ImprovedLoggingService.LogLevel.Error);
             }
         }
 

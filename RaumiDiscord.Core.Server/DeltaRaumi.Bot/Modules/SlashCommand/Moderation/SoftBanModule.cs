@@ -54,6 +54,5 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Modules.SlashCommand.Moderatio
                 await ReplyAsync("そのメンバーをソフトバンする際にエラーが発生しました。権限不足かそのメンバーはロールが自身より上位にいますか？");
             }
         }
-        
     }
 }

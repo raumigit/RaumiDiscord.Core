@@ -8,12 +8,9 @@
         /// <summary>
         /// ImageGeneratorのコンストラクタ
         /// </summary>
-        public ImageGenerator() 
+        public ImageGenerator()
         {
-            
 
-            
         }
-        
     }
 }
