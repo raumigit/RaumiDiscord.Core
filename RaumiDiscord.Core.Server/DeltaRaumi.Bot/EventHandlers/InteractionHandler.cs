@@ -78,7 +78,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
             // グローバルコマンド登録
             await RegisterGlobalCommandsAsync();
 
-            // ギルドごとのコマンド登録(実行はしない)
+            //// ギルドごとのコマンド登録(実行はしない)
             //foreach (var guildId in _guildIds)
             //{
             //    await RegisterGuildCommandsAsync(guildId);

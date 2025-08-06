@@ -25,7 +25,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             }
             var audioClient = await channel.ConnectAsync();
             await RespondAsync("VCに接続しました。\n⚠️実装されていないためしばらくお待ち下さい", ephemeral: true);
-            await voicesendasync(audioClient);
+            //await voicesendasync(audioClient);
             //throw new NotImplementedException();
         }
 

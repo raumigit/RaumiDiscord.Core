@@ -155,8 +155,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                     .Build();
 
                 // ウェルカムチャンネルが設定されている場合はそこに送信
-                if (!string.IsNullOrEmpty(guildData.WelcomeChannnelID) &&
-                    ulong.TryParse(guildData.WelcomeChannnelID, out ulong channelId))
+                if (ulong.TryParse(guildData.WelcomeChannnelID, out ulong channelId))
                 {
                     var channel = guild.GetTextChannel(channelId);
                     if (channel != null)

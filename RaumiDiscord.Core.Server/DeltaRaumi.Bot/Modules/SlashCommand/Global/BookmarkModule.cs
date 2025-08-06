@@ -41,8 +41,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
         /// <param name="ttl"></param>
         /// <param name="publishAttri"></param>
         /// <returns></returns>
-        [SlashCommand("hoyocode", "HoYoverseで使えるギフトコードを出力します")]
-        public async Task HoYoCode(
+        [SlashCommand("gamecode", "ゲームで使えるギフトコードを出力します")]
+        public async Task GameCode(
             [Summary("action","Get:有効なコードを出力します。Set:URLを共有できます。")]
             [Choice("Get","get")]
             [Choice("Set","set")]
@@ -140,7 +140,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 if (urlType == "URL")
                 {
                     results = await deltaRaumiDB.UrlDataModels
-                    .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id.ToString() || u.Publish == true)
+                    .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id.ToString() && u.Publish == true)
                     .Select(u => $"{u.Url}")
                     .ToListAsync();
                 }

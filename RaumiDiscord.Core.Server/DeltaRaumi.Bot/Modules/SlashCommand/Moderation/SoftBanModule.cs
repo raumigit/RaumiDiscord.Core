@@ -29,6 +29,8 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Modules.SlashCommand.Moderatio
         ]
         int daysToDelete = 7)
         {
+            await RespondAsync("実装されていないためしばらくお待ち下さい", ephemeral: true);
+
             var e = (
                 $"「{Format.Bold(Context.Guild.Name)}から {Format.Bold(reason)}によりソフトバンされました。」" +
                 $"\nソフトバンとは、単にあなたがキックされ、一定量の以前のメッセージが大量に削除されることを意味します。" +
@@ -39,8 +41,8 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Modules.SlashCommand.Moderatio
 
             try
             {
-                await member.BanAsync(daysToDelete, reason);
-                await Context.Guild.RemoveBanAsync(member.Id);
+                //await member.BanAsync(daysToDelete, reason);
+                //await Context.Guild.RemoveBanAsync(member.Id);
 
                 //return Ok($"Successfully softbanned **{member}**.", () =>
                 //    ModService.OnModActionCompleteAsync(ModActionEventArgs
