@@ -30,7 +30,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger)); // ロギングサービスをnullチェック
         }
 
-        
+
 
         public async Task InitializeAsync()
         {
@@ -53,7 +53,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
         {
             // LogMessageをImprovedLoggingServiceに変換して使用
             ImprovedLoggingService.LogLevel level = DiscordLoggingAdapter.ConvertDiscordLogLevel(log.Severity);
-            
+
             _logger.Log($"{log.Message} | {log.Exception}", $"{log.Source}", level);
             return Task.CompletedTask;
         }
@@ -78,7 +78,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
             // グローバルコマンド登録
             await RegisterGlobalCommandsAsync();
 
-            // ギルドごとのコマンド登録(実行はしない)
+            //// ギルドごとのコマンド登録(実行はしない)
             //foreach (var guildId in _guildIds)
             //{
             //    await RegisterGuildCommandsAsync(guildId);

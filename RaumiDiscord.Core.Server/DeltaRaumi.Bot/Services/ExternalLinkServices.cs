@@ -6,5 +6,4 @@
     public class ExternalLinkServices
     {
     }
-    //private 
 }

@@ -35,7 +35,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
             var result = new
             {
                 serverVersion = "0.1.3.10",
-                apiVersion= "1.0",
+                apiVersion = "1.0",
                 processCount = Process.GetProcesses().Length,
                 availableMemoryMB = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024,
                 uptime = $"{(int)uptime.TotalDays:D2}:{uptime.Hours:D2}:{uptime.Minutes:D2}:{uptime.Seconds:D2}",
@@ -83,7 +83,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
                 sent += stats.BytesSent;
                 received += stats.BytesReceived;
             }
-
             return (sent, received);
         }
     }

@@ -1,8 +1,8 @@
 ﻿using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
-using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 using System.Text.RegularExpressions;
 using SummaryAttribute = Discord.Interactions.SummaryAttribute;
 
@@ -41,8 +41,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
         /// <param name="ttl"></param>
         /// <param name="publishAttri"></param>
         /// <returns></returns>
-        [SlashCommand("hoyocode", "HoYoverseで使えるギフトコードを出力します")]
-        public async Task HoYoCode(
+        [SlashCommand("gamecode", "ゲームで使えるギフトコードを出力します")]
+        public async Task GameCode(
             [Summary("action","Get:有効なコードを出力します。Set:URLを共有できます。")]
             [Choice("Get","get")]
             [Choice("Set","set")]
@@ -66,7 +66,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(ttl))
                 {
                     await RespondAsync("URLと有効期限を指定してください。(有効期限：yyyy/MM/dd-HH:mm:sszzz)", ephemeral: true);
-
                     return;
                 }
                 if (!DateTimeOffset.TryParseExact(ttl, "yyyy/MM/dd-HH:mm:sszzz", null, System.Globalization.DateTimeStyles.None, out DateTimeOffset expirationTime) && expirationTime.UtcDateTime <= DateTime.UtcNow)
@@ -104,9 +103,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     }
                     await LoggingService.Log($"URLがCodeだったため修正しました。", "hoyocode");
                     //ゲームのコードは強制的に公開
-                    publishAttri=true;
+                    publishAttri = true;
                 }
-
 
                 string discordUser = Context.User.Id.ToString();
 
@@ -119,7 +117,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     UrlType = urlType,
                     DiscordUser = discordUser,
                     TTL = expirationTime.UtcDateTime,
-                    Publish= publishAttri
+                    Publish = publishAttri
                 };
 
                 var Url_record = deltaRaumiDB.UrlDataModels.Where(k => k.Url == url).ToList();
@@ -142,13 +140,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 if (urlType == "URL")
                 {
                     results = await deltaRaumiDB.UrlDataModels
-                    .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id.ToString()|| u.Publish == true)
+                    .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id.ToString() && u.Publish == true)
                     .Select(u => $"{u.Url}")
                     .ToListAsync();
-
-                    
                 }
-               else
+                else
                 {
                     results = await deltaRaumiDB.UrlDataModels
                     .Where(u => u.UrlType == urlType && u.TTL > now)
@@ -156,16 +152,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                     .ToListAsync();
                 }
 
-
                 if (results.Count == 0)
                 {
                     await RespondAsync("有効なURLが見つかりませんでした。", ephemeral: true);
                     return;
                 }
-
                 await RespondAsync(string.Join("\n", results), ephemeral: true);
             }
-
         }
     }
 }

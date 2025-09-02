@@ -15,7 +15,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
         public async Task BotLeaveAsync()
         {
             var guild = Context.Guild;
-            if (guild==null)
+            if (guild == null)
             {
                 await RespondAsync("⚠️このコマンドはサーバー内でのみ使用できます。", ephemeral: true);
             }
@@ -34,10 +34,10 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             }
             else
             {
-                await RespondAsync("⚠️VCから退出できませんでした。",ephemeral: true);
+                await RespondAsync("⚠️VCから退出できませんでした。", ephemeral: true);
             }
-            
-            
+
+
         }
     }
 }

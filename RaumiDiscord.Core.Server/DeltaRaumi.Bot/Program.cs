@@ -47,13 +47,11 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -67,7 +65,6 @@ app.UseSwaggerUI(options =>
     //options.RoutePrefix = string.Empty;
 });
 
-
 app.MapControllers();
 if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 {
@@ -76,6 +73,8 @@ if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     Environment.Exit(-1);
     return;
 }
+
+app.MapFallbackToFile("/index.html");
 
 Task? task = Task.Run(() =>
 {
@@ -91,7 +90,6 @@ Task? task = Task.Run(() =>
 
     return Task.CompletedTask;
 });
-
 
 
 app.Run();

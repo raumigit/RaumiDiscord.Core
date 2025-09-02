@@ -132,7 +132,6 @@
             /// ytdlpのパス
             /// </summary>
             public string ytdlpAppPath { get; set; }
-
         }
 
         /// <summary>
@@ -149,7 +148,6 @@
             /// Discord WebHook URL
             /// </summary>
             public string? LogDataWebHook { get; set; }
-
         }
 
         /// <summary>

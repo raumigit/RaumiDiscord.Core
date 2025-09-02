@@ -8,6 +8,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
     {
         string? commandPrefix;
 
+        //[TomlComment("")]
 
         public string? CommandPrefix
         {
@@ -22,6 +23,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
 
         public Configuration _Config { get; set; }
 
+        public TomlComment Comment { get; set; }
         
 
         public Configuration GetConfigFromFile()
@@ -63,6 +65,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
             setcfg.Setting.MaxPollQuestionTextLength = DiscordConfig.MaxPollQuestionTextLength;
             setcfg.Setting.MaxVoiceChannelStatusLength = DiscordConfig.MaxVoiceChannelStatusLength;
 
+            
             Toml.WriteFile(setcfg, Directories.Config);
         }
 
@@ -70,15 +73,16 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
         {
             Configuration settings;
 
-            TimeZoneInfo tzi = TimeZoneInfo.Local;
+            TimeZoneInfo timeZone = TimeZoneInfo.Local;
             settings = new Configuration
             {
+
                 // デフォルトの設定を作成
                 Setting = new GeneralSettings
                 {
                     UpdateTime = DateTime.Now,
                     UpTime = DateTime.Now,
-                    TimeZone = $"{tzi.DisplayName}",
+                    TimeZone = $"{timeZone.DisplayName}",
                     DiscordAPIVersion = "",
                     CDNURL = "https://cdn.discordapp.com/",
                     DefaultRequestTimeout = 0,
@@ -95,10 +99,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
                 },
                 appPath = new ConnectionServiceAppPath
                 {
-                    CoeiroinkAppPath="",
-                    LLMAppPath="",
-                    ffmpegPath="",
-                    ytdlpAppPath=""
+                    CoeiroinkAppPath = "",
+                    LLMAppPath = "",
+                    ffmpegPath = "",
+                    ytdlpAppPath = ""
                 },
                 SystemLog = new SystemLogSettings
                 {

@@ -1,4 +1,4 @@
-﻿namespace RaumiDiscord.Core.Server.Api.Models
+﻿namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
 {
     /// <summary>
     /// URLデータモデルを表します。

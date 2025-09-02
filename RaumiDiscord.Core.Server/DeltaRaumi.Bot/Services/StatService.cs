@@ -1,14 +1,9 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Microsoft.EntityFrameworkCore;
-using NUlid;
-using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
-using System;
-using System.Net.Sockets;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 {
@@ -35,7 +30,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             _deltaRaumiDB = deltaRaumiDb;
             _dataEnsure = dataEnsure;
         }
-       
+
 
 
         /// <summary>
@@ -53,7 +48,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             }
             else
             {
-                
+
             }
 
             var guildChannel = message.Channel as ITextChannel;

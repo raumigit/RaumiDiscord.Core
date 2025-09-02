@@ -2,12 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RaumiDiscord.Core.Server.Api.Models
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
 {
     /// <summary>
     /// ユーザーのギルドデータを表します。
     /// </summary>
-    
+
     public class UserGuildDataModel
     {
         /// <summary>

@@ -20,14 +20,14 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
         /// <param name="stat"></param>
         /// <param name="logger"></param>
         /// <param name="messageService"></param>
-        public DeltaRaumiEventHandler(DiscordSocketClient client,StatService statService, ImprovedLoggingService loggerService, MessageService messageService)
+        public DeltaRaumiEventHandler(DiscordSocketClient client, StatService statService, ImprovedLoggingService loggerService, MessageService messageService)
         {
-            SocketGuild guild; 
+            SocketGuild guild;
 
             _client = client;
             _statService = statService;
             _loggerService = loggerService;
-            _messageService= messageService;
+            _messageService = messageService;
             //_cacheMessage = cacheMessage;
             //_guild = guild;
             //_welcome= welcome;
@@ -105,7 +105,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
             _loggerService.Log($"User joined: {user.Username}", "UserJoinedAsync");
 
             await _welcome.welcomeCardGenerator(user);
-            
+
             //return Task.CompletedTask;
         }
 

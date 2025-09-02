@@ -1,9 +1,9 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 using System;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
@@ -25,7 +25,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
         /// <param name="deltaRaumiDb">データベースコンテキスト</param>
         /// <param name="logging">ロギングサービス</param>
         /// <param name="client"></param>
-        public DataEnsure(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logging ,DiscordSocketClient client) 
+        public DataEnsure(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logging, DiscordSocketClient client)
         {
             _deltaRaumiDB = deltaRaumiDb;
             _logger = logging;
@@ -33,7 +33,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
             //_guild = guild;
         }
 
-       
+
         //private void CompletionUrlDataModelAsync()
         //{
         //}
@@ -51,7 +51,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
             {
                 guildData = await CompletionGuildBaseModelAsync(guild);
             }
-
             return guildData;
         }
         public async Task<UserBaseDataModel> EnsureUserBaseDataExistsAsync(SocketGuildUser user)
@@ -68,7 +67,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
             {
                 userData = await CompletionUserBaseModelAsync(user);
             }
-
             return userData;
         }
         private void CompletionUserGuildModel()
@@ -102,20 +100,18 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
                     UserBaseData = userData,
                     GuildId = guildId,
                     UserId = userId,
-                    GuildAvatarId = user.GetGuildAvatarUrl()??user.GetAvatarUrl()??user.GetDefaultAvatarUrl(),
+                    GuildAvatarId = user.GetGuildAvatarUrl() ?? user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl(),
                     JoinedAt = user.JoinedAt?.UtcDateTime ?? DateTime.UtcNow,
                     TimedOutUntil = user.TimedOutUntil?.UtcDateTime ?? DateTime.MinValue,
                     Guild_Exp = 0,
                     Latest_Exp = DateTime.MinValue,
                     TotalMessage = 0
                 };
-
                 _deltaRaumiDB.UserGuildData.Add(userGuildData);
                 await _deltaRaumiDB.SaveChangesAsync();
 
                 await _logger.Log($"新しいUserGuildDataを作成しました: Guild: {guild.Name}, User: {user.Username}", "DataEnsure");
             }
-
             return userGuildData;
         }
 

@@ -27,11 +27,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         private readonly ImprovedLoggingService _logger;
         private readonly DeltaRaumiDbContext _raumiDB;
 
-        public WelcomeMessageService(SocketMessage message, ImprovedLoggingService loggingService,DeltaRaumiDbContext dbContext) 
+        public WelcomeMessageService(SocketMessage message, ImprovedLoggingService loggingService, DeltaRaumiDbContext dbContext)
         {
-            _message= message;
+            _message = message;
             _logger = loggingService;
-            _raumiDB = dbContext;        
+            _raumiDB = dbContext;
         }
         internal async Task welcomeCardGenerator(SocketGuildUser socketUser)
         {
@@ -109,7 +109,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                         // 名前をアイコン下に配置
                         ctx.DrawText(discordname, font, Color.White, new PointF(margin, picmargin + margin / 2));
                         ctx.DrawText("Welcome", font, Color.Cyan, new PointF(margin + 50, iconsize + 48 + margin * 2));
-                        
+
 
                     });
 
@@ -131,10 +131,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                 }
                 catch (Exception)
                 {
-
                     await _logger.Log($"カードの送信中にエラーが発生しました。welcomechannnelの値が不正の可能性があります", $"WelcomeMessageService", ImprovedLoggingService.LogLevel.Error);
                 }
-                
+
             }
             catch (Exception ex)
             {

@@ -1,4 +1,4 @@
-﻿namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Models
+﻿namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
 {
     /// <summary>
     /// 天気予報のモデル

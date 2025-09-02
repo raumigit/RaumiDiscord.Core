@@ -51,7 +51,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             {
                 if (message.Channel is SocketGuildChannel guildChannel)
                 {
-                    SocketGuild guild=guildChannel.Guild;
+                    SocketGuild guild = guildChannel.Guild;
                     Console.WriteLine($"*ReceivedServer:{guild.Name}");
                 }
                 else
@@ -68,7 +68,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
 
             //ボットは自分自身に応答してはなりません。
             if (message.Author.Id == _client.CurrentUser.Id)
-                return ; 
+                return;
 
             if (message.Content == "!ping")
             {
@@ -92,18 +92,14 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                     default:
                         break;
                 }
-                
             }
             catch (Exception e)
             {
                 await _logger.Log("メッセージ送信エラー　(E-M4001)", "MessageReceive", ImprovedLoggingService.LogLevel.Warning);
                 await _logger.Log($"{e}", "MessageReceive", ImprovedLoggingService.LogLevel.Warning);
-                
-            }
-            
-        }
 
-        
+            }
+        }
 
         internal async Task GetMessageUpdatedAsync(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel socketMessageChannel)
         {
@@ -120,7 +116,6 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             else if (message.Content != after.Content)
             {
                 Console.WriteLine($"{message.Channel}|{message.Author}\n{message.Author}:```diff\n- {message}\n! {after}\n```");
-                
             }
         }
 
@@ -145,7 +140,5 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         {
             await _levelService.LevelsProsessAsync(message);
         }
-
-        
     }
 }

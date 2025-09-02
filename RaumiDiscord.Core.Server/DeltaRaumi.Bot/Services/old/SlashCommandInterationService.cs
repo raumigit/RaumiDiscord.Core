@@ -7,10 +7,10 @@ using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using NuGet.Protocol;
-using RaumiDiscord.Core.Server.Api.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 using System.Linq;
 using System.Reflection.Emit;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -30,8 +30,10 @@ class SlashCommandInterationService
 
     private List<string> VoiceRegionLists { get; set; } = new List<string>();
 
-    private bool command_GuildAvailadle { get; set; } = true;
+    private bool command_GuildUpdate { get; set; } = true;
     private bool command_GlobalAvailadle { get; set; } = true;
+
+    public int command_GuildCount { get; set; }
 
     private IAudioClient _audioClient;
 
@@ -79,11 +81,16 @@ class SlashCommandInterationService
         SlashCommandProperties[] commands = GetCmmands();
         try
         {
-            if (command_GuildAvailadle == true)
+            if (command_GuildUpdate == true)
             {
                 await guild_arg.DeleteApplicationCommandsAsync();
                 await guild_arg.BulkOverwriteApplicationCommandAsync(commands);
-                command_GuildAvailadle = false;
+                command_GuildCount++;
+                if (command_GuildCount >= 20)
+                {
+                    command_GuildUpdate = false;
+                }
+
             }
             else
             {
