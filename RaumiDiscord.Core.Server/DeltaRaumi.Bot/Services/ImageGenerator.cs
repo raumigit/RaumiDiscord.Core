@@ -189,7 +189,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                         // 名前をアイコン下に配置
                         ctx.DrawText(userName, font, Color.White, new PointF(margin, picmargin + margin / 2));
                         ctx.DrawText($"{guildName}", font, Color.Cyan, new PointF(margin + 50, iconsize + 48 + margin * 2));
-                        ctx.DrawText($"exp:{exp}", font, Color.Cyan, new PointF(margin + 50, iconsize + 48 + margin * 3));
+                        ctx.DrawText($"Exp:{exp}", font, Color.Cyan, new PointF(margin + 50, iconsize + 48 + margin * 3+2));
                         if (comment != null)
                         {
                             ctx.DrawText(comment, commentfont, Color.Black, new PointF(margin, backgroundimage.Height - (margin + commentfont.Size)));

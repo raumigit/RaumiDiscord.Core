@@ -74,5 +74,9 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         /// チャンネルに送信することのできるログのすべてがここから送信されます。
         /// </summary>
         public string? LogChannel { get; set; }
+        /// <summary>
+        /// 公開ログチャンネルのIdを取得または設定します。
+        /// </summary>
+        public string? OpenLogChannel { get; set; }
     }
 }
