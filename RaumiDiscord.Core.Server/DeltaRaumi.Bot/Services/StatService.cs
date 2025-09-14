@@ -1,9 +1,11 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using NUlid;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 {
@@ -73,13 +75,13 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 
                 //var userGuilsStatsData = await _dataEnsure.EnsureGuildUserDataDataExistsAsync(guildData, userData, guild, guildUser);
 
-                //var userGuildStats = new UserGuildStatsModel
-                //{
-                //    StatUlid = Ulid.NewUlid(),
-                //    GuildId = guild.Id.ToString(),
-                //    UserId = guildUser.Id.ToString(),
-                //    CreatedAt = DateTime.UtcNow,
-                //};
+                var userGuildStats = new UserGuildStatsModel
+                {
+                    StatUlid = Ulid.NewUlid(),
+                    GuildId = guild.Id.ToString(),
+                    UserId = guildUser.Id.ToString(),
+                    CreatedAt = DateTime.UtcNow,
+                };
                 var handler = new MentionHandling(_deltaRaumiDB, _logger);
                 await handler.pingMentions(message);
 

@@ -17,8 +17,9 @@
 
         /// <summary>
         /// URLの種類を取得または設定します。
+        /// ここはStringsからintに変更されています。
         /// </summary>
-        public string? UrlType { get; set; }
+        public int UrlType { get; set; }
 
         /// <summary>
         /// URLに関連付けられたDiscordユーザーIDを取得または設定します。

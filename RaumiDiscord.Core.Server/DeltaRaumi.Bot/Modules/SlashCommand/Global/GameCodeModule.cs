@@ -1,6 +1,7 @@
 ﻿using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 using System.Text.RegularExpressions;
@@ -13,23 +14,25 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
     /// <summary>
     /// BookmarkModuleは、URLの登録と取得を行うモジュールです。
     /// </summary>
-    public class BookmarkModule : InteractionModuleBase<SocketInteractionContext>
+    public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
     {
         /// <summary>
         /// BookmarkModuleは、URLの登録と取得を行うモジュールです。
         /// </summary>
         private readonly ImprovedLoggingService LoggingService;
         private readonly DeltaRaumiDbContext deltaRaumiDB;
+        private GameMetaService _gameMetaService;
 
         /// <summary>
         /// BookmarkModuleのコンストラクタ
         /// </summary>
         /// <param name="deltaRaumiDb"></param>
         /// <param name="logger"></param>
-        public BookmarkModule(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logger)
+        public GameCodeModule(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logger)
         {
             this.deltaRaumiDB = deltaRaumiDb;
             this.LoggingService = logger;
+
         }
 
         /// <summary>
@@ -47,12 +50,8 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             [Choice("Get","get")]
             [Choice("Set","set")]
             string action,
-            [Summary("type","URLのタイプを指定")]
-            [Choice("URL","URL")]
-            [Choice("GenshinImpact","GI")]
-            [Choice("HonkaiStarRail","HSR")]
-            [Choice("ZenlessZoneZero","ZZZ")]
-            string urlType,
+            [Summary("type","URLまたはゲームのタイプを指定")]
+            int urlType,
             string? url = null,
             [Summary("ttl","有効期限を設定します。yyyy/MM/dd-HH:mm:sszzz形式で入力してください。")]
             string? ttl = null,
@@ -61,6 +60,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
             [Choice("true",1)]
             bool publishAttri=false)
         {
+            var meta = _gameMetaService.GetGame(urlType);
+
+
             if (action == "set")
             {
                 if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(ttl))
@@ -74,7 +76,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                         "または有効ではない時間を入力している可能性があります。", ephemeral: true);
                     return;
                 }
-                if (urlType == "URL")
+                if (urlType == 0)
                 {
                     if (!url.StartsWith("https://") && !url.StartsWith("http://"))
                     {
@@ -82,32 +84,19 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                         return;
                     }
                 }
-                else if (urlType == "GI" || urlType == "HSR" || urlType == "ZZZ")
+
+                if (meta.BaseUrl != null && url.StartsWith(meta.BaseUrl))
                 {
-                    string baseUrl = urlType switch
-                    {
-                        "GI" => "https://genshin.hoyoverse.com/ja/gift?code=",
-                        "HSR" => "https://hsr.hoyoverse.com/gift?code=",
-                        "ZZZ" => "https://zzz.hoyoverse.com/gift?code=",
-                        _ => ""
-                    };
-
-                    if (url.StartsWith(baseUrl))
-                    {
-                        Console.WriteLine($"URL->{url}");
-                    }
-
-                    if (Regex.IsMatch(url, "^[A-Za-z0-9]+$"))
-                    {
-                        url = baseUrl + url;
-                    }
-                    await LoggingService.Log($"URLがCodeだったため修正しました。", "hoyocode");
-                    //ゲームのコードは強制的に公開
-                    publishAttri = true;
+                    Console.WriteLine($"URL->{url}");
                 }
 
-                string discordUser = Context.User.Id.ToString();
+                if (meta.BaseUrl != null && Regex.IsMatch(url ?? "", "^[A-Za-z0-9]+$"))
+                {
+                    url = meta.BaseUrl + url;
+                    publishAttri = true; // コードの場合は強制公開
+                    await LoggingService.Log($"URLがCodeだったため修正しました。", "hoyocode");
 
+                }
                 // UnixTime 形式に変換
                 long unixExpirationTime = expirationTime.ToUnixTimeSeconds();
 
@@ -115,7 +104,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 {
                     Url = url,
                     UrlType = urlType,
-                    DiscordUser = discordUser,
+                    DiscordUser = Context.User.Id.ToString(),
                     TTL = expirationTime.UtcDateTime,
                     Publish = publishAttri
                 };
@@ -129,7 +118,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 }
                 deltaRaumiDB.UrlDataModels.Add(newEntry);
                 await deltaRaumiDB.SaveChangesAsync();
-                await RespondAsync($"登録完了: {urlType} - {url} (期限: <t:{unixExpirationTime}:R>) 登録者：<@{discordUser}>");
+                await RespondAsync($"登録完了: {urlType} - {url} (期限: <t:{unixExpirationTime}:R>) 登録者：<@{Context.User.Id.ToString()}>");
                 await LoggingService.Log($"登録されたコード：{url}", "hoyocode");
             }
             else if (action == "get")
@@ -137,7 +126,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
                 var now = DateTime.UtcNow;
                 List<string> results;
 
-                if (urlType == "URL")
+                if (urlType == 0)
                 {
                     results = await deltaRaumiDB.UrlDataModels
                     .Where(u => u.UrlType == urlType && u.TTL > now && u.DiscordUser == Context.User.Id.ToString() && u.Publish == true)
