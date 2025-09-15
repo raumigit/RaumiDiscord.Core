@@ -2,9 +2,6 @@
 using Discord.Webhook;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using NuGet.Protocol;
-using NUlid;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using SixLabors.Fonts;
@@ -12,28 +9,39 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using System;
-using System.IO;
 using Color = SixLabors.ImageSharp.Color;
 using Image = SixLabors.ImageSharp.Image;
 
-namespace RaumiDiscord.Core.Server.DiscordBot.Services
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 {
-    internal class WelcomeMessageService
+    /// <summary>
+    /// WelcomeMessageServiceは、ウェルカムメッセージの生成と送信を行うサービスです。
+    /// </summary>
+    public class WelcomeMessageService
     {
-        private bool fileUpload;
+        private bool _fileUpload;
         private readonly SocketMessage _message;
         private readonly DiscordWebhookClient _webhook;
         private readonly ImprovedLoggingService _logger;
-        private readonly DeltaRaumiDbContext _raumiDB;
+        private readonly DeltaRaumiDbContext _raumiDb;
 
-        public WelcomeMessageService(SocketMessage message, ImprovedLoggingService loggingService, DeltaRaumiDbContext dbContext)
+        /// <summary>
+        /// WelcomeMessageServiceのコンストラクタ
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="loggingService"></param>
+        /// <param name="dbContext"></param>
+        /// <param name="webhook">webhook送信チャンネル</param>
+        /// <param name="fileUpload">ファイルをアップロードするか</param>
+        public WelcomeMessageService(SocketMessage message, ImprovedLoggingService loggingService, DeltaRaumiDbContext dbContext, DiscordWebhookClient webhook, bool fileUpload)
         {
             _message = message;
             _logger = loggingService;
-            _raumiDB = dbContext;
+            _raumiDb = dbContext;
+            _webhook = webhook;
+            _fileUpload = fileUpload;
         }
-        internal async Task welcomeCardGenerator(SocketGuildUser socketUser)
+        internal async Task WelcomeCardGenerator(SocketGuildUser socketUser)
         {
             string background = @".\Assets\Image\default_bg.png";
             //string discordicon = Context.User.GetAvatarUrl(Discord.ImageFormat.Png).ToString();
@@ -42,17 +50,17 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             string discordname = socketUser.Username;
             string profileImageFlame = @".\Assets\Image\sampleflame.png";
 
-            string avatarUrl = (socketUser as IGuildUser)?.GetGuildAvatarUrl(ImageFormat.Auto)
-            ?? socketUser.GetAvatarUrl(ImageFormat.Auto)
+            string avatarUrl = (socketUser as IGuildUser)?.GetGuildAvatarUrl()
+            ?? socketUser.GetAvatarUrl()
             ?? socketUser.GetDefaultAvatarUrl();
 
             string avatarPath = $@".\Temp\Discordicon\128\{socketUser.Id}.png";
 
-            var guildBaseData = await _raumiDB.GuildBases.Where(g => g.GuildId == socketUser.Guild.Id.ToString()).FirstOrDefaultAsync();
+            var guildBaseData = await _raumiDb.GuildBases.Where(g => g.GuildId == socketUser.Guild.Id.ToString()).FirstOrDefaultAsync();
 
-            var sendwelcomechannel = string.IsNullOrEmpty(guildBaseData?.WelcomeChannnelID)
+            var sendwelcomechannel = string.IsNullOrEmpty(guildBaseData?.WelcomeChannnelId)
                 ? socketUser.Guild.DefaultChannel ?? socketUser.Guild.TextChannels.FirstOrDefault()
-                : (ulong.TryParse(guildBaseData.WelcomeChannnelID, out var channelId) ? socketUser.Guild.GetTextChannel(channelId) : null);
+                : (ulong.TryParse(guildBaseData.WelcomeChannnelId, out var channelId) ? socketUser.Guild.GetTextChannel(channelId) : null);
             //正しい挙動であればDBのWelcomeChannelIDを探し、あればUlongへ変換。なければデフォルトチャンネルとしてチャンネルの最上位チャンネルを代入　
 
             Directory.CreateDirectory(@".\Temp\Discordicon\128");
@@ -116,11 +124,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                     // 画像を保存
                     backgroundimage.Save(outputPath);
                     //Console.WriteLine($"画像を保存しました: {outputPath}");
-                    await _logger.Log($"画像を保存しました: {outputPath}", $"WelcomeMessageService", ImprovedLoggingService.LogLevel.Info);
+                    await _logger.Log($"画像を保存しました: {outputPath}", $"WelcomeMessageService");
                 }
                 try
                 {
-                    if (fileUpload == true)
+                    if (_fileUpload)
                     {
                         await sendwelcomechannel.SendFileAsync(outputPath);
                     }

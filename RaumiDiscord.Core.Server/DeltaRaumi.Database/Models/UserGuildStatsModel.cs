@@ -17,11 +17,13 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         /// <summary>
         /// 統計データが関連するギルドの一意識別子を取得または設定します。
         /// </summary>
+        [MaxLength(50)]
         public string GuildId { get; set; }
 
         /// <summary>
         /// 統計データが関連するユーザーの一意識別子を取得または設定します。
         /// </summary>
+        [MaxLength(50)]
         public string UserId { get; set; }
 
         /// <summary>
@@ -30,6 +32,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
 
+        /// <summary>
+        /// MentionedUserId は、メンションされたユーザーのIDをカンマ区切りで保存します。
+        /// </summary>
+        [MaxLength(50)]
         public string MentionedUserId { get; set; }
 
     }

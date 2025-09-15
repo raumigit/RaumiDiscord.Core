@@ -6,12 +6,12 @@ using System.Reflection;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 {
-    internal class InteractionHandler
+    public class InteractionHandler
     {
         private readonly DiscordSocketClient _client;
         private readonly InteractionService _handler;
         private readonly IServiceProvider _services;
-        private readonly List<ulong> _guildIds; // ギルドIDリスト
+        private readonly List<ulong>? _guildIds; // ギルドIDリスト
         private readonly ImprovedLoggingService _logger; // 追加: ロギングサービス
 
 
@@ -46,7 +46,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 
             // コマンド実行の結果も処理します
             _handler.InteractionExecuted += HandleInteractionExecute;
-            await _logger.Log("Initialization completed", "InteractionHandler", ImprovedLoggingService.LogLevel.Info);
+            await _logger.Log("Initialization completed", "InteractionHandler");
         }
 
         private Task LogAsync(LogMessage log)
@@ -88,7 +88,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
         private async Task RegisterGlobalCommandsAsync()
         {
             await _handler.RegisterCommandsGloballyAsync();
-            await _logger.Log("Registered global commands", "InteractionHandler", ImprovedLoggingService.LogLevel.Info);
+            await _logger.Log("Registered global commands", "InteractionHandler");
         }
 
         //public async Task RegisterGuildCommandsAsync(ulong guildId)
@@ -116,8 +116,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
                             // 警告をログに記録
                             await _logger.Log($"{result.ErrorReason}", "InteractionHandler", ImprovedLoggingService.LogLevel.Warning);
                             break;
-                        default:
-                            break;
                     }
             }
             catch (Exception ex)
@@ -140,8 +138,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
                     case InteractionCommandError.UnmetPrecondition:
                         // 警告をロギングサービスに記録
                         _logger.Log(result.ErrorReason, "InteractionHandler", ImprovedLoggingService.LogLevel.Warning);
-                        break;
-                    default:
                         break;
                 }
 

@@ -1,12 +1,10 @@
-﻿using Discord;
-using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
+﻿using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using System.Runtime.CompilerServices;
 using Color = SixLabors.ImageSharp.Color;
 using Image = SixLabors.ImageSharp.Image;
 
@@ -19,7 +17,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
     {
         private readonly DeltaRaumiDbContext _deltaRaumiDb;
         private readonly ImprovedLoggingService _logger;
-        private bool fileUpload;
+        private bool _fileUpload;
 
         /// <summary>
         /// ImageGeneratorのコンストラクタ
@@ -29,14 +27,23 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             //_deltaRaumiDb = deltaRaumiDb;
             //_logger = logger;
         }
-        public static async Task WelcomeCardGenerater(string guildName,string userID, string userName,string avatarPath,string avatarUrl,string comment)
+        /// <summary>
+        /// WelcomeCardGeneraterは、ウェルカムカードを生成します。
+        /// </summary>
+        /// <param name="guildName"></param>
+        /// <param name="userId"></param>
+        /// <param name="userName"></param>
+        /// <param name="avatarPath"></param>
+        /// <param name="avatarUrl"></param>
+        /// <param name="comment"></param>
+        public static async Task WelcomeCardGenerater(string guildName,string userId, string userName,string avatarPath,string avatarUrl,string? comment)
         {
             string background = @".\Assets\Image\default_bg.png";
             //string discordicon = Context.User.GetAvatarUrl(Discord.ImageFormat.Png).ToString();
             string fontPath = @".\Assets\fonts\BizinGothic-Regular.ttf"; // フォントファイルを指定
-            string outputPath = @$".\Tests\welcomecard\{userID}.png";
+            string outputPath = @$".\Tests\welcomecard\{userId}.png";
             //string discordname = Context.User.Username;
-            string profileImageFlame = @".\Assets\Image\sampleflame.png";
+            // string profileImageFlame = @".\Assets\Image\sampleflame.png";
 
             //string avatarUrl = (Context.User as IGuildUser)?.GetGuildAvatarUrl(ImageFormat.Auto)
             //?? Context.User.GetAvatarUrl(ImageFormat.Auto)
@@ -107,23 +114,33 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                     });
 
                     // 画像を保存
-                    backgroundimage.Save(outputPath);
+                    await backgroundimage.SaveAsync(outputPath);
                     Console.WriteLine($"画像を保存しました: {outputPath}");
                 }
 
             }
             catch (Exception ex)
             {
-                //await DeleteOriginalResponseAsync();
+                // await DeleteOriginalResponseAsync();
                 //await FollowupAsync($"生成エラー：\n" + $"```cmd\n{ex}\n```", ephemeral: true);
             }
         }
-        public static async Task UserCardGenerater(string guildName, string userID, string userName, string avatarPath, string avatarUrl, string comment,int exp)
+        /// <summary>
+        /// UserCardGeneraterは、ユーザーカードを生成します。
+        /// </summary>
+        /// <param name="guildName"></param>
+        /// <param name="userId"></param>
+        /// <param name="userName"></param>
+        /// <param name="avatarPath"></param>
+        /// <param name="avatarUrl"></param>
+        /// <param name="comment"></param>
+        /// <param name="exp"></param>
+        public static async Task UserCardGenerater(string guildName, string userId, string userName, string avatarPath, string avatarUrl, string? comment,int exp)
         {
             string background = @".\Assets\Image\default_bg.png";
             //string discordicon = Context.User.GetAvatarUrl(Discord.ImageFormat.Png).ToString();
             string fontPath = @".\Assets\fonts\BizinGothic-Regular.ttf"; // フォントファイルを指定
-            string outputPath = @$".\Tests\namecard\{userID}.png";
+            string outputPath = @$".\Tests\namecard\{userId}.png";
             //string discordname = userName;
             string profileImageFlame = @".\Assets\Image\sampleflame.png";
 
@@ -197,7 +214,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                     });
 
                     // 画像を保存
-                    backgroundimage.Save(outputPath);
+                    await backgroundimage.SaveAsync(outputPath);
                     Console.WriteLine($"画像を保存しました: {outputPath}");
                 }
 
@@ -211,6 +228,9 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             }
         }
 
+        /// <summary>
+        /// ディレクトリを作成します。
+        /// </summary>
         public void CreateDirectory()
         {
             Directory.CreateDirectory(@".\Temp\Discordicon\128");

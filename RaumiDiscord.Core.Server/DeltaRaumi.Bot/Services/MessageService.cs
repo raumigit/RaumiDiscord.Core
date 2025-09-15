@@ -1,16 +1,11 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using NuGet.Protocol;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
-using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services;
-using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
-using System.Diagnostics.Metrics;
 
-namespace RaumiDiscord.Core.Server.DiscordBot.Services
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 {
     /// <summary>
     /// MessageServiceは、Discordのメッセージを処理するためのサービスです。
@@ -22,11 +17,17 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
         private DeltaRaumiDbContext _deltaRaumiDb;
         private readonly DataEnsure _dataEnsure;
         private readonly LevelService _levelService;
+
+
+
         /// <summary>
         /// MessageServiceのコンストラクター
         /// </summary>
         /// <param name="client"></param>
         /// <param name="logging"></param>
+        /// <param name="deltaRaumiDb"></param>
+        /// <param name="dataEnsure"></param>
+        /// <param name="levelService"></param>
         public MessageService(DiscordSocketClient client, ImprovedLoggingService logging, DeltaRaumiDbContext deltaRaumiDb, DataEnsure dataEnsure, LevelService levelService)
         {
             _client = client;
@@ -85,11 +86,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
                         await message.Channel.SendMessageAsync("なに？");
                         break;
 
-                    case string match when System.Text.RegularExpressions.Regex.IsMatch(message.CleanContent, contentbase):
+                    case not null when System.Text.RegularExpressions.Regex.IsMatch(message.CleanContent, contentbase):
 
                         await message.Channel.SendMessageAsync("該当するメッセージコマンドはないっぽい…");
-                        break;
-                    default:
                         break;
                 }
             }
@@ -109,13 +108,10 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Services
             message.Embeds.Select(e => e.ToString()),
             after.Embeds.Select(e => e.ToString())
     );
-            if (embedsChanged)
+            if (!embedsChanged && message.Content != after.Content)
             {
-                return;
-            }
-            else if (message.Content != after.Content)
-            {
-                Console.WriteLine($"{message.Channel}|{message.Author}\n{message.Author}:```diff\n- {message}\n! {after}\n```");
+                Console.WriteLine(
+                    $"{message.Channel}|{message.Author}\n{message.Author}:```diff\n- {message}\n! {after}\n```");
             }
         }
 

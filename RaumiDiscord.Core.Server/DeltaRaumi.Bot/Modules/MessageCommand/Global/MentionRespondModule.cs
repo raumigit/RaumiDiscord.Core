@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Interactions;
 
-namespace RaumiDiscord.Core.Server.DiscordBot.Modules.MessageCommand
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Modules.MessageCommand.Global
 {
     /// <summary>
     /// MentionRespondModuleは、メンションに対する応答を行うモジュールです。
@@ -23,11 +23,9 @@ namespace RaumiDiscord.Core.Server.DiscordBot.Modules.MessageCommand
                     await message.Channel.SendMessageAsync("なに...？");
                     break;
 
-                case string match when System.Text.RegularExpressions.Regex.IsMatch(message.CleanContent, contentbase):
+                case not null when System.Text.RegularExpressions.Regex.IsMatch(message.CleanContent, contentbase):
 
                     await message.Channel.SendMessageAsync("該当するメッセージコマンドはないっぽい…");
-                    break;
-                default:
                     break;
             }
         }

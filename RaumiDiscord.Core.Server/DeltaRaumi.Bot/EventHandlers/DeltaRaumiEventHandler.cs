@@ -1,54 +1,60 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using NuGet.ProjectModel;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services;
-using RaumiDiscord.Core.Server.DiscordBot.Services;
-using System.Threading.Channels;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 {
     /// <summary>
-    ///     DeltaRaumiEventHandlerは、Discordのイベントを処理するためのクラスです。
+    /// DeltaRaumiEventHandlerは、Discordのイベントを処理するためのクラスです。
     /// </summary>
     public class DeltaRaumiEventHandler
     {
+        
         /// <summary>
         /// DeltaRaumiEventHandlerは、Discordのイベントを処理するためのクラスです。
         /// </summary>
         /// <param name="client"></param>
-        /// <param name="stat"></param>
-        /// <param name="logger"></param>
+        /// <param name="statService"></param>
+        /// <param name="loggerService"></param>
         /// <param name="messageService"></param>
-        public DeltaRaumiEventHandler(DiscordSocketClient client, StatService statService, ImprovedLoggingService loggerService, MessageService messageService)
+        /// <param name="cacheMessage"></param>
+        /// <param name="guild"></param>
+        /// <param name="welcome"></param>
+        public DeltaRaumiEventHandler(DiscordSocketClient client, StatService statService, ImprovedLoggingService loggerService, MessageService messageService, Cacheable<IUserMessage, ulong> cacheMessage, SocketGuild guild, WelcomeMessageService welcome)
+        
         {
-            SocketGuild guild;
+            // SocketGuild guild;
 
-            _client = client;
-            _statService = statService;
-            _loggerService = loggerService;
-            _messageService = messageService;
+            Client = client;
+            StatService = statService;
+            this._loggerService = loggerService;
+            MessageService = messageService;
+            CacheMessage = cacheMessage;
+            Welcome = welcome;
+            Guild = guild;
             //_cacheMessage = cacheMessage;
             //_guild = guild;
             //_welcome= welcome;
         }
 
+
         /// <summary>
         /// Gets the client.
         /// </summary>
-        public DiscordSocketClient _client { get; }
+        public DiscordSocketClient Client { get; }
 
-        private MessageService _messageService { get; }
+        private MessageService MessageService { get; }
 
-        private Cacheable<IUserMessage, ulong> _cacheMessage { get; }
+        private Cacheable<IUserMessage, ulong> CacheMessage { get; }
 
-        private SocketGuild _guild { get; }
+        private SocketGuild Guild { get; }
 
-        private StatService _statService { get; }
+        private StatService StatService { get; }
 
-        private ImprovedLoggingService _loggerService;
+        private readonly ImprovedLoggingService _loggerService;
 
-        private WelcomeMessageService _welcome { get; }
+        private WelcomeMessageService Welcome { get; }
 
 
         internal Task LogAsync(LogMessage message)
@@ -72,19 +78,19 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 
         internal async Task MessageReceivedAsync(SocketMessage socketMessage)
         {
-            await _messageService.GetMessageReceivedAsync(socketMessage);
-            await _messageService.LevelsHandler(socketMessage);
-            await _statService.UserStatDetection(socketMessage);
+            await MessageService.GetMessageReceivedAsync(socketMessage);
+            await MessageService.LevelsHandler(socketMessage);
+            await StatService.UserStatDetection(socketMessage);
         }
 
         internal async Task MessageUpdated(Cacheable<IMessage, ulong> ucacheable, SocketMessage message, ISocketMessageChannel socketMessageChannel)
         {
-            await _messageService.GetMessageUpdatedAsync(ucacheable, message, socketMessageChannel);
+            await MessageService.GetMessageUpdatedAsync(ucacheable, message, socketMessageChannel);
         }
 
         internal async Task MessageDeleted(Cacheable<IMessage, ulong> dcacheable, Cacheable<IMessageChannel, ulong> cachedChannel)
         {
-            await _messageService.GetMessageDeletedAsync(dcacheable, cachedChannel);
+            await MessageService.GetMessageDeletedAsync(dcacheable, cachedChannel);
         }
 
         internal Task ReactionAddedAsync(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
@@ -93,7 +99,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
             return Task.CompletedTask;
         }
 
-        internal Task ReactionRemovedAsync(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
+        internal async Task<Task> ReactionRemovedAsync(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
         {
             // 実装が必要な場合はここに処理を追加
             return Task.CompletedTask;
@@ -102,9 +108,9 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
         internal async Task UserJoinedAsync(SocketGuildUser user)
         {
             // 実装が必要な場合はここに処理を追加
-            _loggerService.Log($"User joined: {user.Username}", "UserJoinedAsync");
+            await _loggerService.Log($"User joined: {user.Username}", "UserJoinedAsync");
 
-            await _welcome.welcomeCardGenerator(user);
+            await Welcome.WelcomeCardGenerator(user);
 
             //return Task.CompletedTask;
         }

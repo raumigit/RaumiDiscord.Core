@@ -2,35 +2,51 @@
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Common
 {
+    /// <summary>
+    /// ScheduledTaskは、定期的に実行されるタスクを管理します。
+    /// </summary>
     public class ScheduledTask
     {
         private readonly ImprovedLoggingService _logger;
         private readonly IServiceProvider _serviceProvider;
 
-        public ScheduledTask(ImprovedLoggingService loggingService)
+        /// <summary>
+        /// ScheduledTaskのコンストラクタ
+        /// </summary>
+        /// <param name="loggingService"></param>
+        /// <param name="serviceProvider"></param>
+        public ScheduledTask(ImprovedLoggingService loggingService, IServiceProvider serviceProvider)
         {
             _logger = loggingService;
+            _serviceProvider = serviceProvider;
         }
 
+/*
         private Task ScanDatabaseAsync()
         {
             // TODO: DBとキャッシュを比較して不足データを補う処理を書く
             _logger.Log("DBのスキャンを実行中...", "スケジュールタスク");
             return Task.CompletedTask;
         }
+*/
 
+/*
         private void CleanUpLogs(string logDirectory, TimeSpan maxAge)
         {
             _logger.Log("ログのクリーンアップを開始: {Path}", logDirectory);
             CleanOldFiles(logDirectory, maxAge);
         }
+*/
 
+/*
         private void CleanUpCache(string cacheDirectory, TimeSpan maxAge)
         {
             _logger.Log("キャッシュのクリーンアップを開始: {Path}", cacheDirectory);
             CleanOldFiles(cacheDirectory, maxAge);
         }
+*/
 
+/*
         private void CleanOldFiles(string path, TimeSpan maxAge)
         {
             if (!Directory.Exists(path)) return;
@@ -53,5 +69,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common
                 }
             }
         }
+*/
     }
 }

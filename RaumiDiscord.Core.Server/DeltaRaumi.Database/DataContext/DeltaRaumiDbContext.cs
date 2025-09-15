@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NUlid;
-using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Infrastructure.Configuration;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
@@ -46,7 +45,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         public DbSet<LinkedAccountModel> LinkedAccount { get; set; }
 
 
-        private DatabaseType databaseType = DatabaseType.Sqlite;
+        private DatabaseType _databaseType = DatabaseType.Sqlite;
 
 
         /// <summary>
@@ -66,7 +65,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         /// <exception cref="ArgumentException"></exception>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            switch (databaseType)
+            switch (_databaseType)
             {
                 //case DatabaseType.MariaDb:
                 //    optionsBuilder.UseMySql(MySqlConfig.FromConfigFile().GetConnectionString(), new MariaDbServerVersion("11.6.2"));
@@ -90,6 +89,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
             }
         }
 
+        /// <summary>
+        /// ConfigureConventionsメソッドは、モデルのプロパティに対する共通の設定を行うために使用されます。
+        /// </summary>
+        /// <param name="configurationBuilder"></param>
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
             configurationBuilder
@@ -115,14 +118,24 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         //    }
         //}
 
+        /// <summary>
+        /// UlidToStringConverterは、ULID（Universally Unique Lexicographically Sortable Identifier）を文字列に変換するためのValueConverterです。
+        /// </summary>
         public class UlidToStringConverter : ValueConverter<Ulid, string>
         {
             private static readonly ConverterMappingHints DefaultHints = new ConverterMappingHints(size: 26);
 
+            /// <summary>
+            /// 
+            /// </summary>
             public UlidToStringConverter() : this(null)
             {
             }
 
+            /// <summary>
+            /// UlidToStringConverterは、ULIDを文字列に変換するためのValueConverterです。
+            /// </summary>
+            /// <param name="mappingHints"></param>
             public UlidToStringConverter(ConverterMappingHints? mappingHints)
                 : base(
                         convertToProviderExpression: x => x.ToString(),

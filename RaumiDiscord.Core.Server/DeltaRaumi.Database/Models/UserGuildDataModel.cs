@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
@@ -34,21 +33,24 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         /// ギルドユーザーを管理する一意のID
         /// </summary>
         [Key]
-        public Guid guId { get; set; }
+        public Guid GuId { get; set; }
 
         /// <summary>
         /// ギルドの一意識別子を取得または設定します。
         /// </summary>
+        [MaxLength(50)]
         public string GuildId { get; set; }
 
         /// <summary>
         /// ユーザーの一意識別子を取得または設定します。
         /// </summary>
+        [MaxLength(50)]
         public string UserId { get; set; }
 
         /// <summary>
         /// このギルド内でのユーザーのアバターIDを取得または設定します。
         /// </summary>
+        [MaxLength(256)]
         public string? GuildAvatarId { get; set; }
 
         /// <summary>
@@ -69,12 +71,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         /// <summary>
         /// ユーザーのギルド内でのExpを取得または設定します。
         /// </summary>
-        public int Guild_Exp { get; set; }
+        public int GuildExp { get; set; }
 
         /// <summary>
         /// ユーザーが最後に経験値を得た時間を取得または設定します。
         /// </summary>
-        public DateTime Latest_Exp { get; set; }
+        public DateTime LatestExp { get; set; }
 
         /// <summary>
         /// ユーザーがギルド内で送信したメッセージの総数を取得または設定します。

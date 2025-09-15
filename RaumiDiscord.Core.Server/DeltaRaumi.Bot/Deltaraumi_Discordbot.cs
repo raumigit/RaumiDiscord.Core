@@ -12,37 +12,35 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Common;
 using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
-using RaumiDiscord.Core.Server.DiscordBot.Services;
 
-namespace RaumiDiscord.Core.Server.DiscordBot
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
 {
-    internal class Deltaraumi_Discordbot
+    internal class DeltaraumiDiscordbot
     {
         //public IReadOnlyCollection<SocketGuildUser> ConnectedUsers { get; private set; }
         //VCユーザーを取るためのコマンド　検証と実装はこれから
-        public List<ulong>? guildIDs { get; private set; }
+        public List<ulong>? GuildIDs { get; private set; }
 
-        public static ulong vc_chid { get; set; }
-        public static string? vc_region { get; set; }
+        public static ulong VcChid { get; set; }
+        public static string? VcRegion { get; set; }
 
         //public static ulong GuildId { get; private set; }
         //おそらく出番なし
 
-        public static DiscordSocketClient _client;
+        public static DiscordSocketClient Client;
         private readonly InteractionService _handler;
         private IServiceProvider? _services;
         private static IConfiguration _configuration;
-        public static Configuration? _Config { get; set; }
+        public static Configuration? Config { get; set; }
 
-        public static ImprovedLoggingService _logger;
+        public static ImprovedLoggingService Logger;
         public static SqlMode AppSqlMode { get; set; }
         public enum SqlMode { Sqlite, MariaDb }
-        private DiscordCoordinationService? DiscordCoordinationService;
+        private DiscordCoordinationService? _discordCoordinationService;
 
-        public Deltaraumi_Discordbot()
+        public DeltaraumiDiscordbot()
         {
-            _logger = new ImprovedLoggingService();
-
+            Logger = new ImprovedLoggingService();
         }
 
         public static void Deltaraumi_load(string[] args)
@@ -53,7 +51,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             Console.WriteLine();
             try
             {
-                new Deltaraumi_Discordbot().MainAsync(args).GetAwaiter().GetResult();
+                new DeltaraumiDiscordbot().MainAsync(args).GetAwaiter().GetResult();
             }
             catch (Exception e)
             {
@@ -67,11 +65,11 @@ namespace RaumiDiscord.Core.Server.DiscordBot
         {
             try
             {
-                await _logger.Log("DeltaRaumiを初期化中", "Startup");
+                await Logger.Log("DeltaRaumiを初期化中", "Startup");
 
-                _Config = new Configuration().GetConfigFromFile();
+                Config = new Configuration().GetConfigFromFile();
 
-                _client = new DiscordSocketClient(new DiscordSocketConfig
+                Client = new DiscordSocketClient(new DiscordSocketConfig
                 {
                     GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
                     ConnectionTimeout = 8000,
@@ -90,13 +88,13 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 .Build();
                 _services = BuildServices();
 
-                await _logger.Log("サービスプロバイダを設定中...", "Startup");
+                await Logger.Log("サービスプロバイダを設定中...", "Startup");
 
                 var dbContext = _services.GetRequiredService<DeltaRaumiDbContext>();
-                this.DiscordCoordinationService = _services.GetRequiredService<DiscordCoordinationService>();
-                _client.Log += LogAsync;
+                this._discordCoordinationService = _services.GetRequiredService<DiscordCoordinationService>();
+                Client.Log += LogAsync;
 
-                guildIDs = _client.Guilds.Select(guild => guild.Id).ToList();
+                GuildIDs = Client.Guilds.Select(guild => guild.Id).ToList();
                 await _services.GetRequiredService<InteractionHandler>().InitializeAsync();
 
 
@@ -112,22 +110,22 @@ namespace RaumiDiscord.Core.Server.DiscordBot
                 }
 
 
-                await _logger.Log("初期化が完了", "Startup");
+                await Logger.Log("初期化が完了", "Startup");
 
-                await _logger.Log("ログイン→", "Startup");
+                await Logger.Log("ログイン→", "Startup");
                 try
                 {
-                    string _token = _Config.TokenData.Token;
+                    string token = Config.TokenData.Token;
 
-                    await _client.LoginAsync(TokenType.Bot, _token);
+                    await Client.LoginAsync(TokenType.Bot, token);
                     //await Log(new LogMessage(LogSeverity.Debug, "Startup", $"Tokun:{_token}"));
 
-                    await _client.StartAsync();
+                    await Client.StartAsync();
                 }
                 catch (HttpException e)
                 {
-                    await _logger.Log("ログイン失敗", "Startup", ImprovedLoggingService.LogLevel.Error);
-                    await _logger.Log($"{e}", "Startup", ImprovedLoggingService.LogLevel.Error);
+                    await Logger.Log("ログイン失敗", "Startup", ImprovedLoggingService.LogLevel.Error);
+                    await Logger.Log($"{e}", "Startup", ImprovedLoggingService.LogLevel.Error);
                     Environment.Exit(1);
                 }
 
@@ -139,14 +137,14 @@ namespace RaumiDiscord.Core.Server.DiscordBot
 
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                await _logger.Log("DeltaRaumi接続中", "Startup", ImprovedLoggingService.LogLevel.Notice);
+                await Logger.Log("DeltaRaumi接続中", "Startup", ImprovedLoggingService.LogLevel.Notice);
                 Console.ResetColor();
 
                 await Task.Delay(-1);
             }
             catch (Exception e)
             {
-                await _logger.Log($"{e.Message}\n{e.StackTrace}", "Startup", ImprovedLoggingService.LogLevel.Fatal);
+                await Logger.Log($"{e.Message}\n{e.StackTrace}", "Startup", ImprovedLoggingService.LogLevel.Fatal);
 
                 Environment.Exit(1);
             }
@@ -157,19 +155,21 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             return Task.CompletedTask;
         }
 
+/*
         private static async Task MessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
         {
             // メッセージがキャッシュになかった場合、ダウンロードすると `after` のコピーが取得されます。
             var message = await before.GetOrDownloadAsync();
             Console.WriteLine($"{message.Channel}|{message.Author}\n{message.Author}:```diff\n- {message}\n! {after}\n```");
         }
+*/
 
         //private readonly InteractionHandler;
         public static Task LogAsync(LogMessage log)
         {
             // LogMessageをImprovedLoggingServiceに変換して使用
             ImprovedLoggingService.LogLevel level = DiscordLoggingAdapter.ConvertDiscordLogLevel(log.Severity);
-            _logger.Log($"{log.Message}", $"{log.Source}", level);
+            Logger.Log($"{log.Message}", $"{log.Source}", level);
 
             return Task.CompletedTask;
         }
@@ -179,7 +179,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             .AddDbContext<DeltaRaumiDbContext>()
 
             // 設定やクライアントなどの基本的なシングルトン
-            .AddSingleton(_client)
+            .AddSingleton(Client)
             .AddSingleton(_configuration)
             .AddSingleton<ImprovedLoggingService>()
             .AddSingleton<DiscordLoggingAdapter>()
@@ -208,7 +208,7 @@ namespace RaumiDiscord.Core.Server.DiscordBot
             .AddScoped<LevelService>()
 
             // Guild IDsのコレクション
-            .AddSingleton(provider => _client.Guilds.Select(guild => guild.Id).ToList())
+            .AddSingleton(_ => Client.Guilds.Select(guild => guild.Id).ToList())
 
             .BuildServiceProvider();
     }

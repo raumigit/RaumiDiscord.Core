@@ -18,6 +18,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
         private readonly DataEnsure _dataEnsure;
         private readonly DiscordSocketClient _client;
         private ImprovedLoggingService _logger;
+        
 
         /// <summary>
         /// StatServiceのインスタンスを初期化します。
@@ -48,16 +49,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             {
                 return;
             }
-            else
-            {
-
-            }
 
             var guildChannel = message.Channel as ITextChannel;
             var guild = guildChannel.Guild as SocketGuild;
             var guildUser = message.Author as SocketGuildUser;
 
-            var ensure = new DataEnsure(_deltaRaumiDB, _logger, _client);
+            // var ensure = new DataEnsure(_deltaRaumiDB, _logger, _client);
 
             if (guild == null || guildUser == null)
             {
@@ -75,7 +72,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 
                 //var userGuilsStatsData = await _dataEnsure.EnsureGuildUserDataDataExistsAsync(guildData, userData, guild, guildUser);
 
-                var userGuildStats = new UserGuildStatsModel
+                var userGuildStatsModel = new UserGuildStatsModel
                 {
                     StatUlid = Ulid.NewUlid(),
                     GuildId = guild.Id.ToString(),
@@ -83,9 +80,9 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                     CreatedAt = DateTime.UtcNow,
                 };
                 var handler = new MentionHandling(_deltaRaumiDB, _logger);
-                await handler.pingMentions(message);
+                await handler.PingMentions(message);
 
-                //await _deltaRaumiDB.UserGuildStats.AddAsync(userGuildStats);
+                await _deltaRaumiDB.UserGuildStats.AddAsync(userGuildStatsModel);
                 await _logger.Log($"Statの記録が完了", "StatService", ImprovedLoggingService.LogLevel.Verbose);
 
 
@@ -97,5 +94,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             }
             Console.WriteLine("StatService OK");
         }
+
     }
 }

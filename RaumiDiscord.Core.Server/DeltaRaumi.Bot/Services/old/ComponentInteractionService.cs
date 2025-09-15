@@ -11,23 +11,23 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
     class ComponentInteractionService
     {
 #nullable disable
-        private readonly DiscordSocketClient Client;
-        private readonly DeltaRaumiDbContext DeltaRaumiDbContext;
-        private readonly ImprovedLoggingService LoggingService;
+        private readonly DiscordSocketClient _client;
+        private readonly DeltaRaumiDbContext _deltaRaumiDbContext;
+        private readonly ImprovedLoggingService _loggingService;
 
-        private Color RaumiMainColor = new Color(0x7bb3ee);
-        private Color RaumiSubColor = new Color(0xf02443);
+        private Color _raumiMainColor = new Color(0x7bb3ee);
+        private Color _raumiSubColor = new Color(0xf02443);
 
 
-        private string Version = $"バージョン:0.1.3.16　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
+        private string _version = $"バージョン:0.1.3.16　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
 
-        public Configuration configuration { get; set; }
+        private Configuration Configuration { get; set; }
 
         public ComponentInteractionService(DiscordSocketClient client, DeltaRaumiDbContext deltaRaumiDbContext, ImprovedLoggingService loggingService)
         {
-            Client = client;
-            DeltaRaumiDbContext = deltaRaumiDbContext;
-            LoggingService = loggingService;
+            _client = client;
+            _deltaRaumiDbContext = deltaRaumiDbContext;
+            _loggingService = loggingService;
 
             client.SelectMenuExecuted += Client_SelectMenuExecuted;
             client.ButtonExecuted += Client_ButtonExecuted;
@@ -45,7 +45,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
                     builder.WithAuthor(component.User);
                     builder.WithDescription("あなたはこの狐を撫でてみることにした\nまんざらでもなさそうだ");
                     builder.WithImageUrl("");
-                    builder.WithColor(RaumiMainColor);
+                    builder.WithColor(_raumiMainColor);
                     await component.FollowupAsync(embed: builder.Build(), ephemeral: true);
                     break;
                 case "DontPat":
@@ -56,7 +56,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
                     await component.FollowupAsync(embed: builder.Build(), ephemeral: true);
                     break;
                 default:
-                    await LoggingService.Log("通常では到達できないエラー(E-5900)", "InteractionButton", ImprovedLoggingService.LogLevel.Error);
+                    await _loggingService.Log("通常では到達できないエラー(E-5900)", "InteractionButton", ImprovedLoggingService.LogLevel.Error);
                     break;
             }
         }
@@ -65,155 +65,165 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
         {
             //await component.DeferAsync();
 
-            DiscordComponentModel model = DeltaRaumiDbContext.Components.Find(Guid.Parse(component.Data.CustomId));
+            DiscordComponentModel model = _deltaRaumiDbContext.Components.Find(Guid.Parse(component.Data.CustomId));
 
             EmbedBuilder builder = new EmbedBuilder();
 
-            configuration = new Configuration().GetConfig();
+            Configuration = new Configuration().GetConfig();
 
-            switch (model.DeltaRaumiComponentType)
+            if (model != null)
             {
-                case "FAQ-Menu":
-                    if (component.User.Id.ToString() != model.OwnerId)
-                    {
-                        await component.RespondAsync("**許可されていない動作**：このメニューは他ユーザーによって制御されています。", ephemeral: true);
-                        return;
-                    }
+                switch (model.DeltaRaumiComponentType)
+                {
+                    case "FAQ-Menu":
+                        if (component.User.Id.ToString() != model.OwnerId)
+                        {
+                            await component.RespondAsync("**許可されていない動作**：このメニューは他ユーザーによって制御されています。", ephemeral: true);
+                            return;
+                        }
 
-                    switch (component.Data.Values.FirstOrDefault())
-                    {
-                        case "about":
-                            builder.WithAuthor(component.User);
-                            builder.WithTitle("DeltaRaumiとは？");
-                            builder.WithDescription("Raumiが制作した主に個人用途のBOTです。2024年11月に計画され、2025年1月に見切り発車されているアルファ段階のBOTのため常時稼働はしていません。");
-                            builder.AddField("Github", "実行中のコードは[ここにあります](https://github.com/raumigit/RaumiDiscord.Core)");
-                            builder.WithColor(RaumiMainColor);
-                            builder.WithUrl("https://raumisrv.com/");
-                            builder.WithCurrentTimestamp();
-                            builder.WithFooter("ヘルプを参照中");
-                            break;
+                        switch (component.Data.Values.FirstOrDefault())
+                        {
+                            case "about":
+                                builder.WithAuthor(component.User);
+                                builder.WithTitle("DeltaRaumiとは？");
+                                builder.WithDescription(
+                                    "Raumiが制作した主に個人用途のBOTです。2024年11月に計画され、2025年1月に見切り発車されているアルファ段階のBOTのため常時稼働はしていません。");
+                                builder.AddField("Github",
+                                    "実行中のコードは[ここにあります](https://github.com/raumigit/RaumiDiscord.Core)");
+                                builder.WithColor(_raumiMainColor);
+                                builder.WithUrl("https://raumisrv.com/");
+                                builder.WithCurrentTimestamp();
+                                builder.WithFooter("ヘルプを参照中");
+                                break;
 
-                        case "nowsettings":
-                            builder.WithAuthor(component.User);
-                            builder.WithTitle("現在の設定値");
-                            builder.WithDescription(
-                                $"タイムゾーン：{TimeZoneInfo.Local}\n" +
-                                "使用言語：JA-JP\n" +
-                                "VC状態：--\n" +
-                                "使用DB：SQlite3\n"
+                            case "nowsettings":
+                                builder.WithAuthor(component.User);
+                                builder.WithTitle("現在の設定値");
+                                builder.WithDescription(
+                                    $"タイムゾーン：{TimeZoneInfo.Local}\n" +
+                                    "使用言語：JA-JP\n" +
+                                    "VC状態：--\n" +
+                                    "使用DB：SQlite3\n"
                                 );
 
-                            builder.WithColor(RaumiMainColor);
-                            //builder.WithUrl("");
-                            builder.WithCurrentTimestamp();
-                            builder.WithFooter("ヘルプを参照中");
-                            break;
+                                builder.WithColor(_raumiMainColor);
+                                //builder.WithUrl("");
+                                builder.WithCurrentTimestamp();
+                                builder.WithFooter("ヘルプを参照中");
+                                break;
 
-                        case "serverstat":
-                            DateTime localuptime = configuration.Setting.UpTime;
-                            DateTime utcUptime = localuptime.ToUniversalTime();
-                            long unixTime = new DateTimeOffset(utcUptime).ToUnixTimeSeconds();
-                            //string unixTimestr = unixTime.ToString();
-                            builder.WithAuthor(component.User);
-                            builder.WithTitle("サーバーの状態");
-                            builder.WithDescription(
-                                $"{Version}\n " +
-                                "外部連携：null\n" +
-                                "読み上げエンジン：null\n" +
-                                "WebGUI：null" +
-                                "API：Online\n" +
-                                "ロギング中：no\n" +
-                                "Stat機能：null\n" +
-                                "使用DB：SQlite3\n" +
-                                $"致命的なエラー：{configuration.Setting.SystemFatal.ToString()}\n"
+                            case "serverstat":
+                                DateTime localuptime = Configuration.Setting.UpTime;
+                                DateTime utcUptime = localuptime.ToUniversalTime();
+                                long unixTime = new DateTimeOffset(utcUptime).ToUnixTimeSeconds();
+                                //string unixTimestr = unixTime.ToString();
+                                builder.WithAuthor(component.User);
+                                builder.WithTitle("サーバーの状態");
+                                builder.WithDescription(
+                                    $"{_version}\n " +
+                                    "外部連携：null\n" +
+                                    "読み上げエンジン：null\n" +
+                                    "WebGUI：null" +
+                                    "API：Online\n" +
+                                    "ロギング中：no\n" +
+                                    "Stat機能：null\n" +
+                                    "使用DB：SQlite3\n" +
+                                    $"致命的なエラー：{Configuration.Setting.SystemFatal.ToString()}\n"
                                 );
-                            builder.AddField("UpTime", $"<t:{unixTime.ToString()}:R>");
-                            builder.WithColor(RaumiMainColor);
-                            builder.WithUrl("");
-                            builder.WithCurrentTimestamp();
-                            builder.WithFooter("DeltaRaumi");
-                            break;
+                                builder.AddField("UpTime", $"<t:{unixTime.ToString()}:R>");
+                                builder.WithColor(_raumiMainColor);
+                                builder.WithUrl("");
+                                builder.WithCurrentTimestamp();
+                                builder.WithFooter("DeltaRaumi");
+                                break;
 
-                        case "website":
-                            builder.WithAuthor(component.User);
-                            builder.WithTitle("DeltaRaumiのホームページはある?");
-                            builder.WithDescription("現在はありませんが、いつかはどこかを使って乗せる予定です。");
-                            builder.AddField("Github", "実行中のコードは[ここにあります](https://github.com/raumigit/RaumiDiscord.Core)");
-                            builder.WithColor(RaumiMainColor);
-                            builder.WithUrl("https://github.com/raumigit/RaumiDiscord.Core");
-                            builder.WithCurrentTimestamp();
-                            builder.WithFooter("DeltaRaumi");
-                            break;
+                            case "website":
+                                builder.WithAuthor(component.User);
+                                builder.WithTitle("DeltaRaumiのホームページはある?");
+                                builder.WithDescription("現在はありませんが、いつかはどこかを使って乗せる予定です。");
+                                builder.AddField("Github",
+                                    "実行中のコードは[ここにあります](https://github.com/raumigit/RaumiDiscord.Core)");
+                                builder.WithColor(_raumiMainColor);
+                                builder.WithUrl("https://github.com/raumigit/RaumiDiscord.Core");
+                                builder.WithCurrentTimestamp();
+                                builder.WithFooter("DeltaRaumi");
+                                break;
 
-                        case "donate":
-                            builder.WithAuthor(component.User);
-                            builder.WithTitle("Patreonとかしてるの？");
-                            builder.WithDescription("やってもいいけど面倒くさいから今のところ無いと思っておいてください。\n  Discord内の決済機能が開放されたら実装の目処は付ける予定");
-                            builder.WithColor(RaumiMainColor);
-                            builder.WithUrl("");
-                            builder.WithCurrentTimestamp();
-                            builder.WithFooter("DeltaRaumi");
-                            break;
+                            case "donate":
+                                builder.WithAuthor(component.User);
+                                builder.WithTitle("Patreonとかしてるの？");
+                                builder.WithDescription(
+                                    "やってもいいけど面倒くさいから今のところ無いと思っておいてください。\n  Discord内の決済機能が開放されたら実装の目処は付ける予定");
+                                builder.WithColor(_raumiMainColor);
+                                builder.WithUrl("");
+                                builder.WithCurrentTimestamp();
+                                builder.WithFooter("DeltaRaumi");
+                                break;
 
-                        case "bookmark":
-                            builder.WithAuthor(component.User);
-                            builder.WithTitle("ブックマークって何？");
-                            builder.WithDescription("スラッシュコマンドに一つで特定のタイプのURLを出してくれます。\n ＊現在登録はできません。");
-                            builder.WithColor(RaumiMainColor);
-                            builder.WithUrl("");
-                            builder.WithCurrentTimestamp();
-                            builder.WithFooter("ヘルプを参照中");
-                            break;
+                            case "bookmark":
+                                builder.WithAuthor(component.User);
+                                builder.WithTitle("ブックマークって何？");
+                                builder.WithDescription("スラッシュコマンドに一つで特定のタイプのURLを出してくれます。\n ＊現在登録はできません。");
+                                builder.WithColor(_raumiMainColor);
+                                builder.WithUrl("");
+                                builder.WithCurrentTimestamp();
+                                builder.WithFooter("ヘルプを参照中");
+                                break;
 
-                        case "wayoperate-24":
-                            builder.WithAuthor(component.User);
-                            builder.WithTitle("なぜ24時間上がってないの？");
-                            builder.WithDescription("Releaseバージョンではないため開発と同時に適当にセルフホスティングされているためです。v1.0までは頻繁に停止します。");
-                            builder.WithColor(RaumiMainColor);
-                            builder.WithUrl("");
-                            builder.WithCurrentTimestamp();
-                            builder.WithFooter("ヘルプを参照中");
-                            break;
+                            case "wayoperate-24":
+                                builder.WithAuthor(component.User);
+                                builder.WithTitle("なぜ24時間上がってないの？");
+                                builder.WithDescription(
+                                    "Releaseバージョンではないため開発と同時に適当にセルフホスティングされているためです。v1.0までは頻繁に停止します。");
+                                builder.WithColor(_raumiMainColor);
+                                builder.WithUrl("");
+                                builder.WithCurrentTimestamp();
+                                builder.WithFooter("ヘルプを参照中");
+                                break;
 
-                        case "enhancement":
-                            builder.WithAuthor(component.User);
-                            builder.WithTitle("新しい機能を作る予定は？");
+                            case "enhancement":
+                                builder.WithAuthor(component.User);
+                                builder.WithTitle("新しい機能を作る予定は？");
 
-                            builder.WithDescription("現在開発中に機能は以下のとおりです。");
-                            builder.AddField("ウェブ側", "- WebGui");
-                            builder.AddField("サーバー側",
-                                "- 名刺(カード)生成機能\n" +
-                                "- stat機能\n" +
-                                "- 誕生日機能\n" +
-                                "- 読み上げ機能\n" +
-                                "- ウェルカムメッセージ\n");
-                            builder.WithColor(RaumiMainColor);
-                            builder.WithUrl("");
-                            builder.WithCurrentTimestamp();
-                            builder.WithFooter("DeltaRaumi");
-                            break;
+                                builder.WithDescription("現在開発中に機能は以下のとおりです。");
+                                builder.AddField("ウェブ側", "- WebGui");
+                                builder.AddField("サーバー側",
+                                    "- 名刺(カード)生成機能\n" +
+                                    "- stat機能\n" +
+                                    "- 誕生日機能\n" +
+                                    "- 読み上げ機能\n" +
+                                    "- ウェルカムメッセージ\n");
+                                builder.WithColor(_raumiMainColor);
+                                builder.WithUrl("");
+                                builder.WithCurrentTimestamp();
+                                builder.WithFooter("DeltaRaumi");
+                                break;
 
-                        case "updatenow":
-                            builder.WithAuthor(component.User);
-                            builder.WithTitle("最新で行われた変更は？");
-                            builder.WithDescription("スラッシュコマンドにリージョンの指定が追加されました。");
-                            builder.WithColor(RaumiMainColor);
-                            builder.WithUrl("");
-                            builder.WithCurrentTimestamp();
-                            builder.WithFooter("DeltaRaumi");
-                            break;
-                    }
+                            case "updatenow":
+                                builder.WithAuthor(component.User);
+                                builder.WithTitle("最新で行われた変更は？");
+                                builder.WithDescription("スラッシュコマンドにリージョンの指定が追加されました。");
+                                builder.WithColor(_raumiMainColor);
+                                builder.WithUrl("");
+                                builder.WithCurrentTimestamp();
+                                builder.WithFooter("DeltaRaumi");
+                                break;
+                        }
 
-                    await component.Message.ModifyAsync(x =>
-                    {
-                        x.Components = null;
-                        x.Content = "";
-                        x.Embed = builder.Build();
-                    });
-                    break;
+                        await component.Message.ModifyAsync(x =>
+                        {
+                            x.Components = null;
+                            x.Content = "";
+                            x.Embed = builder.Build();
+                        });
+                        break;
+                }
+
+                _deltaRaumiDbContext.Components.Remove(model);
             }
-            DeltaRaumiDbContext.Components.Remove(model);
-            await DeltaRaumiDbContext.SaveChangesAsync();
+
+            await _deltaRaumiDbContext.SaveChangesAsync();
         }
     }
 }

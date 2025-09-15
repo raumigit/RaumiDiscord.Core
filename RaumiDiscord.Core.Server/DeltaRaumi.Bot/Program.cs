@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
-using RaumiDiscord.Core.Server.DiscordBot;
 using System.Runtime.InteropServices;
 using System.Threading.RateLimiting;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,12 +76,12 @@ if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 
 app.MapFallbackToFile("/index.html");
 
-Task? task = Task.Run(() =>
+await Task.Run(() =>
 {
     try
     {
         Console.WriteLine("Deltaraumi_load呼び出し済み");
-        Deltaraumi_Discordbot.Deltaraumi_load(args);
+        DeltaraumiDiscordbot.Deltaraumi_load(args);
     }
     catch (Exception ex)
     {

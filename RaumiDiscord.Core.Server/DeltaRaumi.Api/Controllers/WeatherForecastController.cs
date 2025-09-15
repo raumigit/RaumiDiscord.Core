@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
-namespace RaumiDiscord.Core.Server.Api.Controllers
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 {
     /// <summary>
     /// 天気予報を取得するためのコントローラー

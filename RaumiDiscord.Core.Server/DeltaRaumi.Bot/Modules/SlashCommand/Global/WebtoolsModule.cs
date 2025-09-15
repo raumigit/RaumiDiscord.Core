@@ -1,21 +1,20 @@
 ﻿using Discord.Interactions;
 
-namespace RaumiDiscord.Core.Server.DiscordBot.Modules.SlashCommand.Global
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Modules.SlashCommand.Global;
+
+/// <summary>
+/// WebtoolsModuleは、Webダッシュボードに関するコマンドを提供します。
+/// </summary>
+public class WebtoolsModule : InteractionModuleBase<SocketInteractionContext>
 {
     /// <summary>
-    /// WebtoolsModuleは、Webダッシュボードに関するコマンドを提供します。
+    /// Webダッシュボードへ案内されます。(未実装)
     /// </summary>
-    public class WebtoolsModule : InteractionModuleBase<SocketInteractionContext>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    [SlashCommand("webtools", "Webダッシュボードへ案内されます。(未実装)")]
+    public async Task WebDashbordLink()
     {
-        /// <summary>
-        /// Webダッシュボードへ案内されます。(未実装)
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        [SlashCommand("webtools", "Webダッシュボードへ案内されます。(未実装)")]
-        public async Task WebDashbordLink()
-        {
-            await RespondAsync("実装されていないためしばらくお待ち下さい", ephemeral: true);
-        }
+        await RespondAsync("実装されていないためしばらくお待ち下さい", ephemeral: true);
     }
 }

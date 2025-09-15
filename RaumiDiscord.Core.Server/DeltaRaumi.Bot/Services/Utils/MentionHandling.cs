@@ -7,11 +7,19 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
 {
+    /// <summary>
+    /// MentionHandlingは、メンションの処理を行うサービスです。
+    /// </summary>
     public class MentionHandling
     {
         private static ImprovedLoggingService _logger;
         private static DeltaRaumiDbContext _dbContext;
 
+        /// <summary>
+        /// MentionHandlingのコンストラクタ
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="loggingService"></param>
         public MentionHandling(DeltaRaumiDbContext dbContext, ImprovedLoggingService loggingService)
         {
             _dbContext = dbContext;
@@ -19,7 +27,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
             // Constructor logic if needed
         }
 
-        internal async Task pingMentions(SocketMessage message)
+        internal async Task PingMentions(SocketMessage message)
         {
             if (message is not SocketUserMessage userMessage) return;
 
@@ -53,7 +61,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
 
             // ユーザーごとのメンション回数をカウント
             var allMentioned = recentStats
-                .SelectMany(s => (s.MentionedUserId ?? "")
+                .SelectMany(s => (s.MentionedUserId)
                 .Split(',', StringSplitOptions.RemoveEmptyEntries))
                 .GroupBy(id => id)
                 .ToDictionary(g => g.Key, g => g.Count());

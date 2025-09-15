@@ -1,48 +1,42 @@
 ﻿using Discord;
 using Discord.Audio;
 using Discord.Net;
-using Discord.Net.Queue;
-using Discord.Rest;
 using Discord.WebSocket;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using NuGet.Protocol;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
-using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
-using System.Linq;
-using System.Reflection.Emit;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old;
 
 class SlashCommandInterationService
 {
-    private readonly DeltaRaumiDbContext DbContext;
-    private readonly DiscordSocketClient Client;
-    private readonly ImprovedLoggingService LoggingService;
+    private readonly DeltaRaumiDbContext _dbContext;
+    private readonly DiscordSocketClient _client;
+    private readonly ImprovedLoggingService _loggingService;
     //private bool commandUpgrade = false;
 
-    private ulong guildID { get; set; }
+    private ulong GuildId { get; set; }
 
     public Optional<IVoiceRegion> Region { get; set; }
 
     private ComponentInteractionService ComponentInteractionService { get; set; }
 
-    private List<string> VoiceRegionLists { get; set; } = new List<string>();
+    private List<string> VoiceRegionLists { get; set; } = new();
 
-    private bool command_GuildUpdate { get; set; } = true;
-    private bool command_GlobalAvailadle { get; set; } = true;
+    private bool CommandGuildUpdate { get; set; } = true;
+    private bool CommandGlobalAvailadle { get; set; } = true;
 
-    public int command_GuildCount { get; set; }
+    public int CommandGuildCount { get; set; }
 
     private IAudioClient _audioClient;
 
 
-    public SlashCommandInterationService(DiscordSocketClient client, ImprovedLoggingService logger, DeltaRaumiDbContext dbContext)
+    public SlashCommandInterationService(DiscordSocketClient client, ImprovedLoggingService logger, DeltaRaumiDbContext dbContext, IAudioClient audioClient)
     {
-        this.DbContext = dbContext;
-        this.Client = client;
-        this.LoggingService = logger;
+        _dbContext = dbContext;
+        _audioClient = audioClient;
+        _client = client;
+        _loggingService = logger;
         //client.Ready += Client_GlobalAvailadle;
         client.GuildAvailable += Client_GuildAvailadle;
         client.SlashCommandExecuted += Client_SlashCommandExcuted;
@@ -51,15 +45,15 @@ class SlashCommandInterationService
 
 
 
-    private async Task Client_SlashCommandExcuted(SocketSlashCommand command_arg)
+    private async Task Client_SlashCommandExcuted(SocketSlashCommand commandArg)
     {
-        switch (command_arg.Data.Name)
+        switch (commandArg.Data.Name)
         {
             case "faq":
-                await Faq(command_arg);
+                await Faq(commandArg);
                 break;
             case "pat":
-                await Pat(command_arg);
+                await Pat(commandArg);
                 break;
             //case "vc-region":
             //    await VcRegion(command_arg);
@@ -69,40 +63,40 @@ class SlashCommandInterationService
             //    break;
             default:
 
-                await LoggingService.Log($"このコマンドはギルドコマンドに存在しないためギルドコマンドとして実行されませんでした: {command_arg.CommandName}", "SlashCommandExcuted", ImprovedLoggingService.LogLevel.Warning);
+                await _loggingService.Log($"このコマンドはギルドコマンドに存在しないためギルドコマンドとして実行されませんでした: {commandArg.CommandName}", "SlashCommandExcuted", ImprovedLoggingService.LogLevel.Warning);
                 break;
         }
     }
 
 
 
-    private async Task Client_GuildAvailadle(SocketGuild guild_arg)
+    private async Task Client_GuildAvailadle(SocketGuild guildArg)
     {
-        SlashCommandProperties[] commands = GetCmmands();
+        ApplicationCommandProperties[] commands = GetCmmands();
         try
         {
-            if (command_GuildUpdate == true)
+            if (CommandGuildUpdate)
             {
-                await guild_arg.DeleteApplicationCommandsAsync();
-                await guild_arg.BulkOverwriteApplicationCommandAsync(commands);
-                command_GuildCount++;
-                if (command_GuildCount >= 20)
+                await guildArg.DeleteApplicationCommandsAsync();
+                await guildArg.BulkOverwriteApplicationCommandAsync(commands);
+                CommandGuildCount++;
+                if (CommandGuildCount >= 20)
                 {
-                    command_GuildUpdate = false;
+                    CommandGuildUpdate = false;
                 }
 
             }
             else
             {
-                await LoggingService.Log("ギルドコマンドの更新がスキップされました。", "Startup");
+                await _loggingService.Log("ギルドコマンドの更新がスキップされました。", "Startup");
             }
         }
         catch (HttpException e)
         {
             //前回の謎の苦渋からHttpエラーをどうにかして吐くように変更(本来あるべき姿)
-            await LoggingService.Log($"コマンドの追加中にエラーが発生しました", "Startup", ImprovedLoggingService.LogLevel.Fatal);
-            await LoggingService.Log(e.ToString(), "Startup", ImprovedLoggingService.LogLevel.Fatal);
-            await LoggingService.Log(Newtonsoft.Json.JsonConvert.SerializeObject(e.Errors, Newtonsoft.Json.Formatting.Indented), "Startup", ImprovedLoggingService.LogLevel.Fatal);
+            await _loggingService.Log($"コマンドの追加中にエラーが発生しました", "Startup", ImprovedLoggingService.LogLevel.Fatal);
+            await _loggingService.Log(e.ToString(), "Startup", ImprovedLoggingService.LogLevel.Fatal);
+            await _loggingService.Log(Newtonsoft.Json.JsonConvert.SerializeObject(e.Errors, Newtonsoft.Json.Formatting.Indented), "Startup", ImprovedLoggingService.LogLevel.Fatal);
             Environment.Exit(1);
             //続行させてもいいけどぶち切ったほうが良さそうと判断
         }
@@ -116,7 +110,7 @@ class SlashCommandInterationService
     /// <returns></returns>
     private SlashCommandProperties[] GetCmmands()
     {
-        var guild = Client.GetGuild(guildID);
+        _client.GetGuild(GuildId);
 
         List<SlashCommandBuilder> commands = new List<SlashCommandBuilder>();
         #region /Faq
@@ -163,13 +157,13 @@ class SlashCommandInterationService
         return slashGlobalCommandsBuilder.ToArray();
     }
 
-    public async Task Pat(SocketSlashCommand command_arg)
+    public async Task Pat(SocketSlashCommand commandArg)
     {
-        await command_arg.DeferAsync();
+        await commandArg.DeferAsync();
         DiscordComponentModel model = new DiscordComponentModel();
         model.CustomId = Guid.NewGuid();
 
-        ButtonBuilder Pat = new ButtonBuilder()
+        ButtonBuilder pat = new ButtonBuilder()
         {
             Label = "撫でてみる",
             CustomId = "DoPat",
@@ -183,23 +177,23 @@ class SlashCommandInterationService
         };
 
         ComponentBuilder componentBuilder = new ComponentBuilder();
-        componentBuilder.WithButton(Pat);
+        componentBuilder.WithButton(pat);
         componentBuilder.WithButton(dontPat);
 
-        var msg = await command_arg.FollowupAsync("DeltaRaumiを撫でる？", components: componentBuilder.Build());
+        var msg = await commandArg.FollowupAsync("DeltaRaumiを撫でる？", components: componentBuilder.Build());
 
-        model.ChannelId = command_arg.Channel.Id.ToString();
+        model.ChannelId = commandArg.Channel.Id.ToString();
         model.MessageId = msg.Id.ToString();
         model.DeltaRaumiComponentType = "DeltaraumiPat";
-        model.OwnerId = command_arg.User.Id.ToString();
+        model.OwnerId = commandArg.User.Id.ToString();
 
-        DbContext.Components.Add(model);
-        await DbContext.SaveChangesAsync();
+        _dbContext.Components.Add(model);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Faq(SocketSlashCommand command_arg)
+    public async Task Faq(SocketSlashCommand commandArg)
     {
-        await command_arg.DeferAsync();
+        await commandArg.DeferAsync();
         DiscordComponentModel model = new DiscordComponentModel();
         model.CustomId = Guid.NewGuid();
         SelectMenuBuilder menuBuilder = new SelectMenuBuilder();
@@ -218,25 +212,25 @@ class SlashCommandInterationService
 
 
         ComponentBuilder componentBuilder = new ComponentBuilder();
-        componentBuilder.WithSelectMenu(menuBuilder, 0);
+        componentBuilder.WithSelectMenu(menuBuilder);
 
-        var msg = await command_arg.FollowupAsync("何を聞きたいんだい？:", components: componentBuilder.Build());
+        var msg = await commandArg.FollowupAsync("何を聞きたいんだい？:", components: componentBuilder.Build());
 
-        model.ChannelId = command_arg.Channel.Id.ToString();
+        model.ChannelId = commandArg.Channel.Id.ToString();
         model.MessageId = msg.Id.ToString();
         model.DeltaRaumiComponentType = "FAQ-Menu";
-        model.OwnerId = command_arg.User.Id.ToString();
+        model.OwnerId = commandArg.User.Id.ToString();
 
-        DbContext.Components.Add(model);
+        _dbContext.Components.Add(model);
 
-        await DbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task listVoiceRegion(SocketVoiceChannel? voiceChannel)
+    public async Task ListVoiceRegion(SocketVoiceChannel? voiceChannel)
     {
         if (voiceChannel != null)
         {
-            var v = await Client.GetVoiceRegionsAsync();
+            var v = await _client.GetVoiceRegionsAsync();
             //regionのリストはnull
             foreach (var item in v)
             {

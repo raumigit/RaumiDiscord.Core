@@ -12,32 +12,38 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         ///  ギルドのIdを取得または設定します。
         /// </summary>
         [Key]
+        [MaxLength(50)]
         public required string GuildId { get; set; }
 
         /// <summary>
         ///  ギルドの名前を取得または設定します。
         /// </summary>
+        [MaxLength(100)]
         public required string GuildName { get; set; }
 
         /// <summary>
         ///  アイコンのUrlを取得または設定します。
         /// </summary>
+        [MaxLength(256)]
         public string? IconUrl { get; set; }
 
         /// <summary>
         ///  バナーのUrlを取得または設定します。
         /// </summary>
+        [MaxLength(256)]
         public string? BannerUrl { get; set; }
 
         /// <summary>
         ///  ギルドオーナーの取得または設定します。
         /// </summary>
-        public string OwnerID { get; set; }
+        [MaxLength(256)]
+        public string OwnerId { get; set; }
 
         /// <summary>
         ///  ウェルカムチャンネルのIdを取得または設定します。
         /// </summary>
-        public string? WelcomeChannnelID { get; set; }
+        [MaxLength(50)]
+        public string? WelcomeChannnelId { get; set; }
 
         /// <summary>
         ///  ギルドの作成日時を取得または設定します。
@@ -47,6 +53,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         /// <summary>
         ///  ギルドの説明を取得または設定します。
         /// </summary>
+        [MaxLength(512)]
         public string? Description { get; set; }
 
         /// <summary>
@@ -73,10 +80,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         /// ログチャンネルのIdを取得または設定します。
         /// チャンネルに送信することのできるログのすべてがここから送信されます。
         /// </summary>
+        [MaxLength(50)]
         public string? LogChannel { get; set; }
         /// <summary>
         /// 公開ログチャンネルのIdを取得または設定します。
         /// </summary>
+        [MaxLength(50)]
         public string? OpenLogChannel { get; set; }
     }
 }

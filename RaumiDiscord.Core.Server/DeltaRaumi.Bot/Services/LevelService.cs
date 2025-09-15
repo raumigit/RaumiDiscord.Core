@@ -5,7 +5,6 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
-using System.Linq;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 {
@@ -15,7 +14,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
     public class LevelService
     {
         private readonly ImprovedLoggingService _logger;
-        private readonly DeltaRaumiDbContext _deltaRaumiDB;
+        private readonly DeltaRaumiDbContext _deltaRaumiDb;
         private readonly DiscordSocketClient _client;
         private readonly DataEnsure _dataEnsure;
         private readonly Random _random;
@@ -37,7 +36,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
         {
             _client = client;
             _logger = logging;
-            _deltaRaumiDB = deltaRaumiDb;
+            _deltaRaumiDb = deltaRaumiDb;
             _dataEnsure = dataEnsure;
             _random = new Random();
         }
@@ -50,7 +49,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
         public async Task LevelsProsessAsync(SocketMessage message)
         {
             // メッセージがDMチャネルからのものか、ボットからのものか、Webhookからのものであれば処理しない
-            if (!(message is SocketUserMessage userMessage) || message.Channel is IDMChannel ||
+            if (!(message is SocketUserMessage) || message.Channel is IDMChannel ||
                 message.Author.IsBot || message.Author.IsWebhook)
             {
                 return;
@@ -60,7 +59,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             var guild = guildChannel.Guild as SocketGuild;
             var guildUser = message.Author as SocketGuildUser;
 
-            var ensure = new DataEnsure(_deltaRaumiDB, _logger, _client);
+            // var ensure = new DataEnsure(_deltaRaumiDb, _logger, _client);
 
             if (guild == null || guildUser == null)
             {
@@ -79,7 +78,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                 var userGuildData = await _dataEnsure.GetOrCreateUserGuildDataAsync(guildData, userData, guild, guildUser);
 
                 // 経験値クールダウンのチェック
-                if (userGuildData != null && DateTime.UtcNow > userGuildData.Latest_Exp.AddMinutes(1))
+                if (DateTime.UtcNow > userGuildData.LatestExp.AddMinutes(1))
                 {
                     // 経験値の付与とメッセージカウントの更新
                     await UpdateUserExperienceAsync(userGuildData, guildUser, guild);
@@ -87,7 +86,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                 else
                 {
                     userGuildData.TotalMessage++;
-                    await _deltaRaumiDB.SaveChangesAsync();
+                    await _deltaRaumiDb.SaveChangesAsync();
                 }
             }
             catch (Exception ex)
@@ -105,19 +104,19 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
         private async Task UpdateUserExperienceAsync(UserGuildDataModel userGuildData, SocketGuildUser user, SocketGuild guild)
         {
             // 前回のレベル
-            int previousLevel = CalculateLevel(userGuildData.Guild_Exp);
+            int previousLevel = CalculateLevel(userGuildData.GuildExp);
 
             // ランダムな経験値を追加 (1～10)
             int expToAdd = _random.Next(1, 11);
-            userGuildData.Guild_Exp += expToAdd;
-            userGuildData.Latest_Exp = DateTime.UtcNow;
+            userGuildData.GuildExp += expToAdd;
+            userGuildData.LatestExp = DateTime.UtcNow;
             userGuildData.TotalMessage++;
 
             // 変更を保存
-            await _deltaRaumiDB.SaveChangesAsync();
+            await _deltaRaumiDb.SaveChangesAsync();
 
             // 現在のレベル
-            int currentLevel = CalculateLevel(userGuildData.Guild_Exp);
+            int currentLevel = CalculateLevel(userGuildData.GuildExp);
 
             // レベルアップの確認
             if (currentLevel > previousLevel)
@@ -125,7 +124,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                 await HandleLevelUpAsync(user, guild, currentLevel);
             }
 
-            await _logger.Log($"ユーザー {user.Username} に {expToAdd} 経験値を付与しました。合計: {userGuildData.Guild_Exp} EXP", "LevelService");
+            await _logger.Log($"ユーザー {user.Username} に {expToAdd} 経験値を付与しました。合計: {userGuildData.GuildExp} EXP", "LevelService");
         }
 
         /// <summary>
@@ -136,7 +135,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             try
             {
                 // ギルドデータを取得
-                var guildData = await _deltaRaumiDB.GuildBases
+                var guildData = await _deltaRaumiDb.GuildBases
                     .Where(g => g.GuildId == guild.Id.ToString())
                     .FirstOrDefaultAsync();
 
@@ -155,7 +154,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                     .Build();
 
                 // ウェルカムチャンネルが設定されている場合はそこに送信
-                if (ulong.TryParse(guildData.WelcomeChannnelID, out ulong channelId))
+                if (ulong.TryParse(guildData.WelcomeChannnelId, out ulong channelId))
                 {
                     var channel = guild.GetTextChannel(channelId);
                     if (channel != null)
