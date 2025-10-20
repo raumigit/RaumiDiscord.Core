@@ -6,7 +6,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Modules.MessageCommand.Global
     /// <summary>
     /// MentionRespondModuleは、メンションに対する応答を行うモジュールです。
     /// </summary>
-    public class MentionRespondModule
+    public class MentionRespondModule: InteractionModuleBase<SocketInteractionContext>
     {
         /// <summary>
         /// メンションコマンドに応じて、特定のメッセージを返します。

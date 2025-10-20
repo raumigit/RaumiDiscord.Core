@@ -15,23 +15,23 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
     public class StatService
     {
         private readonly DeltaRaumiDbContext _deltaRaumiDB;
-        private readonly DataEnsure _dataEnsure;
+
         private readonly DiscordSocketClient _client;
         private ImprovedLoggingService _logger;
-        
+
 
         /// <summary>
         /// StatServiceのインスタンスを初期化します。
         /// </summary>
         public StatService(DiscordSocketClient client,
             ImprovedLoggingService logging,
-            DeltaRaumiDbContext deltaRaumiDb,
-            DataEnsure dataEnsure)
+            DeltaRaumiDbContext deltaRaumiDb
+            )
         {
             _client = client;
             _logger = logging;
             _deltaRaumiDB = deltaRaumiDb;
-            _dataEnsure = dataEnsure;
+
         }
 
 
@@ -65,10 +65,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             {
 
                 // GuildBaseDataの確認と初期化
-                var guildData = await _dataEnsure.EnsureGuildBaseDataExistsAsync(guild); //
+                //var guildData = await _dataEnsure.EnsureGuildBaseDataExistsAsync(guild); //
 
                 // UserBaseDataの確認と初期化
-                var userData = await _dataEnsure.EnsureUserBaseDataExistsAsync(guildUser);
+                //var userData = await _dataEnsure.EnsureUserBaseDataExistsAsync(guildUser);
 
                 //var userGuilsStatsData = await _dataEnsure.EnsureGuildUserDataDataExistsAsync(guildData, userData, guild, guildUser);
 
@@ -79,7 +79,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                     UserId = guildUser.Id.ToString(),
                     CreatedAt = DateTime.UtcNow,
                 };
-                var handler = new MentionHandling(_deltaRaumiDB, _logger);
+                var handler = new MentionHandling(_deltaRaumiDB, _logger, _client);
                 await handler.PingMentions(message);
 
                 await _deltaRaumiDB.UserGuildStats.AddAsync(userGuildStatsModel);

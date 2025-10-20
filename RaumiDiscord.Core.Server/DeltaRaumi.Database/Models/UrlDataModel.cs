@@ -22,7 +22,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         /// URLの種類を取得または設定します。
         /// ここはStringsからintに変更されています。
         /// </summary>
-        public int UrlType { get; set; }
+        public string UrlType { get; set; }
 
         /// <summary>
         /// URLに関連付けられたDiscordユーザーIDを取得または設定します。

@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /RaumiDiscord.Core.Server/Temp/Discordicon/128
 /RaumiDiscord.Core.Server/Tests/namecard
 /RaumiDiscord.Core.Server/Resources/Data/DeltaRaumiData.db-journal
+/RaumiDiscord.Core.Server/Resources/Data/DeltaRaumiData.db.bak

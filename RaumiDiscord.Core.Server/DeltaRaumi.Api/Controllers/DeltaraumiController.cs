@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
+using RaumiDiscord.Core.Server.DeltaRaumi.Configuration.Models;
 using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -15,7 +16,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
     [ApiController]
     public class DeltaraumiController : ControllerBase
     {
-        private static readonly DateTime StartTime = new Configuration().GetConfig().Setting.UpTime;
+        private static readonly DateTime StartTime = new BotConfiguration().Setting.UpTime;
 
         /// <summary>
         /// 
@@ -36,7 +37,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
             var sw = Stopwatch.StartNew();
 
             Process.GetCurrentProcess();
-            var uptime = DateTime.UtcNow - StartTime;
+            var uptime = DateTime.Now - StartTime;
 
             var cpuUsage = await GetCpuUsageAsync();
             var networkStats = GetNetworkStats();
@@ -45,7 +46,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 
             var result = new
             {
-                serverVersion = "0.1.3.10",
+                serverVersion = "0.1.3.18",
                 apiVersion = "1.0",
                 processCount = Process.GetProcesses().Length,
                 availableMemoryMB = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024,

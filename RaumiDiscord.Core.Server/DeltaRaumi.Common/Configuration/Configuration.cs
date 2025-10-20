@@ -1,8 +1,9 @@
 ﻿using Discord;
 using Nett;
+using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
 using static RaumiDiscord.Core.Server.DeltaRaumi.Bot.Infrastructure.Configuration.ServerConfiguration;
 
-namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Configuration
 {
     class Configuration
     {

@@ -2,17 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 
 #nullable disable
 
-namespace RaumiDiscord.Core.Server.Migrations
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Migrations
 {
     [DbContext(typeof(DeltaRaumiDbContext))]
-    partial class DeltaRaumiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251020104512_FixUserGuildStatsModel-CreatedAt-UTCRemove")]
+    partial class FixUserGuildStatsModelCreatedAtUTCRemove
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");

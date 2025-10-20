@@ -2,17 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 
 #nullable disable
 
-namespace RaumiDiscord.Core.Server.Migrations
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Migrations
 {
     [DbContext(typeof(DeltaRaumiDbContext))]
-    partial class DeltaRaumiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250915040215_Model-EditMore")]
+    partial class ModelEditMore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -161,9 +164,8 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .HasMaxLength(65535)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UrlType")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("UrlType")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -275,7 +277,8 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MentionedUserId")
-                        .HasMaxLength(5000)
+                        .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")

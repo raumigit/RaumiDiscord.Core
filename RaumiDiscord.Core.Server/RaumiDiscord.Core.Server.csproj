@@ -35,14 +35,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Discord.Net" Version="3.18.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
-      <Version>9.0.8</Version>
+      <Version>9.0.9</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
-    <PackageReference Include="microsoft.entityframeworkcore.sqlite" Version="9.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="9.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
+    <PackageReference Include="microsoft.entityframeworkcore.sqlite" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -50,14 +51,16 @@
     <PackageReference Include="Nett" Version="0.15.0" />
     <PackageReference Include="NUlid" Version="1.7.3" />
     <PackageReference Include="Opus" Version="1.0.0" />
+    <PackageReference Include="Serilog" Version="4.3.0" />
     <PackageReference Include="SixLabors.Fonts" Version="2.1.3" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.7" />
     <PackageReference Include="Sodium.Core" Version="1.4.0" />
     <PackageReference Include="SQLite" Version="3.13.0" />
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.1" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
-    <PackageReference Include="System.Text.Json" Version="9.0.8" />
+    <PackageReference Include="System.Text.Json" Version="9.0.9" />
+    <PackageReference Include="Tomlyn" Version="0.19.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,7 +70,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DeltaRaumi.Common\cmp\" />
     <Folder Include="DeltaRaumi.Database\Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="DeltaRaumi.Common\Configuration\ConfigurationModels.cs" />
   </ItemGroup>
 
 </Project>

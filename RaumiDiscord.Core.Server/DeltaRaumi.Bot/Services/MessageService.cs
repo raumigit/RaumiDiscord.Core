@@ -28,12 +28,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
         /// <param name="deltaRaumiDb"></param>
         /// <param name="dataEnsure"></param>
         /// <param name="levelService"></param>
-        public MessageService(DiscordSocketClient client, ImprovedLoggingService logging, DeltaRaumiDbContext deltaRaumiDb, DataEnsure dataEnsure, LevelService levelService)
+        public MessageService(DiscordSocketClient client, ImprovedLoggingService logging, DeltaRaumiDbContext deltaRaumiDb, LevelService levelService)
         {
             _client = client;
             _logger = logging;
             _deltaRaumiDb = deltaRaumiDb;
-            _dataEnsure = dataEnsure;
             _levelService = levelService;
 
 

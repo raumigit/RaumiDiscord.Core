@@ -1,33 +1,35 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
-using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
+using RaumiDiscord.Core.Server.DeltaRaumi.Common.Configuration;
+using RaumiDiscord.Core.Server.DeltaRaumi.Configuration.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 using System.Reflection;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
 {
-    class ComponentInteractionService
+    public class ComponentInteractionService
     {
 #nullable disable
         private readonly DiscordSocketClient _client;
         private readonly DeltaRaumiDbContext _deltaRaumiDbContext;
         private readonly ImprovedLoggingService _loggingService;
-
+        private BotConfiguration _config;
         private Color _raumiMainColor = new Color(0x7bb3ee);
         private Color _raumiSubColor = new Color(0xf02443);
 
 
-        private string _version = $"バージョン:0.1.3.16　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
+        private string _version = $"バージョン:0.1.3.18　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
 
-        private Configuration Configuration { get; set; }
+        //private IConfiguration Configuration { get; set; }
 
-        public ComponentInteractionService(DiscordSocketClient client, DeltaRaumiDbContext deltaRaumiDbContext, ImprovedLoggingService loggingService)
+        public ComponentInteractionService(DiscordSocketClient client, DeltaRaumiDbContext deltaRaumiDbContext, ImprovedLoggingService loggingService, BotConfiguration config)
         {
             _client = client;
             _deltaRaumiDbContext = deltaRaumiDbContext;
             _loggingService = loggingService;
+            _config = config;
 
             client.SelectMenuExecuted += Client_SelectMenuExecuted;
             client.ButtonExecuted += Client_ButtonExecuted;
@@ -69,7 +71,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
 
             EmbedBuilder builder = new EmbedBuilder();
 
-            Configuration = new Configuration().GetConfig();
+            
 
             if (model != null)
             {
@@ -114,7 +116,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
                                 break;
 
                             case "serverstat":
-                                DateTime localuptime = Configuration.Setting.UpTime;
+                                DateTime localuptime = _config.Setting.UpTime;
                                 DateTime utcUptime = localuptime.ToUniversalTime();
                                 long unixTime = new DateTimeOffset(utcUptime).ToUnixTimeSeconds();
                                 //string unixTimestr = unixTime.ToString();
@@ -129,7 +131,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
                                     "ロギング中：no\n" +
                                     "Stat機能：null\n" +
                                     "使用DB：SQlite3\n" +
-                                    $"致命的なエラー：{Configuration.Setting.SystemFatal.ToString()}\n"
+                                    $"致命的なエラー：{_config.Setting.SystemFatal.ToString()}\n"
                                 );
                                 builder.AddField("UpTime", $"<t:{unixTime.ToString()}:R>");
                                 builder.WithColor(_raumiMainColor);

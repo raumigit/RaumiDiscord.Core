@@ -1,0 +1,74 @@
+{
+  "games": [
+    {
+      "id": 0,
+      "name": "Url",
+      "shortname": "url",
+      "baseUrl": null,
+      "store": {
+        "google": null,
+        "apple": null
+      }
+    },
+    {
+      "id": 1,
+      "name": "GenshinImpact",
+      "shortname": "gi",
+      "baseUrl": "https://genshin.hoyoverse.com/ja/gift?code=",
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.miHoYo.GenshinImpact",
+        "apple": "https://apps.apple.com/jp/app/id1517783697"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Honkai:StarRail",
+      "shortname": "hsr",
+      "baseUrl": "https://hsr.hoyoverse.com/gift?code=",
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.HoYoverse.hkrpgoversea",
+        "apple": "https://apps.apple.com/jp/app/id1599719154"
+      }
+    },
+    {
+      "id": 3,
+      "name": "ZenlessZoneZero",
+      "shortname": "zzz",
+      "baseUrl": "https://zenless.hoyoverse.com/redemption?code=sample",
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.HoYoverse.Nap",
+        "apple": "https://apps.apple.com/jp/app/id1606356401"
+      }
+    },
+    {
+      "id": 4,
+      "name": "WutheringWaves",
+      "shortname": "wuwa",
+      "baseUrl": null,
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.kurogame.wutheringwaves.global",
+        "apple": "https://apps.apple.com/jp/app/id6475033368"
+      }
+    },
+    {
+      "id": 5,
+      "name": "BlueArchive",
+      "shortname": "blac",
+      "baseUrl": null,
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.YostarJP.BlueArchive",
+        "apple": "https://apps.apple.com/jp/app/id1515877221"
+      }
+    },
+    {
+      "id": 6,
+      "name": "Resonance",
+      "shortname": "reso",
+      "baseUrl": null,
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.gameduchy.reso.jp.and",
+        "apple": "https://apps.apple.com/jp/app/id6575363737"
+      }
+    }
+  ]
+}

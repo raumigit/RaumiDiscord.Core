@@ -1,0 +1,67 @@
+{
+  "games": [
+    {
+      "id": 0,
+      "name": "Url",
+      "baseUrl": null,
+      "store": {
+        "google": null,
+        "apple": null
+      }
+    },
+    {
+      "id": 1,
+      "name": "Genshin Impact",
+      "baseUrl": "https://genshin.hoyoverse.com/ja/gift?code=",
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.miHoYo.GenshinImpact",
+        "apple": "https://apps.apple.com/jp/app/id1517783697"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Honkai: Star Rail",
+      "baseUrl": "https://hsr.hoyoverse.com/gift?code=",
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.HoYoverse.hkrpgoversea",
+        "apple": "https://apps.apple.com/jp/app/id1599719154"
+      }
+    },
+    {
+      "id": 3,
+      "name": "Zenless Zone Zero",
+      "baseUrl": null,
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.HoYoverse.Nap",
+        "apple": "https://apps.apple.com/jp/app/id1606356401"
+      }
+    },
+    {
+      "id": 4,
+      "name": "WutheringWaves",
+      "baseUrl": null,
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.kurogame.wutheringwaves.global",
+        "apple": "https://apps.apple.com/jp/app/id6475033368"
+      }
+    },
+    {
+      "id": 5,
+      "name": "BlueArchive",
+      "baseUrl": null,
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.YostarJP.BlueArchive",
+        "apple": "https://apps.apple.com/jp/app/id1515877221"
+      }
+    },
+    {
+      "id": 6,
+      "name": "Resonance",
+      "baseUrl": null,
+      "store": {
+        "google": "https://play.google.com/store/apps/details?id=com.gameduchy.reso.jp.and",
+        "apple": "https://apps.apple.com/jp/app/id6575363737"
+      }
+    }
+  ]
+}

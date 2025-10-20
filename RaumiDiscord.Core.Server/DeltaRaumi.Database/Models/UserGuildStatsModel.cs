@@ -29,14 +29,14 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         /// <summary>
         /// 統計データが作成された日時を取得または設定します。
         /// </summary>
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; }
 
 
         /// <summary>
         /// MentionedUserId は、メンションされたユーザーのIDをカンマ区切りで保存します。
         /// </summary>
-        [MaxLength(50)]
-        public string MentionedUserId { get; set; }
+        [MaxLength(5000)]
+        public string? MentionedUserId { get; set; }
 
     }
 }

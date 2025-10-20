@@ -81,7 +81,7 @@ await Task.Run(() =>
     try
     {
         Console.WriteLine("Deltaraumi_load呼び出し済み");
-        DeltaraumiDiscordbot.Deltaraumi_load(args);
+        Deltaraumi_Discordbot.Deltaraumi_load(args);
     }
     catch (Exception ex)
     {

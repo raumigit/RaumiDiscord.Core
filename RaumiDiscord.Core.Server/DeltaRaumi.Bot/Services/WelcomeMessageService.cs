@@ -9,6 +9,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using System.Net.Http;
 using Color = SixLabors.ImageSharp.Color;
 using Image = SixLabors.ImageSharp.Image;
 
@@ -19,11 +20,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
     /// </summary>
     public class WelcomeMessageService
     {
-        private bool _fileUpload;
-        private readonly SocketMessage _message;
-        private readonly DiscordWebhookClient _webhook;
         private readonly ImprovedLoggingService _logger;
         private readonly DeltaRaumiDbContext _raumiDb;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly bool fileUpload;
 
         /// <summary>
         /// WelcomeMessageServiceのコンストラクタ
@@ -33,13 +33,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
         /// <param name="dbContext"></param>
         /// <param name="webhook">webhook送信チャンネル</param>
         /// <param name="fileUpload">ファイルをアップロードするか</param>
-        public WelcomeMessageService(SocketMessage message, ImprovedLoggingService loggingService, DeltaRaumiDbContext dbContext, DiscordWebhookClient webhook, bool fileUpload)
+        /// <param name="httpClientFactory"></param>
+        public WelcomeMessageService(ImprovedLoggingService loggingService, DeltaRaumiDbContext dbContext, bool fileUpload=true)
         {
-            _message = message;
             _logger = loggingService;
             _raumiDb = dbContext;
-            _webhook = webhook;
-            _fileUpload = fileUpload;
+            
         }
         internal async Task WelcomeCardGenerator(SocketGuildUser socketUser)
         {
@@ -128,7 +127,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                 }
                 try
                 {
-                    if (_fileUpload)
+                    if (fileUpload)
                     {
                         await sendwelcomechannel.SendFileAsync(outputPath);
                     }

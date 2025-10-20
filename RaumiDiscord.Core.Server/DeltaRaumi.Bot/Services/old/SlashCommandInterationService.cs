@@ -8,7 +8,7 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old;
 
-class SlashCommandInterationService
+public class SlashCommandInterationService
 {
     private readonly DeltaRaumiDbContext _dbContext;
     private readonly DiscordSocketClient _client;
@@ -28,13 +28,13 @@ class SlashCommandInterationService
 
     public int CommandGuildCount { get; set; }
 
-    private IAudioClient _audioClient;
+    //private readonly IAudioClient _audioClient;
 
 
-    public SlashCommandInterationService(DiscordSocketClient client, ImprovedLoggingService logger, DeltaRaumiDbContext dbContext, IAudioClient audioClient)
+    public SlashCommandInterationService(DiscordSocketClient client, ImprovedLoggingService logger, DeltaRaumiDbContext dbContext)
     {
         _dbContext = dbContext;
-        _audioClient = audioClient;
+        
         _client = client;
         _loggingService = logger;
         //client.Ready += Client_GlobalAvailadle;

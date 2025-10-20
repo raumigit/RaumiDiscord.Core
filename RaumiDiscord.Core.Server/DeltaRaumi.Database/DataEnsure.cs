@@ -15,7 +15,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
         private readonly DiscordSocketClient _client;
         private readonly ImprovedLoggingService _logger;
         private readonly SocketGuild _guild;
-        private string? _logChannelId;
+        //private string? _logChannelId;
 
         /// <summary>
         /// DatabaseHelperのコンストラクター
@@ -25,13 +25,13 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
         /// <param name="client"></param>
         /// <param name="guild"></param>
         /// <param name="logChannelId"></param>
-        public DataEnsure(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logging, DiscordSocketClient client, SocketGuild guild, string? logChannelId)
+        public DataEnsure(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logging /*DiscordSocketClient client, SocketGuild guild, string? logChannelId*/)
         {
             _deltaRaumiDb = deltaRaumiDb;
             _logger = logging;
-            _client = client;
-            _guild = guild;
-            _logChannelId = logChannelId;
+            //_client = client;
+            //_guild = guild;
+            //_logChannelId = logChannelId;
         }
 
 

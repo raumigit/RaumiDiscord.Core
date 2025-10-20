@@ -2,17 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 
 #nullable disable
 
-namespace RaumiDiscord.Core.Server.Migrations
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Migrations
 {
     [DbContext(typeof(DeltaRaumiDbContext))]
-    partial class DeltaRaumiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251016082325_FixUserGuildStatsModel-MentionedUserIdNullable")]
+    partial class FixUserGuildStatsModelMentionedUserIdNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -161,9 +164,8 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .HasMaxLength(65535)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UrlType")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("UrlType")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

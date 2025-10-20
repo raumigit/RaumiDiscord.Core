@@ -3,12 +3,12 @@ using Discord.WebSocket;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 {
-    internal class DeltaRaumiHandler(
+    public class DeltaRaumiHandler(
         DiscordSocketClient client,
         DeltaRaumiEventHandler events,
         IServiceProvider provider)
     {
-        //_provider = provider;
+        
 
         /// <summary>
         /// Gets the client.

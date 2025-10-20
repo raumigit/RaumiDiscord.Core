@@ -21,6 +21,16 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         public DbSet<GuildBaseDataModel> GuildBases { get; set; }
 
         /// <summary>
+        /// ユーザーアカウントの紐づけ状態を表すモデルのデータセットを取得または設定します。
+        /// </summary>
+        public DbSet<LinkedAccountModel> LinkedAccount { get; set; }
+
+        /// <summary>
+        /// URLデータモデルのデータセットを取得または設定します。
+        /// </summary>
+        public DbSet<UrlDataModel> UrlDataModels { get; set; } = null!;
+
+        /// <summary>
         /// ユーザーのベースデータモデルのデータセットを取得または設定します。
         /// </summary>
         public DbSet<UserBaseDataModel> UserBases { get; set; }
@@ -31,18 +41,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         public DbSet<UserGuildDataModel> UserGuildData { get; set; }
 
         /// <summary>
-        /// URLデータモデルのデータセットを取得または設定します。
-        /// </summary>
-        public DbSet<UrlDataModel> UrlDataModels { get; set; } = null!;
-
-        /// <summary>
         /// ユーザーのギルド統計データモデルのデータセットを取得または設定します。
         /// </summary>
         public DbSet<UserGuildStatsModel> UserGuildStats { get; set; }
-        /// <summary>
-        /// ユーザーアカウントの紐づけ状態を表すモデルのデータセットを取得または設定します。
-        /// </summary>
-        public DbSet<LinkedAccountModel> LinkedAccount { get; set; }
+       
 
 
         private DatabaseType _databaseType = DatabaseType.Sqlite;
