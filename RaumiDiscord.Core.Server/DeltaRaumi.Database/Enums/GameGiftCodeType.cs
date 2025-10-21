@@ -9,7 +9,7 @@
         /// <summary>
         /// URLのみが該当します。
         /// </summary>
-        URL = 0,
+        Url = 0,
         /// <summary>
         /// 原神のギフトコードを表します。
         /// </summary>

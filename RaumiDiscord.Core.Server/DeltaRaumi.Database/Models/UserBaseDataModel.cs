@@ -20,16 +20,19 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         /// </summary>
         /// <remarks>注意：SocketMessage Author.Idで取得してください。</remarks>
         [Key]
+        [MaxLength(50)]
         public required string UserId { get; set; }
 
         /// <summary>
         /// このユーザーのユーザー名を取得または設定します。
         /// </summary>
+        [MaxLength(50)]
         public string? UserName { get; set; }
 
         /// <summary>
         /// このユーザーのアバターの識別子を取得または設定します。
         /// </summary>
+        [MaxLength(256)]
         public string? AvatarId { get; set; }
 
         /// <summary>
@@ -56,6 +59,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         /// このユーザーの誕生日を取得または設定します。
         /// 年が使われることはありません。
         /// </summary>
+        [MaxLength(32)]
         public string? Barthday { get; set; }
 
         /// <summary>

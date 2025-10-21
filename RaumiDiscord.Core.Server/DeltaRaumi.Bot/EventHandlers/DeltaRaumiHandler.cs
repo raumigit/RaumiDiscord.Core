@@ -3,29 +3,27 @@ using Discord.WebSocket;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 {
-    internal class DeltaRaumiHandler
+    public class DeltaRaumiHandler(
+        DiscordSocketClient client,
+        DeltaRaumiEventHandler events,
+        IServiceProvider provider)
     {
+        
 
-        public DeltaRaumiHandler(DiscordSocketClient client, DeltaRaumiEventHandler events)
-        {
-            _client = client;
-            _event = events;
-            //_provider = provider;
-        }
         /// <summary>
         /// Gets the client.
         /// </summary>
-        private DiscordSocketClient _client { get; }
+        private DiscordSocketClient Client { get; } = client;
 
         /// <summary>
         /// Gets the event.
         /// </summary>
-        private DeltaRaumiEventHandler _event { get; }
+        private DeltaRaumiEventHandler Event { get; } = events;
 
         /// <summary>
         /// Gets the provider.
         /// </summary>
-        private IServiceProvider _provider { get; }
+        private IServiceProvider Provider { get; } = provider;
 
         /// <summary>
         /// Initializes and logs the bot in.
@@ -37,13 +35,13 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
         {
             // These are our EventSetup, each time one of these is triggered it runs the corresponding method. Ie, the bot receives a PartnerMessage we run Event.MessageReceivedAsync
             //_client.Log += _event.LogAsync;
-            _client.JoinedGuild += _event.JoinedGuildAsync;
-            _client.LeftGuild += _event.LeftGuildAsync;
+            Client.JoinedGuild += Event.JoinedGuildAsync;
+            Client.LeftGuild += Event.LeftGuildAsync;
 
             //_client.ReactionAdded += _event.ReactionAddedAsync;　//<-使わない
-            _client.MessageReceived += _event.MessageReceivedAsync;
-            _client.MessageUpdated += _event.MessageUpdated;
-            _client.MessageDeleted += _event.MessageDeleted;
+            Client.MessageReceived += Event.MessageReceivedAsync;
+            Client.MessageUpdated += Event.MessageUpdated;
+            Client.MessageDeleted += Event.MessageDeleted;
 
             return Task.CompletedTask;
 

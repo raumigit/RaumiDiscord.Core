@@ -1,9 +1,11 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using NUlid;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 {
@@ -13,22 +15,23 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
     public class StatService
     {
         private readonly DeltaRaumiDbContext _deltaRaumiDB;
-        private readonly DataEnsure _dataEnsure;
+
         private readonly DiscordSocketClient _client;
         private ImprovedLoggingService _logger;
+
 
         /// <summary>
         /// StatServiceのインスタンスを初期化します。
         /// </summary>
         public StatService(DiscordSocketClient client,
             ImprovedLoggingService logging,
-            DeltaRaumiDbContext deltaRaumiDb,
-            DataEnsure dataEnsure)
+            DeltaRaumiDbContext deltaRaumiDb
+            )
         {
             _client = client;
             _logger = logging;
             _deltaRaumiDB = deltaRaumiDb;
-            _dataEnsure = dataEnsure;
+
         }
 
 
@@ -46,16 +49,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             {
                 return;
             }
-            else
-            {
-
-            }
 
             var guildChannel = message.Channel as ITextChannel;
             var guild = guildChannel.Guild as SocketGuild;
             var guildUser = message.Author as SocketGuildUser;
 
-            var ensure = new DataEnsure(_deltaRaumiDB, _logger, _client);
+            // var ensure = new DataEnsure(_deltaRaumiDB, _logger, _client);
 
             if (guild == null || guildUser == null)
             {
@@ -66,24 +65,24 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             {
 
                 // GuildBaseDataの確認と初期化
-                var guildData = await _dataEnsure.EnsureGuildBaseDataExistsAsync(guild); //
+                //var guildData = await _dataEnsure.EnsureGuildBaseDataExistsAsync(guild); //
 
                 // UserBaseDataの確認と初期化
-                var userData = await _dataEnsure.EnsureUserBaseDataExistsAsync(guildUser);
+                //var userData = await _dataEnsure.EnsureUserBaseDataExistsAsync(guildUser);
 
                 //var userGuilsStatsData = await _dataEnsure.EnsureGuildUserDataDataExistsAsync(guildData, userData, guild, guildUser);
 
-                //var userGuildStats = new UserGuildStatsModel
-                //{
-                //    StatUlid = Ulid.NewUlid(),
-                //    GuildId = guild.Id.ToString(),
-                //    UserId = guildUser.Id.ToString(),
-                //    CreatedAt = DateTime.UtcNow,
-                //};
-                var handler = new MentionHandling(_deltaRaumiDB, _logger);
-                await handler.pingMentions(message);
+                var userGuildStatsModel = new UserGuildStatsModel
+                {
+                    StatUlid = Ulid.NewUlid(),
+                    GuildId = guild.Id.ToString(),
+                    UserId = guildUser.Id.ToString(),
+                    CreatedAt = DateTime.UtcNow,
+                };
+                var handler = new MentionHandling(_deltaRaumiDB, _logger, _client);
+                await handler.PingMentions(message);
 
-                //await _deltaRaumiDB.UserGuildStats.AddAsync(userGuildStats);
+                await _deltaRaumiDB.UserGuildStats.AddAsync(userGuildStatsModel);
                 await _logger.Log($"Statの記録が完了", "StatService", ImprovedLoggingService.LogLevel.Verbose);
 
 
@@ -95,5 +94,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             }
             Console.WriteLine("StatService OK");
         }
+
     }
 }

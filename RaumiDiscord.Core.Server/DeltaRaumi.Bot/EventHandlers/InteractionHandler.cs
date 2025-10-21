@@ -6,32 +6,47 @@ using System.Reflection;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 {
-    internal class InteractionHandler
+    public class InteractionHandler
     {
         private readonly DiscordSocketClient _client;
         private readonly InteractionService _handler;
         private readonly IServiceProvider _services;
-        private readonly List<ulong> _guildIds; // ギルドIDリスト
+        //private readonly List<ulong>? _guildIds; // ギルドIDリスト
         private readonly ImprovedLoggingService _logger; // 追加: ロギングサービス
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InteractionHandler"/> class,  which manages interactions
+        /// between the Discord client and the interaction service.
+        /// </summary>
+        /// <param name="client">The <see cref="DiscordSocketClient"/> instance used to interact with the Discord gateway.</param>
+        /// <param name="handler">The <see cref="InteractionService"/> instance responsible for handling Discord interactions.</param>
+        /// <param name="services">The <see cref="IServiceProvider"/> instance used to resolve dependencies for interaction modules.</param>
+        /// <param name="config">The <see cref="IConfiguration"/> instance containing application configuration settings.</param>
+        /// <param name="logger">The <see cref="ImprovedLoggingService"/> instance used for logging interaction events and errors.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="logger"/> is <see langword="null"/>.</exception>
         public InteractionHandler(
             DiscordSocketClient client,
             InteractionService handler,
             IServiceProvider services,
-            IConfiguration config,
-            List<ulong>? guildIds,
+            //IConfiguration config,
             ImprovedLoggingService logger) // 追加: ロギングサービスのパラメータ
         {
             _client = client;
             _handler = handler;
             _services = services;
-            _guildIds = guildIds;
+            
             _logger = logger ?? throw new ArgumentNullException(nameof(logger)); // ロギングサービスをnullチェック
         }
 
 
-
+        /// <summary>
+        /// Asynchronously initializes the client and interaction handler, setting up event handlers and registering
+        /// commands.
+        /// </summary>
+        /// <remarks>This method prepares the client for handling interactions by subscribing to necessary
+        /// events and adding modules  to the interaction service. It ensures that commands are registered and ready to
+        /// execute when the client is ready.</remarks>
+        /// <returns>A task that represents the asynchronous initialization operation.</returns>
         public async Task InitializeAsync()
         {
             // クライアントの準備ができたら処理し、コマンドを登録できるようにします。
@@ -46,7 +61,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 
             // コマンド実行の結果も処理します
             _handler.InteractionExecuted += HandleInteractionExecute;
-            await _logger.Log("Initialization completed", "InteractionHandler", ImprovedLoggingService.LogLevel.Info);
+            await _logger.Log("Initialization completed", "InteractionHandler");
         }
 
         private Task LogAsync(LogMessage log)
@@ -87,8 +102,21 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
 
         private async Task RegisterGlobalCommandsAsync()
         {
-            await _handler.RegisterCommandsGloballyAsync();
-            await _logger.Log("Registered global commands", "InteractionHandler", ImprovedLoggingService.LogLevel.Info);
+            try
+            {
+                await _handler.RegisterCommandsGloballyAsync();
+                await _logger.Log("Registered global commands", "InteractionHandler");
+            }
+            catch (Discord.Net.HttpException httpEx)
+            {
+                await _logger.Log($"HTTP error during command registration: {httpEx.HttpCode} - {httpEx.Reason}", "InteractionHandler", ImprovedLoggingService.LogLevel.Error);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                await _logger.Log($"Unexpected error during command registration: {ex.Message}", "InteractionHandler", ImprovedLoggingService.LogLevel.Error);
+                throw;
+            }
         }
 
         //public async Task RegisterGuildCommandsAsync(ulong guildId)
@@ -116,8 +144,6 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
                             // 警告をログに記録
                             await _logger.Log($"{result.ErrorReason}", "InteractionHandler", ImprovedLoggingService.LogLevel.Warning);
                             break;
-                        default:
-                            break;
                     }
             }
             catch (Exception ex)
@@ -141,11 +167,14 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers
                         // 警告をロギングサービスに記録
                         _logger.Log(result.ErrorReason, "InteractionHandler", ImprovedLoggingService.LogLevel.Warning);
                         break;
-                    default:
-                        break;
                 }
 
             return Task.CompletedTask;
+        }
+
+        public List<ulong> GetGuildIds()
+        {
+            return _client.Guilds.Select(g => g.Id).ToList();
         }
     }
 }

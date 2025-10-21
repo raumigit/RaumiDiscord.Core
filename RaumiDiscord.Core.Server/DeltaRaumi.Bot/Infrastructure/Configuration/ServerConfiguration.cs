@@ -45,12 +45,12 @@
             /// <summary>
             /// DiscordAPIバージョン
             /// </summary>
-            public string? DiscordAPIVersion { get; set; }
+            public string? DiscordApiVersion { get; set; }
 
             /// <summary>
             /// DiscordcdnのURL
             /// </summary>
-            public string? CDNURL { get; set; }
+            public string? Cdnurl { get; set; }
 
             /// <summary>
             /// 既定のリクエストタイムアウト
@@ -60,7 +60,7 @@
             /// <summary>
             /// 招待URL
             /// </summary>
-            public string? InviteURL { get; set; }
+            public string? InviteUrl { get; set; }
 
             /// <summary>
             /// アプリケーションの説明の最大長
@@ -121,17 +121,17 @@
             /// <summary>
             /// Coerioinkのパス
             /// </summary>
-            public string LLMAppPath { get; set; }
+            public string LlmAppPath { get; set; }
 
             /// <summary>
             /// ffmpegのパス
             /// </summary>
-            public string ffmpegPath { get; set; }
+            public string FfmpegPath { get; set; }
 
             /// <summary>
             /// ytdlpのパス
             /// </summary>
-            public string ytdlpAppPath { get; set; }
+            public string YtdlpAppPath { get; set; }
         }
 
         /// <summary>

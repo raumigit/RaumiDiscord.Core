@@ -1,27 +1,28 @@
 ﻿using Discord;
 using Nett;
+using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
 using static RaumiDiscord.Core.Server.DeltaRaumi.Bot.Infrastructure.Configuration.ServerConfiguration;
 
-namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
+namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Configuration
 {
     class Configuration
     {
-        string? commandPrefix;
+        string? _commandPrefix;
 
         //[TomlComment("")]
 
         public string? CommandPrefix
         {
-            get => commandPrefix;
-            set => commandPrefix = value;
+            get => _commandPrefix;
+            set => _commandPrefix = value;
         }
 
         public GeneralSettings? Setting { get; set; }
-        public ConnectionServiceAppPath appPath { get; set; }
+        public ConnectionServiceAppPath AppPath { get; set; }
         public SystemLogSettings? SystemLog { get; set; }
         public TokenSetting? TokenData { get; set; }
 
-        public Configuration _Config { get; set; }
+        public Configuration Config { get; set; }
 
         public TomlComment Comment { get; set; }
         
@@ -30,35 +31,35 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
         {
             if (!File.Exists(Directories.Config))
             {
-                initconfig();
+                Initconfig();
             }
-            setconfig();
+            Setconfig();
 
-            string config_FilePath = Directories.Config;
-            var configToml = Toml.ReadFile<Configuration>(config_FilePath);
-            _Config = configToml;
+            string configFilePath = Directories.Config;
+            var configToml = Toml.ReadFile<Configuration>(configFilePath);
+            Config = configToml;
             return configToml;
         }
 
         public Configuration GetConfig()
         {
-            string config_FilePath = Directories.Config;
-            var configToml = Toml.ReadFile<Configuration>(config_FilePath);
-            _Config = configToml;
+            string configFilePath = Directories.Config;
+            var configToml = Toml.ReadFile<Configuration>(configFilePath);
+            Config = configToml;
             return configToml;
         }
 
-        public void setconfig()
+        public void Setconfig()
         {
-            string config_FilePath = Directories.Config;
-            Configuration setcfg = Toml.ReadFile<Configuration>(config_FilePath);
+            string configFilePath = Directories.Config;
+            Configuration setcfg = Toml.ReadFile<Configuration>(configFilePath);
 
             setcfg.Setting.UpTime = DateTime.Now;
             setcfg.Setting.TimeZone = $"{TimeZoneInfo.Local}";
-            setcfg.Setting.DiscordAPIVersion = DiscordConfig.APIVersion.ToString();
+            setcfg.Setting.DiscordApiVersion = DiscordConfig.APIVersion.ToString();
             setcfg.Setting.DefaultRequestTimeout = DiscordConfig.DefaultRequestTimeout;
-            setcfg.Setting.CDNURL = DiscordConfig.CDNUrl;
-            setcfg.Setting.InviteURL = DiscordConfig.InviteUrl;
+            setcfg.Setting.Cdnurl = DiscordConfig.CDNUrl;
+            setcfg.Setting.InviteUrl = DiscordConfig.InviteUrl;
             setcfg.Setting.MaxApplicationDescriptionLength = DiscordConfig.MaxApplicationDescriptionLength;
             setcfg.Setting.MaxMessageSize = DiscordConfig.MaxMessageSize;
             setcfg.Setting.MaxPollAnswerTextLength = DiscordConfig.MaxPollAnswerTextLength;
@@ -69,7 +70,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
             Toml.WriteFile(setcfg, Directories.Config);
         }
 
-        public void initconfig()
+        public void Initconfig()
         {
             Configuration settings;
 
@@ -83,10 +84,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
                     UpdateTime = DateTime.Now,
                     UpTime = DateTime.Now,
                     TimeZone = $"{timeZone.DisplayName}",
-                    DiscordAPIVersion = "",
-                    CDNURL = "https://cdn.discordapp.com/",
+                    DiscordApiVersion = "",
+                    Cdnurl = "https://cdn.discordapp.com/",
                     DefaultRequestTimeout = 0,
-                    InviteURL = "https://discord.gg/",
+                    InviteUrl = "https://discord.gg/",
                     MaxApplicationDescriptionLength = 0,
                     MaxMessageSize = 0,
                     MaxPollAnswerTextLength = 0,
@@ -97,12 +98,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
                     CustomStatusGame = "",
                     SystemFatal = false
                 },
-                appPath = new ConnectionServiceAppPath
+                AppPath = new ConnectionServiceAppPath
                 {
                     CoeiroinkAppPath = "",
-                    LLMAppPath = "",
-                    ffmpegPath = "",
-                    ytdlpAppPath = ""
+                    LlmAppPath = "",
+                    FfmpegPath = "",
+                    YtdlpAppPath = ""
                 },
                 SystemLog = new SystemLogSettings
                 {
@@ -122,7 +123,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Data
             }
             else
             {
-                Configuration config = new();
+                // Configuration config = new();
 
                 // TOMLファイルに書き込む
                 Toml.WriteFile(settings, Directories.Config);

@@ -1,6 +1,4 @@
-﻿using Discord;
-using Discord.WebSocket;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
@@ -8,8 +6,6 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 using System.Globalization;
-using System.Xml.Linq;
-using static RaumiDiscord.Core.Server.DeltaRaumi.Bot.Modules.SlashCommand.Global.UserServiceModule;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Common
 {
@@ -19,24 +15,44 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common
     public class UserManager
     {
         private readonly ImprovedLoggingService _logger;
-        private readonly IDbContextFactory<DeltaRaumiDbContext> _deltaRaumiDB;
+        private readonly IDbContextFactory<DeltaRaumiDbContext> _deltaRaumiDb;
         private readonly DiscordSocketClient _client;
         private readonly IDictionary<string, UserBaseDataModel> _users;
 
+        /// <summary>
+        /// UserManagerのコンストラクタ
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="logging"></param>
+        /// <param name="deltaRaumiDb"></param>
+        /// <param name="users"></param>
         public UserManager(
             DiscordSocketClient client,
             ImprovedLoggingService logging,
-            IDbContextFactory<DeltaRaumiDbContext> deltaRaumiDb)
+            IDbContextFactory<DeltaRaumiDbContext> deltaRaumiDb, IDictionary<string, UserBaseDataModel> users)
         {
             _client = client;
             _logger = logging;
-            _deltaRaumiDB = deltaRaumiDb;
+            _deltaRaumiDb = deltaRaumiDb;
+            _users = users;
         }
+        /// <summary>
+        /// ユーザーが更新されたときに発生します。
+        /// </summary>
         public event EventHandler<GenericEventHandler<UserBaseDataModel>>? OnUserUpdated;
 
+        /// <summary>
+        /// UserBaseDataModelのコレクションを取得します。
+        /// </summary>
         public IEnumerable<UserBaseDataModel> Users => _users.Values;
 
 
+        /// <summary>
+        /// UserBaseDataModelをIDで取得します。
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public UserBaseDataModel? GetUserById(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -46,6 +62,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common
 
             return user;
         }
+        /// <summary>
+        /// ユーザー名でUserBaseDataModelを取得します。
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public UserBaseDataModel? GetUserByName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -61,11 +83,18 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common
             await UpdateUserInternalAsync(user);
         }
 
-        private async Task UpdateUserInternalAsync(UserBaseDataModel user)
+        private Task UpdateUserInternalAsync(UserBaseDataModel user)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 新しいユーザーを作成します。
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<UserBaseDataModel> CreateUserAsync(ulong userid, string username)
         {
             if (Users.Any(u => u.UserName.Equals(username, StringComparison.OrdinalIgnoreCase)))
@@ -85,7 +114,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common
 
             UserBaseDataModel newUser;
 
-            var dbContext = await _deltaRaumiDB.CreateDbContextAsync();
+            var dbContext = await _deltaRaumiDb.CreateDbContextAsync();
 
             await using (dbContext)
             {
@@ -97,7 +126,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common
             return newUser;
         }
 
-        internal async Task<UserBaseDataModel> CreateUserInternalAsync(ulong userid, string username)
+        private Task<UserBaseDataModel> CreateUserInternalAsync(ulong userid, string username)
         {
             //throw new NotImplementedException();
             if (userid == 0)
@@ -122,7 +151,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common
             //user.AddDefaultPreferences();
             userBase.AddDefaultDiscordData(isBot, isWebhook);
 
-            return userBase;
+            return Task.FromResult(userBase);
         }
     }
 }

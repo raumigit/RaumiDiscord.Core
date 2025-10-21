@@ -15,7 +15,7 @@ namespace RaumiDiscord.Core.Server.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.DeltaRaumi.Database.Models.DiscordComponentModel", b =>
                 {
@@ -25,23 +25,28 @@ namespace RaumiDiscord.Core.Server.Migrations
 
                     b.Property<string>("ChannelId")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DeltaRaumiComponentType")
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LinkCode")
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MessageId")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OwnerId")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("TimeToLive")
@@ -55,25 +60,31 @@ namespace RaumiDiscord.Core.Server.Migrations
             modelBuilder.Entity("RaumiDiscord.Core.Server.DeltaRaumi.Database.Models.GuildBaseDataModel", b =>
                 {
                     b.Property<string>("GuildId")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("BannerUrl")
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .HasMaxLength(512)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("GuildName")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("IconUrl")
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LogChannel")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<ulong>("MaxUploadLimit")
@@ -83,10 +94,12 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("OpenLogChannel")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OwnerID")
+                    b.Property<string>("OwnerId")
                         .IsRequired()
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PremiumSubscriptionCount")
@@ -95,7 +108,8 @@ namespace RaumiDiscord.Core.Server.Migrations
                     b.Property<int>("PremiumTier")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("WelcomeChannnelID")
+                    b.Property<string>("WelcomeChannnelId")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("GuildId");
@@ -114,10 +128,12 @@ namespace RaumiDiscord.Core.Server.Migrations
 
                     b.Property<string>("ParentUserId")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SubUserId")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -132,18 +148,21 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("DiscordUser")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("Publish")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("TTL")
+                    b.Property<DateTime>("Ttl")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Url")
+                        .HasMaxLength(65535)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UrlType")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -154,12 +173,15 @@ namespace RaumiDiscord.Core.Server.Migrations
             modelBuilder.Entity("RaumiDiscord.Core.Server.DeltaRaumi.Database.Models.UserBaseDataModel", b =>
                 {
                     b.Property<string>("UserId")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AvatarId")
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Barthday")
+                        .HasMaxLength(32)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -178,6 +200,7 @@ namespace RaumiDiscord.Core.Server.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Userstatus")
@@ -190,27 +213,29 @@ namespace RaumiDiscord.Core.Server.Migrations
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.DeltaRaumi.Database.Models.UserGuildDataModel", b =>
                 {
-                    b.Property<Guid>("guId")
+                    b.Property<Guid>("GuId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("GuildAvatarId")
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("GuildExp")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("GuildId")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("GuildUserFlags")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Guild_Exp")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("JoinedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Latest_Exp")
+                    b.Property<DateTime>("LatestExp")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("SetToMention")
@@ -224,9 +249,10 @@ namespace RaumiDiscord.Core.Server.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("guId");
+                    b.HasKey("GuId");
 
                     b.HasIndex("GuildId");
 
@@ -245,14 +271,16 @@ namespace RaumiDiscord.Core.Server.Migrations
 
                     b.Property<string>("GuildId")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MentionedUserId")
-                        .IsRequired()
+                        .HasMaxLength(5000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("StatUlid");

@@ -241,7 +241,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers
         public void Shutdown()
         {
             // 必要に応じて、保留中のログをフラッシュするなどの処理を追加
-            Log("ロギングサービスをシャットダウンしています", "LoggingService", LogLevel.Info);
+            Log("ロギングサービスをシャットダウンしています", "LoggingService");
         }
     }
 }

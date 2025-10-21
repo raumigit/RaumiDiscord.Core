@@ -9,7 +9,7 @@
         /// UserStatusの種類を定義する列挙型です。
         /// これはDiscordのシステムとは関係なく、RaumiDiscordの内部で使用されるステータスを表します。
         /// </summary>
-        public enum userstatsType
+        public enum UserstatsType
         {
             /// <summary>
             /// 通常の状態を示す
@@ -19,7 +19,7 @@
             /// UserはBotからBANされた
             /// 詳細：ユーザーはサービスが拒否されサービスを受けることはできません。
             /// </summary>
-            UserBAN = 1,
+            UserBan = 1,
             /// <summary>
             /// UserはBotへのアクセスロックされている
             /// 詳細：ユーザーはBotの機能を使用できませんが、他の機能は利用可能です。
@@ -29,7 +29,7 @@
             /// UserはWebからBANされている
             /// 詳細：ユーザーはWebインターフェースからのアクセスが拒否され、サービスを受けることはできません。
             /// </summary>
-            UserWebBAN = 3,
+            UserWebBan = 3,
             /// <summary>
             /// Userは非表示にされている
             /// 詳細：ユーザーはリーダーボード等への提供を拒否しています。この状態では名前等がフォールバックされます。
@@ -67,7 +67,7 @@
             UserTester = 10,
             /// <summary>
             /// Userはライセンスを有効にしている
-            /// 詳細：該当ユーザーはライセンスを持ち、特定の機能やサービスを利用することができます。
+            /// 詳細：該当ユーザーはライセンスを持ち、特定の機能やサービスを利用できます。
             /// </summary>
             UserLisenceEnable = 11,
             /// <summary>

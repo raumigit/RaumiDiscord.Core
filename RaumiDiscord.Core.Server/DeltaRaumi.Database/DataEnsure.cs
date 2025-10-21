@@ -1,10 +1,8 @@
-﻿using Discord;
-using Discord.WebSocket;
+﻿using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
-using System;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
 {
@@ -13,11 +11,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
     /// </summary>
     public class DataEnsure
     {
-        private readonly DeltaRaumiDbContext _deltaRaumiDB;
+        private readonly DeltaRaumiDbContext _deltaRaumiDb;
         private readonly DiscordSocketClient _client;
         private readonly ImprovedLoggingService _logger;
         private readonly SocketGuild _guild;
-        private string? logChannelId;
+        //private string? _logChannelId;
 
         /// <summary>
         /// DatabaseHelperのコンストラクター
@@ -25,24 +23,32 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
         /// <param name="deltaRaumiDb">データベースコンテキスト</param>
         /// <param name="logging">ロギングサービス</param>
         /// <param name="client"></param>
-        public DataEnsure(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logging, DiscordSocketClient client)
+        /// <param name="guild"></param>
+        /// <param name="logChannelId"></param>
+        public DataEnsure(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logging /*DiscordSocketClient client, SocketGuild guild, string? logChannelId*/)
         {
-            _deltaRaumiDB = deltaRaumiDb;
+            _deltaRaumiDb = deltaRaumiDb;
             _logger = logging;
-            _client = client;
+            //_client = client;
             //_guild = guild;
+            //_logChannelId = logChannelId;
         }
 
 
         //private void CompletionUrlDataModelAsync()
         //{
         //}
+        /// <summary>
+        /// GuildBaseDataModelを確認し、存在しない場合は新規作成します。
+        /// </summary>
+        /// <param name="guild"></param>
+        /// <returns></returns>
         public async Task<GuildBaseDataModel> EnsureGuildBaseDataExistsAsync(SocketGuild guild)
         {
             var guildId = guild.Id.ToString();
 
             // GuildBaseDataを検索
-            var guildData = await _deltaRaumiDB.GuildBases
+            var guildData = await _deltaRaumiDb.GuildBases
                 .Where(g => g.GuildId == guildId)
                 .FirstOrDefaultAsync();
 
@@ -53,12 +59,17 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
             }
             return guildData;
         }
+        /// <summary>
+        /// EnsureUserBaseDataExistsAsyncを確認し、存在しない場合は新規作成します。
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public async Task<UserBaseDataModel> EnsureUserBaseDataExistsAsync(SocketGuildUser user)
         {
             var userId = user.Id.ToString();
 
             // UserBaseDataを検索
-            var userData = await _deltaRaumiDB.UserBases
+            var userData = await _deltaRaumiDb.UserBases
                 .Where(u => u.UserId == userId)
                 .FirstOrDefaultAsync();
 
@@ -69,14 +80,24 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
             }
             return userData;
         }
-        private void CompletionUserGuildModel()
-        {
+        /*
+                private void CompletionUserGuildModel()
+                {
 
-        }
+                }
+        */
         //private Task Completion()
         //{
 
         //}
+        /// <summary>
+        /// GetOrCreateUserGuildDataAsyncを確認し、存在しない場合は新規作成します。
+        /// </summary>
+        /// <param name="guildData"></param>
+        /// <param name="userData"></param>
+        /// <param name="guild"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public async Task<UserGuildDataModel> GetOrCreateUserGuildDataAsync(
             GuildBaseDataModel guildData,
             UserBaseDataModel userData,
@@ -87,7 +108,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
             var userId = user.Id.ToString();
 
             // UserGuildDataを検索
-            var userGuildData = await _deltaRaumiDB.UserGuildData
+            var userGuildData = await _deltaRaumiDb.UserGuildData
                 .Where(ug => ug.GuildId == guildId && ug.UserId == userId)
                 .FirstOrDefaultAsync();
 
@@ -103,12 +124,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
                     GuildAvatarId = user.GetGuildAvatarUrl() ?? user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl(),
                     JoinedAt = user.JoinedAt?.UtcDateTime ?? DateTime.UtcNow,
                     TimedOutUntil = user.TimedOutUntil?.UtcDateTime ?? DateTime.MinValue,
-                    Guild_Exp = 0,
-                    Latest_Exp = DateTime.MinValue,
+                    GuildExp = 0,
+                    LatestExp = DateTime.MinValue,
                     TotalMessage = 0
                 };
-                _deltaRaumiDB.UserGuildData.Add(userGuildData);
-                await _deltaRaumiDB.SaveChangesAsync();
+                _deltaRaumiDb.UserGuildData.Add(userGuildData);
+                await _deltaRaumiDb.SaveChangesAsync();
 
                 await _logger.Log($"新しいUserGuildDataを作成しました: Guild: {guild.Name}, User: {user.Username}", "DataEnsure");
             }
@@ -126,8 +147,8 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
                 GuildName = guild.Name,
                 IconUrl = guild.IconUrl,
                 BannerUrl = guild.BannerUrl,
-                OwnerID = guild.OwnerId.ToString(),
-                WelcomeChannnelID = null,
+                OwnerId = guild.OwnerId.ToString(),
+                WelcomeChannnelId = null,
                 CreatedAt = guild.CreatedAt.UtcDateTime,
                 Description = guild.Description,
                 MaxUploadLimit = guild.MaxUploadLimit,
@@ -137,8 +158,8 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
                 LogChannel = null
             };
 
-            _deltaRaumiDB.GuildBases.Add(guildData);
-            await _deltaRaumiDB.SaveChangesAsync();
+            _deltaRaumiDb.GuildBases.Add(guildData);
+            await _deltaRaumiDb.SaveChangesAsync();
 
             await _logger.Log($"新しいGuildBaseDataを作成しました: {guild.Name}", "DataEnsure");
 
@@ -164,8 +185,8 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database
                 Userstatus = 0
             };
 
-            _deltaRaumiDB.UserBases.Add(userData);
-            await _deltaRaumiDB.SaveChangesAsync();
+            _deltaRaumiDb.UserBases.Add(userData);
+            await _deltaRaumiDb.SaveChangesAsync();
 
             await _logger.Log($"新しいUserBaseDataを作成しました: {user.Username}", "DataEnsure");
 

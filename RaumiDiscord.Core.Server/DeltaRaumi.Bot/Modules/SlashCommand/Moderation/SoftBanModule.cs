@@ -31,7 +31,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Modules.SlashCommand.Moderatio
         {
             await RespondAsync("実装されていないためしばらくお待ち下さい", ephemeral: true);
 
-            var e = (
+            _ = (
                 $"「{Format.Bold(Context.Guild.Name)}から {Format.Bold(reason)}によりソフトバンされました。」" +
                 $"\nソフトバンとは、単にあなたがキックされ、一定量の以前のメッセージが大量に削除されることを意味します。" +
                 $"まだ再参加できます。");
