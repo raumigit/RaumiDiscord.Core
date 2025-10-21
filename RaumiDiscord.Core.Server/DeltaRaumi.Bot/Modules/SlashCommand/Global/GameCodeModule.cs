@@ -48,17 +48,17 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
     /// <param name="ttl"></param>
     /// <param name="publish"></param>
     /// <returns></returns>
-    [SlashCommand("gamemode", "ゲームで使えるギフトコードを出力します(メンテナンス中)")]
+    [SlashCommand("gamecode", "ゲームで使えるギフトコードを出力します(メンテナンス中)")]
     public async Task GameCode(
-        [Summary("action", "実行するアクション")]
+    [Summary("action", "実行するアクション")]
     [Choice("Get","Get")]
     [Choice("Set","Set")]
     [Choice("Help","Help")]
     string action,
-            [Summary("urlType", "URLのタイプ")] string? urlType = null,
-            [Summary("url", "URL又はコード")] string? url = null,
-            [Summary("ttl", "有効期限 (例: 2025/9/10-3:34:00+9:00)")] string? ttl = null,
-            [Summary("publish", "公開するかどうか")] bool? publish = false)
+    [Summary("urlType", "URLのタイプ")] string? urlType = null,
+    [Summary("url", "URL又はコード")] string? url = null,
+    [Summary("ttl", "有効期限 (例: 2025/9/10-3:34:00+9:00)")] string? ttl = null,
+    [Summary("publish", "公開するかどうか")] bool? publish = false)
     {
         try
         {
