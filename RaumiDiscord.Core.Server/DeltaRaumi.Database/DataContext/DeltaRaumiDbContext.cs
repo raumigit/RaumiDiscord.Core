@@ -74,13 +74,13 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
                 //    break;
 
                 case DatabaseType.Sqlite:
-                    if (!File.Exists("Resources\\Data\\DeltaRaumiData.db"))
+                    if (!File.Exists("data\\DeltaRaumiData.db"))
                     {
-                        Directory.CreateDirectory("Resources\\Data");
-                        File.Create("Resources\\Data\\DeltaRaumiData.db");
+                        Directory.CreateDirectory("data");
+                        File.Create("data\\DeltaRaumiData.db");
                     }
 
-                    optionsBuilder.UseSqlite("Data Source=Resources\\Data\\DeltaRaumiData.db;Cache=Shared");
+                    optionsBuilder.UseSqlite("Data Source=data\\DeltaRaumiData.db;Cache=Shared");
 
                     break;
 

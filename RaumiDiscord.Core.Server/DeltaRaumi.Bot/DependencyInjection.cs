@@ -18,12 +18,13 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
 {
     /// <summary>
-    /// Provides methods for configuring and managing dependency injection in the application.
+    /// DI コンテナ設定を簡素化するための拡張クラスです。<br/>
+    /// サービス登録や検証、共通ユーティリティへのアクセスを提供します。
     /// </summary>
     /// <remarks>
-    /// This class provides a centralized method to register all required services into the dependency 
-    /// injection container, including database contexts, core application services, and Discord-related services.
-    /// It ensures that services are registered with appropriate lifetimes based on their usage requirements.
+    /// このクラスは、データベースコンテキスト、コアアプリケーションサービス、Discord関連サービスを含む、
+    /// 必要なすべてのサービスを依存性注入コンテナに登録するための中央集約的な方法を提供します。
+    /// これにより、各サービスの使用要件に基づいて適切なライフタイムでサービスが登録されることが保証されます。
     /// </remarks>
     public static class DependencyInjection
     {
@@ -177,10 +178,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
         }
 
         /// <summary>
-        /// サービス登録の検証
+        /// DI コンテナに必要な主要サービスが正しく登録されているかを確認します。<br/>
+        /// ビルド時にバリデーションを有効化し、例外が発生した場合は false を返却します。
         /// </summary>
-        /// <param name="services">サービスコレクション</param>
-        /// <returns>検証結果</returns>
+        /// <param name="services">検証対象の IServiceCollection。</param>
+        /// <returns>すべての必須サービスが登録済みなら true、そうでなければ false。</returns>
         public static bool ValidateServiceRegistration(IServiceCollection services)
         {
             try
@@ -212,12 +214,13 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// DeltaRaumiアプリケーション用の完全なサービス設定
+        /// DeltaRaumi アプリケーションで使用するすべてのサービスを DI コンテナに登録します。<br/>
+        /// これには、Discord クライアント、ロギング、データベース接続、ビジネスロジック層などが含まれます。
         /// </summary>
-        /// <param name="services">サービスコレクション</param>
-        /// <param name="configFilePath">設定ファイルのパス</param>
-        /// <param name="connectionString">データベース接続文字列</param>
-        /// <returns>設定されたサービスコレクション</returns>
+        /// <param name="services">DI コンテナのサービスコレクション。</param>
+        /// <param name="configFilePath">BotConfiguration を読み込む設定ファイルへのパス。</param>
+        /// <param name="connectionString">データベース接続文字列。</param>
+        /// <returns>登録済みの IServiceCollection を返します。</returns>
         public static IServiceCollection AddDeltaRaumiServices(
             this IServiceCollection services,
             string configFilePath,

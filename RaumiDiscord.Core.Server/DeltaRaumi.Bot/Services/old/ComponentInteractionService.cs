@@ -20,7 +20,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
         private Color _raumiSubColor = new Color(0xf02443);
 
 
-        private string _version = $"バージョン:0.1.3.18　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
+        private string _version = $"バージョン:0.1.3.19　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
 
         //private IConfiguration Configuration { get; set; }
 

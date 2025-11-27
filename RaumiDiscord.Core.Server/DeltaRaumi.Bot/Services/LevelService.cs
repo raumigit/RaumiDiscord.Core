@@ -169,7 +169,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                     var defaultChannel = guild.DefaultChannel ?? guild.TextChannels.FirstOrDefault();
                     if (defaultChannel != null)
                     {
-                        await defaultChannel.SendMessageAsync(embed: embed);
+                        //await defaultChannel.SendMessageAsync(embed: embed);
                     }
                 }
 

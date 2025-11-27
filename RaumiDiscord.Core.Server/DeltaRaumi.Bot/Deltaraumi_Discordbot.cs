@@ -106,7 +106,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
                 try
                 {
                     _serverShutdownRequested = false;
-                     StartServer(appPaths, options, startupConfig);
+                    StartServer(appPaths, options, startupConfig);
                 }
                 catch (Exception ex)
                 {
@@ -238,13 +238,13 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
             }
             catch (HttpException e)
             {
-                _logger.Log("Discord への接続に失敗", "Startup", ImprovedLoggingService.LogLevel.Error);
-                _logger.Log($"HTTP Error: {e.HttpCode} - {e.Reason}", "Startup", ImprovedLoggingService.LogLevel.Error);
+                await _logger.Log("Discord への接続に失敗", "Startup", ImprovedLoggingService.LogLevel.Error);
+                await _logger.Log($"HTTP Error: {e.HttpCode} - {e.Reason}", "Startup", ImprovedLoggingService.LogLevel.Error);
                 throw new InvalidOperationException("Discordへの接続に失敗しました。ボットトークンとネットワーク接続を確認してください。", e);
             }
             catch (Exception e)
             {
-                _logger.Log($"Discord接続中に予期せぬエラーが発生しました: {e.Message}", "Startup", ImprovedLoggingService.LogLevel.Error);
+                await _logger.Log($"Discord接続中に予期せぬエラーが発生しました: {e.Message}", "Startup", ImprovedLoggingService.LogLevel.Error);
                 throw;
             }
         }

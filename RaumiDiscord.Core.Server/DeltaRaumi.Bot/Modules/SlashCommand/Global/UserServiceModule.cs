@@ -1,5 +1,8 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
+using RaumiDiscord.Core.Server.DeltaRaumi.Api.Dtos;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
+using RaumiDiscord.Core.Server.DeltaRaumi.Database;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
@@ -13,15 +16,19 @@ public class UserServiceModule : InteractionModuleBase<SocketInteractionContext>
 {
     private readonly DeltaRaumiDbContext _deltaRaumiDb;
     private readonly ImprovedLoggingService _logger;
+    private object _dataEnsure;
+
     /// <summary>
     /// ユーザーサービスモジュールのコンストラクター
     /// </summary>
     /// <param name="deltaRaumiDb"></param>
     /// <param name="logger"></param>
-    public UserServiceModule(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logger)
+    /// <param name="dataEnsure"></param>
+    public UserServiceModule(DeltaRaumiDbContext deltaRaumiDb, ImprovedLoggingService logger, DataEnsure dataEnsure)
     {
         _deltaRaumiDb = deltaRaumiDb;
         _logger = logger;
+        _dataEnsure = dataEnsure;
     }
 
 
@@ -145,5 +152,38 @@ public class UserServiceModule : InteractionModuleBase<SocketInteractionContext>
                 await RespondAsync($"{e.Message}\n{e.StackTrace}");
             }
         }
+    }
+    [SlashCommand("settoping", "メンションの受け取り上限を設定します。(ギルドごとに設定できます。)")]
+    public async Task SetToPing([Summary("count", "メンションの受け取り上限 -1の場合機能がオフになります。")] int count)
+    {
+        var userId = Context.User.Id.ToString();
+        var guildId = Context.Guild.Id.ToString();
+        if (count < -1 || count > 255)
+        {
+            await RespondAsync("メンションの受け取り上限は-1から255の間で設定してください。", ephemeral: true);
+            return;
+        }
+        var setting = _deltaRaumiDb.UserGuildData
+            .FirstOrDefault(s => s.UserId == userId && s.GuildId == guildId);
+        if (setting == null)
+        {
+            //await _dataEnsure.GetOrCreateUserGuildDataAsync(guildData, userData, guild, guildUser);
+            //setting = new UserGuildDataModel
+            //{
+            //    UserId = userId,
+            //    GuildId = guildId,
+            //    SetToMention = count
+            //};
+            //_deltaRaumiDb.UserGuildData.Add(setting);
+            await RespondAsync("必要なデータが欠落しています。ギルド内でメッセージを送信してから再度実行してください。", ephemeral: true);
+            return;
+        }
+        else
+        {
+            setting.SetToMention = count;
+            _deltaRaumiDb.UserGuildData.Update(setting);
+        }
+        await _deltaRaumiDb.SaveChangesAsync();
+        await RespondAsync($"メンションの受け取り上限を{count}に設定しました。", ephemeral: true);
     }
 }

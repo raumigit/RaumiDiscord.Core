@@ -28,9 +28,20 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
             return Task.FromResult<IActionResult>(Ok("pingConnection"));
         }
         /// <summary>
-        /// Deltaraumiのサーバーステータスを取得します。
+        /// サーバーの状態情報を JSON で返します。<br/>
+        /// 返却されるオブジェクトには以下が含まれます：
+        /// - serverVersion (string): サーバーのバージョン<br/>
+        /// - apiVersion (string): API のバージョン<br/>
+        /// - processCount (int): 現在実行中のプロセス数<br/>
+        /// - availableMemoryMB (long): 利用可能メモリ（MB）<br/>
+        /// - uptime (string): サーバー起動からの経過時間（DD:HH:mm:ss）<br/>
+        /// - cpuUsagePercent (double): CPU 使用率（%）<br/>
+        /// - network.bytesSent (long): 送信済みバイト数<br/>
+        /// - network.bytesReceived (long): 受信済みバイト数<br/>
+        /// - requestDurationMs (long): このリクエストの処理時間（ms）
         /// </summary>
-        /// <returns></returns>
+        /// <returns>サーバー状態を示す JSON オブジェクト</returns>
+
         [HttpGet("status")]
         public async Task<IActionResult> ServerInfo()
         {
