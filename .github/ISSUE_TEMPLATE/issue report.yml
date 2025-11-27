@@ -118,7 +118,7 @@ body:
       label: "ビルド・バージョンを指定する"
       description: Botかダッシュボードに表示されているビルド・バージョンを教えてください。
     validations:
-      required: true
+      required: false
   - type: textarea
     id: environment-information
     attributes:

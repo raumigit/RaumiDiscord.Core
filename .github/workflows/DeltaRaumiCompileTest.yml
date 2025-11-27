@@ -15,10 +15,10 @@ jobs:
     # ジョブの中で実行する処理をステップで定義
     steps:
     
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup .net
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.0.x
       - name: Restore dependencies
