@@ -5,6 +5,7 @@ using NUlid;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 
@@ -23,7 +24,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="loggingService"></param>
-        public MentionHandling(DeltaRaumiDbContext dbContext, ImprovedLoggingService loggingService ,DiscordSocketClient Client)
+        public MentionHandling(DeltaRaumiDbContext dbContext, ImprovedLoggingService loggingService, DiscordSocketClient Client)
         {
             _dbContext = dbContext;
             _logger = loggingService;
@@ -35,25 +36,22 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
         {
             if (message is not SocketUserMessage userMessage) return;
 
-            
-            //if (mentionedUserIds.Count == 0) return;
+            // 今回のメッセージでメンションされたユーザーがいない場合は処理終了
+            if (message.MentionedUsers == null || !message.MentionedUsers.Any()) return;
 
             List<string> mentionedUserIds;
-
             string? mentionedUsersJson = null;
-            if (message.MentionedUsers != null && message.MentionedUsers.Any())
-            {
-                mentionedUserIds = message.MentionedUsers
-                    .Select(u => u.Id.ToString())
-                    .ToList();
-                mentionedUsersJson = JsonSerializer.Serialize(mentionedUserIds);
-            }
+
+            mentionedUserIds = message.MentionedUsers
+                .Select(u => u.Id.ToString())
+                .ToList();
+            mentionedUsersJson = JsonSerializer.Serialize(mentionedUserIds);
 
             var createdAt = userMessage.Timestamp.UtcDateTime;
             var authorId = userMessage.Author.Id.ToString();
             var guildId = (message.Channel as SocketGuildChannel)?.Guild.Id.ToString() ?? "DM";
 
-            // 保存処理
+            // UserGuildStats保存処理
             var userGuildStats = new UserGuildStatsModel
             {
                 StatUlid = Ulid.NewUlid(),
@@ -66,33 +64,34 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
             _dbContext.UserGuildStats.Add(userGuildStats);
             await _dbContext.SaveChangesAsync();
 
-            // 直近24時間の記録を取得
+            // 直近24時間の記録を取得（今回メンションされたユーザーに関連するもののみ）
             var timeThreshold = DateTime.UtcNow.AddHours(-24);
             var recentStats = await _dbContext.UserGuildStats
-                .Where(s => s.CreatedAt >= timeThreshold)
+                .Where(s => s.CreatedAt >= timeThreshold && s.GuildId == guildId)
                 .ToListAsync();
 
-            // ユーザーごとのメンション回数をカウント(古い)
-            //var allMentioned = recentStats
-            //    .SelectMany(s => (s.MentionedUserId)
-            //    .Split(',', StringSplitOptions.RemoveEmptyEntries))
-            //    .GroupBy(id => id)
-            //    .ToDictionary(g => g.Key, g => g.Count());
+            // 今回メンションされたユーザーごとのメンション回数をカウント
+            var mentionCounts = new Dictionary<string, int>();
 
-            // 該当ユーザーを抽出
-            var mentionCounts = new Dictionary<string, int>();// ユーザーIDごとのメンション回数
+            // 今回メンションされたユーザーIDで初期化
+            foreach (var userId in mentionedUserIds)
+            {
+                mentionCounts[userId] = 0;
+            }
 
+            // 過去24時間の統計から今回メンションされたユーザーのカウントを集計
             foreach (var item in recentStats)
             {
-                var mentionedUsers = DeserializeMentionedUsers(item);// Json文字列をリストに変換
+                var mentionedUsers = DeserializeMentionedUsers(item);
                 if (mentionedUsers != null)
                 {
                     foreach (var mentionedUserId in mentionedUsers)
                     {
+                        // 今回メンションされたユーザーのみカウント
                         if (mentionCounts.ContainsKey(mentionedUserId))
+                        {
                             mentionCounts[mentionedUserId]++;
-                        else
-                            mentionCounts[mentionedUserId] = 0;
+                        }
                     }
                 }
             }
@@ -105,44 +104,31 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
                 var userId = kvp.Key;
                 var mentionCount = kvp.Value;
 
-                // UserBasesからSetToMentionを取得
-                var userBase = await _dbContext.UserBases
-                    .FirstOrDefaultAsync(ub => ub.UserId == userId);
-                
-                if (userBase != null && mentionCount > userBase.SetToMention)
+                // UserGuildDataからSetToMentionを取得（ギルドIDも考慮）
+                var userGuildData = await _dbContext.UserGuildData
+                    .FirstOrDefaultAsync(ugd => ugd.UserId == userId && ugd.GuildId == guildId);
+
+                if (userGuildData != null && userGuildData.SetToMention != -1 && mentionCount > userGuildData.SetToMention)
                 {
                     // ユーザー名を取得
-                    var user = _client.GetUser(ulong.Parse(userId));
-                    var userName = user?.Username ?? $"UserId:{userId}";
+                    string? dbUserName = await _dbContext.UserBases
+                        .Where(u => u.UserId == userId)
+                        .Select(u => u.UserName)
+                        .FirstOrDefaultAsync();
 
-                    overageUsers.Add((userId, userName, mentionCount, userBase.SetToMention));
+                    dbUserName ??= $"不明なユーザー (ID:{userId})";
+
+                    overageUsers.Add((userId, dbUserName, mentionCount, userGuildData.SetToMention));
                 }
             }
 
+            await _logger.Log($"オーバーユーザー数: {overageUsers.Count}", "LevelService: MentionHandling");
+
             // オーバーしたユーザーがいる場合、DMで通知
-            if (overageUsers.Any())
+            if (overageUsers.Count > 0)
             {
                 await SendOverageNotificationAsync(message.Author, overageUsers);
             }
-
-
-
-            // DM送信
-            //if (true)
-            //{
-            //    try
-            //    {
-            //        var dm = await message.Author.CreateDMChannelAsync();
-            //        var msg = string.Join("\n", overThresholdUserIds.Select(id =>
-            //            $"⚠️ ユーザーID `{id}` は直近24時間で {allMentioned[id]} 回メンションされました（許容値: {(_dbContext.UserBases.FirstOrDefault(u => u.UserId == id)?.SetToMention ?? -1)}）"));
-
-            //        await dm.SendMessageAsync(msg);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine($"DM送信失敗: {ex.Message}");
-            //    }
-            //}
         }
 
         private async Task SendOverageNotificationAsync(SocketUser author, List<(string UserId, string UserName, int MentionCount, int SetToMention)> overageUsers)
@@ -167,11 +153,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.Utils
             catch (Discord.Net.HttpException ex) when (ex.DiscordCode == DiscordErrorCode.CannotSendMessageToUser)
             {
                 // DMが送信できない場合（ユーザーがDMをブロックしている等）
-                Console.WriteLine($"ユーザー {author.Username} にDMを送信できませんでした。");
+                await _logger.Log($"ユーザー {author.Username} にDMを送信できませんでした。", "LevelService: MentionHandling");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"DM送信中にエラーが発生しました: {ex.Message}");
+                await _logger.Log($"DM送信中にエラーが発生しました: {ex.Message}", "LevelService: MentionHandling");
             }
         }
 

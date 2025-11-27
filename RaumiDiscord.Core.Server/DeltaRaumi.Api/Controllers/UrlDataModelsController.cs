@@ -6,8 +6,10 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 {
     /// <summary>
-    /// UrlDataModelのコントローラー
+    /// UrlDataModel を CRUD（取得・更新・作成・削除）するための API コンポーネントです。<br/>
+    /// データベースへのアクセスは Entity Framework Core の DeltaRaumiDbContext で行います。
     /// </summary>
+
     [Route("api/[controller]")]
     [ApiController]
     public class UrlDataModelsController : ControllerBase
@@ -24,9 +26,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 
         // GET: api/UrlDataModels
         /// <summary>
-        /// UrlDataModelの一覧を取得します。
+        /// データベース内の全 UrlDataModel レコードを取得します。<br/>
+        /// <para>戻り値は JSON 配列形式で、各要素が UrlDataModel のプロパティを含みます。</para>
         /// </summary>
-        /// <returns></returns>
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UrlDataModel>>> GetUrlDataModels()
         {
@@ -35,10 +38,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 
         // GET: api/UrlDataModels/5
         /// <summary>
-        /// UrlDataModelを取得します。
+        /// 指定した ID を持つ UrlDataModel を取得します。<br/>
+        /// <paramref name="id"/> に該当するレコードが存在しない場合は 404 NotFound が返ります。<br/>
+        /// 成功時は対象オブジェクトを JSON で返却します。
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">取得したい UrlDataModel の ID。</param>
+
         [HttpGet("{id}")]
         public async Task<ActionResult<UrlDataModel>> GetUrlDataModel(uint id)
         {
@@ -55,11 +60,14 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
         // PUT: api/UrlDataModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
-        /// UrlDataModelを更新します。
+        /// 指定した ID を持つ UrlDataModel を更新します。<br/>
+        /// リクエストボディに渡されたオブジェクトの Id が URL パラメータと一致しない場合は 400 BadRequest、<br/>
+        /// レコードが存在しない場合は 404 NotFound を返します。<br/>
+        /// 成功時は 204 NoContent を返却します。
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="urlDataModel"></param>
-        /// <returns></returns>
+        /// <param name="id">更新対象の UrlDataModel の ID。</param>
+        /// <param name="urlDataModel">更新内容を含むオブジェクト。</param>
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUrlDataModel(uint id, UrlDataModel urlDataModel)
         {
@@ -92,10 +100,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
         // POST: api/UrlDataModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
-        /// UrlDataModelを追加します。
+        /// 新しい UrlDataModel をデータベースに追加します。<br/>
+        /// 成功すると 201 Created が返り、Location ヘッダーに作成したリソースの URL が設定されます。
         /// </summary>
-        /// <param name="urlDataModel"></param>
-        /// <returns></returns>
+        /// <param name="urlDataModel">作成対象となるオブジェクト。</param>
+
         [HttpPost]
         public async Task<ActionResult<UrlDataModel>> PostUrlDataModel(UrlDataModel urlDataModel)
         {
@@ -107,10 +116,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 
         // DELETE: api/UrlDataModels/5
         /// <summary>
-        /// UrlDataModelを削除します。
+        /// 指定した ID を持つ UrlDataModel を削除します。<br/>
+        /// レコードが見つからない場合は 404 NotFound、成功時は 204 NoContent を返却します。
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">削除対象の UrlDataModel の ID。</param>
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUrlDataModel(uint id)
         {
