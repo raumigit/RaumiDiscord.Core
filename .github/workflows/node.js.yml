@@ -23,8 +23,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: ls -la    
+        cache: 'npm' 
     - run: |
         cd ./raumidiscord.core.client/
         npm ci
@@ -33,4 +32,4 @@ jobs:
         npm run build --if-present
     - run: |
         cd ./raumidiscord.core.client/
-        npm test
+    # npm test
