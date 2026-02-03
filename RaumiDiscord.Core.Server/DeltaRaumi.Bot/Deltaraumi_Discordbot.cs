@@ -1,5 +1,4 @@
-﻿using CommandLine;
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.Net;
@@ -78,16 +77,16 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
 
         private async Task MainAsync(string[] args)
         {
-            static Task ErrorParsingArguments(IEnumerable<CommandLine.Error> errors)
-            {
-                Console.WriteLine("Command line parsing failed:");
-                foreach (var error in errors)
-                {
-                    Console.WriteLine($"{error}");
-                }
-                Environment.ExitCode = 1;
-                return Task.CompletedTask;
-            }
+            //static Task ErrorParsingArguments(IEnumerable<Microsoft.Extensions.Configuration.CommandLine.Error> errors)
+            //{
+            //    Console.WriteLine("Command line parsing failed:");
+            //    foreach (var error in errors)
+            //    {
+            //        Console.WriteLine($"{error}");
+            //    }
+            //    Environment.ExitCode = 1;
+            //    return Task.CompletedTask;
+            //}
 
             // Parse the command line arguments and either start the app or exit indicating error
             StartApp();
@@ -140,7 +139,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
                     LogLevel = LogSeverity.Verbose,
                     LogGatewayIntentWarnings = true,
                 });
-
+                //試験的変更：serilogに統一するため独自のログイベントを無効化
                 _client.Log += LogAsync;
                 _client.Ready += OnReady;
 
@@ -223,7 +222,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
         {
             try
             {
-                await _logger.Log("Discord への接続を開始", "Startup");
+                await _logger.Log("Discord へ接続中", "Startup");
 
                 if (string.IsNullOrWhiteSpace(_config.TokenData?.Token))
                 {

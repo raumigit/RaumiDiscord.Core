@@ -87,12 +87,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
             services.AddSingleton<ImprovedLoggingService>();
             services.AddSingleton<DiscordLoggingAdapter>();
 
-            // Microsoft.Extensions.Logging integration
-            services.AddLogging(builder =>
-            {
-                builder.AddConsole();
-                builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
-            });
+            // Microsoft.Extensions.Logging integration　計画：このコードをコンフィグから切り替えれるように再実装
+            //services.AddLogging(builder =>
+            //{
+            //    builder.AddConsole();
+            //    builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
+            //});
             services.AddSingleton(logger ?? new ImprovedLoggingService());
             // ========================================================================
             // Discord Core Services - Discord コアサービス
