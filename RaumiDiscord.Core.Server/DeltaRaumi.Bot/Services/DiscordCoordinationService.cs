@@ -77,9 +77,9 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
 
                 // 起動完了ログ
                 await _loggingService.Log("Startup Complete", "Startup");
-                await _loggingService.Log($"Logged in as {_client.CurrentUser?.Username ?? "Unknown User"}", "Startup");
+                await _loggingService.Log($"Login as {_client.CurrentUser?.Username ?? "Unknown User"}", "Startup");
 
-                _logger?.LogInformation("Bot startup complete. Logged in as: {Username}", _client.CurrentUser?.Username ?? "Unknown User");
+                //_logger?.LogInformation("Bot startup complete. Logged in as: {Username}", _client.CurrentUser?.Username ?? "Unknown User");
 
                 // 追加の初期化処理
                 await InitializeServices();
@@ -87,7 +87,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             catch (Exception ex)
             {
                 await _loggingService.Log($"Error in OnReady: {ex.Message}", "DiscordCoordination", ImprovedLoggingService.LogLevel.Error);
-                _logger?.LogError(ex, "Error occurred in OnReady event handler");
+                //_logger?.LogError(ex, "Error occurred in OnReady event handler");
             }
         }
 
@@ -99,12 +99,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             try
             {
                 await _loggingService.Log("Connected to Discord", "DiscordCoordination", ImprovedLoggingService.LogLevel.Info);
-                _logger?.LogInformation("Connected to Discord");
+                //_logger?.LogInformation("Connected to Discord");
             }
             catch (Exception ex)
             {
                 await _loggingService.Log($"Error in OnConnected: {ex.Message}", "DiscordCoordination", ImprovedLoggingService.LogLevel.Error);
-                _logger?.LogError(ex, "Error occurred in OnConnected event handler");
+                //_logger?.LogError(ex, "Error occurred in OnConnected event handler");
             }
         }
 
@@ -120,12 +120,12 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
                     "Disconnected from Discord";
 
                 await _loggingService.Log(message, "DiscordCoordination", ImprovedLoggingService.LogLevel.Warning);
-                _logger?.LogWarning(exception, "Disconnected from Discord");
+                //_logger?.LogWarning(exception, "Disconnected from Discord");
             }
             catch (Exception ex)
             {
                 await _loggingService.Log($"Error in OnDisconnected: {ex.Message}", "DiscordCoordination", ImprovedLoggingService.LogLevel.Error);
-                _logger?.LogError(ex, "Error occurred in OnDisconnected event handler");
+                //_logger?.LogError(ex, "Error occurred in OnDisconnected event handler");
             }
         }
 
@@ -162,7 +162,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             catch (Exception ex)
             {
                 await _loggingService.Log($"Error during service initialization: {ex.Message}", "DiscordCoordination", ImprovedLoggingService.LogLevel.Error);
-                _logger?.LogError(ex, "Error occurred during service initialization");
+                //_logger?.LogError(ex, "Error occurred during service initialization");
             }
         }
 
@@ -185,7 +185,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             catch (Exception ex)
             {
                 await _loggingService.Log($"Error during shutdown: {ex.Message}", "DiscordCoordination", ImprovedLoggingService.LogLevel.Error);
-                _logger?.LogError(ex, "Error occurred during DiscordCoordinationService shutdown");
+                //_logger?.LogError(ex, "Error occurred during DiscordCoordinationService shutdown");
             }
         }
 
