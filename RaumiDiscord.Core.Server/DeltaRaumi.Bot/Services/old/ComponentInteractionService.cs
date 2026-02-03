@@ -6,6 +6,7 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Configuration.Models;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext;
 using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 using System.Reflection;
+using System.Security.Cryptography;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
 {
@@ -19,8 +20,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
         private Color _raumiMainColor = new Color(0x7bb3ee);
         private Color _raumiSubColor = new Color(0xf02443);
 
+        //private string exePath = Assembly.GetExecutingAssembly().Location;
+        
 
-        private string _version = $"バージョン:0.1.3.19　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
+        private string _version = $"バージョン:0.1.3.20　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
 
         //private IConfiguration Configuration { get; set; }
 
@@ -34,6 +37,16 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
             client.SelectMenuExecuted += Client_SelectMenuExecuted;
             client.ButtonExecuted += Client_ButtonExecuted;
             //client.SlashCommandExecuted += Client_SlashCommandExecuted;
+        }
+        //インタラクションにエラーが出るため将来的に修正予定
+        static string GetFileHash<T>(string filePath) where T : HashAlgorithm
+        {
+            using (var hashAlgorithm = (T)Activator.CreateInstance(typeof(T)))
+            using (var stream = File.OpenRead(filePath))
+            {
+                byte[] hash = hashAlgorithm.ComputeHash(stream);
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            }
         }
 
         private async Task Client_ButtonExecuted(SocketMessageComponent component)
@@ -71,7 +84,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
 
             EmbedBuilder builder = new EmbedBuilder();
 
-            
+            //string? debug_Hash = "";
+
+            //if (AssemblyState.IsDebug)
+            //    debug_Hash = $"({GetFileHash<MD5>(exePath)})";
 
             if (model != null)
             {
