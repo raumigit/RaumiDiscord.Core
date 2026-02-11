@@ -366,7 +366,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
             .AddSingleton<InteractionService>(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
             .AddSingleton<ComponentInteractionService>()
             .AddSingleton<InteractionHandler>()
-            .AddSingleton<SlashCommandInterationService>()
+            .AddSingleton<SlashCommandInteractionService>()
 
             // イベントハンドラー
             .AddSingleton<DeltaRaumiHandler>()

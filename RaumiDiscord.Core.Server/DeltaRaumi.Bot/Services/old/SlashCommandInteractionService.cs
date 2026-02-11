@@ -8,7 +8,7 @@ using RaumiDiscord.Core.Server.DeltaRaumi.Database.Models;
 
 namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old;
 
-public class SlashCommandInterationService
+public class SlashCommandInteractionService
 {
     private readonly DeltaRaumiDbContext _dbContext;
     private readonly DiscordSocketClient _client;
@@ -24,14 +24,14 @@ public class SlashCommandInterationService
     private List<string> VoiceRegionLists { get; set; } = new();
 
     private bool CommandGuildUpdate { get; set; } = true;
-    private bool CommandGlobalAvailadle { get; set; } = true;
+    private bool CommandGlobalAvailable{ get; set; } = true;
 
     public int CommandGuildCount { get; set; }
 
     //private readonly IAudioClient _audioClient;
 
 
-    public SlashCommandInterationService(DiscordSocketClient client, ImprovedLoggingService logger, DeltaRaumiDbContext dbContext)
+    public SlashCommandInteractionService(DiscordSocketClient client, ImprovedLoggingService logger, DeltaRaumiDbContext dbContext)
     {
         _dbContext = dbContext;
         
@@ -39,13 +39,13 @@ public class SlashCommandInterationService
         _loggingService = logger;
         //client.Ready += Client_GlobalAvailadle;
         client.GuildAvailable += Client_GuildAvailadle;
-        client.SlashCommandExecuted += Client_SlashCommandExcuted;
+        client.SlashCommandExecuted += Client_SlashCommandExecuted;
     }
 
 
 
 
-    private async Task Client_SlashCommandExcuted(SocketSlashCommand commandArg)
+    private async Task Client_SlashCommandExecuted(SocketSlashCommand commandArg)
     {
         switch (commandArg.Data.Name)
         {
@@ -63,7 +63,7 @@ public class SlashCommandInterationService
             //    break;
             default:
 
-                await _loggingService.Log($"このコマンドはギルドコマンドに存在しないためギルドコマンドとして実行されませんでした: {commandArg.CommandName}", "SlashCommandExcuted", ImprovedLoggingService.LogLevel.Warning);
+                await _loggingService.Log($"このコマンドはギルドコマンドに存在しないためギルドコマンドとして実行されませんでした: {commandArg.CommandName}", "SlashCommandExecuted", ImprovedLoggingService.LogLevel.Warning);
                 break;
         }
     }
@@ -72,7 +72,7 @@ public class SlashCommandInterationService
 
     private async Task Client_GuildAvailadle(SocketGuild guildArg)
     {
-        ApplicationCommandProperties[] commands = GetCmmands();
+        ApplicationCommandProperties[] commands = GetCommands();
         try
         {
             if (CommandGuildUpdate)
@@ -108,7 +108,7 @@ public class SlashCommandInterationService
     /// ギルドコマンドを設定するためのリストが作られます。
     /// </summary>
     /// <returns></returns>
-    private SlashCommandProperties[] GetCmmands()
+    private SlashCommandProperties[] GetCommands()
     {
         _client.GetGuild(GuildId);
 

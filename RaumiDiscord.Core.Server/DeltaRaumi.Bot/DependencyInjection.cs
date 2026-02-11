@@ -118,7 +118,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
             // ========================================================================
 
             services.AddSingleton<ComponentInteractionService>();
-            services.AddSingleton<SlashCommandInterationService>();
+            services.AddSingleton<SlashCommandInteractionService>();
 
             // ========================================================================
             // Core Application Services - コアアプリケーションサービス

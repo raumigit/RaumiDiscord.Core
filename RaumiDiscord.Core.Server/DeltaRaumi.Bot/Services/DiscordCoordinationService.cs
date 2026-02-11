@@ -14,7 +14,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
     public class DiscordCoordinationService
     {
         private readonly DiscordSocketClient _client;
-        private readonly SlashCommandInterationService? _slashCommandService;
+        private readonly SlashCommandInteractionService? _slashCommandService;
         private readonly ComponentInteractionService? _componentInteractionService;
         private readonly ImprovedLoggingService _loggingService;
         private readonly WelcomeMessageService? _welcomeMessageService;
@@ -36,7 +36,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services
             DiscordSocketClient client,
             ImprovedLoggingService loggingService,
             BotConfiguration config,
-            SlashCommandInterationService? slashCommandService = null,
+            SlashCommandInteractionService? slashCommandService = null,
             ComponentInteractionService? componentInteractionService = null,
             WelcomeMessageService? welcomeMessageService = null,
             ILogger<DiscordCoordinationService>? logger = null)
