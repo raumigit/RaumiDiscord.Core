@@ -239,6 +239,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Configuration
                 _config.Setting.MaxVoiceChannelStatusLength = DiscordConfig.MaxVoiceChannelStatusLength;
                 _config.Setting.UpdateTime = DateTime.Now;
                 _config.Setting.TimeZone = TimeZoneInfo.Local.DisplayName;
+                _config.Setting.UpTime = DateTime.Now;
             }
         }
     }

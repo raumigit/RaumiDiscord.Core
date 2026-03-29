@@ -1,5 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Microsoft.AspNetCore.Hosting;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.ApplicationStartup;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Common.Configuration;
 using RaumiDiscord.Core.Server.DeltaRaumi.Configuration.Models;
@@ -17,26 +19,33 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
         private readonly DeltaRaumiDbContext _deltaRaumiDbContext;
         private readonly ImprovedLoggingService _loggingService;
         private BotConfiguration _config;
+        private readonly IServerStartup _startupFactory;
         private Color _raumiMainColor = new Color(0x7bb3ee);
         private Color _raumiSubColor = new Color(0xf02443);
 
         //private string exePath = Assembly.GetExecutingAssembly().Location;
         
+        private string serverversionassembly;
 
-        private string _version = $"バージョン:0.1.3.20　({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
+
 
         //private IConfiguration Configuration { get; set; }
 
-        public ComponentInteractionService(DiscordSocketClient client, DeltaRaumiDbContext deltaRaumiDbContext, ImprovedLoggingService loggingService, BotConfiguration config)
+        public ComponentInteractionService(
+    DiscordSocketClient client,
+    DeltaRaumiDbContext deltaRaumiDbContext,
+    ImprovedLoggingService loggingService,
+    BotConfiguration config,
+    IServerStartup serverStartup)
         {
             _client = client;
             _deltaRaumiDbContext = deltaRaumiDbContext;
             _loggingService = loggingService;
             _config = config;
+            _startupFactory = serverStartup;
 
             client.SelectMenuExecuted += Client_SelectMenuExecuted;
             client.ButtonExecuted += Client_ButtonExecuted;
-            //client.SlashCommandExecuted += Client_SlashCommandExecuted;
         }
         //インタラクションにエラーが出るため将来的に修正予定
         static string GetFileHash<T>(string filePath) where T : HashAlgorithm
@@ -83,6 +92,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
             DiscordComponentModel model = _deltaRaumiDbContext.Components.Find(Guid.Parse(component.Data.CustomId));
 
             EmbedBuilder builder = new EmbedBuilder();
+
+            var startup = _startupFactory;
+
+            string _version = $"バージョン: {startup.ApplicationVersionString}({File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)})";
 
             //string? debug_Hash = "";
 

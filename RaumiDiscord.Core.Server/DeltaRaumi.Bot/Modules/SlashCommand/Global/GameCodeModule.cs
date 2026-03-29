@@ -178,7 +178,7 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
             return;
         }
 
-        var existingCode = await _deltaRaumiDb.UrlDataModels
+        var existingCode = await _deltaRaumiDb.GameCodeModels
             .FirstOrDefaultAsync(u => u.Url == url);
 
         if (existingCode != null)
@@ -189,16 +189,16 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
 
         var shouldPublish = publish ?? (gameConfig.Name != "Url");
 
-        var newCode = new UrlDataModel
+        var newCode = new GameCodeModel
         {
             Url = url,
-            UrlType = gameConfig.Name,
+            ContentType = gameConfig.Name,
             DiscordUser = Context.User.Id.ToString(),
             Ttl = parsedTtl,
             Publish = shouldPublish
         };
 
-        _deltaRaumiDb.UrlDataModels.Add(newCode);
+        _deltaRaumiDb.GameCodeModels.Add(newCode);
         await _deltaRaumiDb.SaveChangesAsync();
 
         var unixTime = new DateTimeOffset(parsedTtl).ToUnixTimeSeconds();
@@ -221,7 +221,7 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
         var now = DateTime.UtcNow;
         var userId = Context.User.Id.ToString();
 
-        IQueryable<UrlDataModel> query = _deltaRaumiDb.UrlDataModels
+        IQueryable<GameCodeModel> query = _deltaRaumiDb.GameCodeModels
             .Where(u => u.Ttl > now);
 
         if (!string.IsNullOrEmpty(urlType))
@@ -233,7 +233,7 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
                 return;
             }
 
-            query = query.Where(u => u.UrlType == gameConfig.Name);
+            query = query.Where(u => u.ContentType == gameConfig.Name);
         }
 
         var codes = await query
@@ -249,11 +249,11 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
 
         var response = string.Join("\n\n", codes.Select(code =>
         {
-            var gameConfig = _gameMetaService.FindGame(code.UrlType);
+            var gameConfig = _gameMetaService.FindGame(code.ContentType);
             var unixTime = new DateTimeOffset(code.Ttl).ToUnixTimeSeconds();
             var storeLinks = BuildStoreLinks(gameConfig);
 
-            return $"**{code.UrlType}** - {code.Url}\n" +
+            return $"**{code.ContentType}** - {code.Url}\n" +
                    $"期限：<t:{unixTime}:R>\n" +
                    $"登録者：<@{code.DiscordUser}>" +
                    (string.IsNullOrEmpty(storeLinks) ? "" : $"\n{storeLinks}");

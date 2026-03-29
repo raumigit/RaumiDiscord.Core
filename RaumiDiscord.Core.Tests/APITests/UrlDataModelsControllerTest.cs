@@ -29,7 +29,7 @@ public class UrlDataModelsControllerTest : IClassFixture<CustomWebApplicationFac
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var result = await response.Content.ReadFromJsonAsync<List<UrlDataModel>>();
+        var result = await response.Content.ReadFromJsonAsync<List<GameCodeModel>>();
         Assert.NotNull(result);
     }
 
@@ -37,10 +37,10 @@ public class UrlDataModelsControllerTest : IClassFixture<CustomWebApplicationFac
     public async Task Post_CreatesUrlDataModel()
     {
         // Arrange
-        var newModel = new UrlDataModel
+        var newModel = new GameCodeModel
         {
             Url = "https://genshin.hoyoverse.com/ja/gift?code=TEST123",
-            UrlType = "gi",
+            ContentType = "gi",
             Ttl = DateTime.UtcNow.AddDays(7)
         };
 
@@ -50,10 +50,10 @@ public class UrlDataModelsControllerTest : IClassFixture<CustomWebApplicationFac
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var created = await response.Content.ReadFromJsonAsync<UrlDataModel>();
+        var created = await response.Content.ReadFromJsonAsync<GameCodeModel>();
         Assert.NotNull(created);
         Assert.Equal(newModel.Url, created.Url);
-        Assert.Equal(newModel.UrlType, created.UrlType);
+        Assert.Equal(newModel.ContentType, created.ContentType);
         Assert.True(created.Id > 0, "ID should be auto-generated");
     }
 
@@ -61,15 +61,15 @@ public class UrlDataModelsControllerTest : IClassFixture<CustomWebApplicationFac
     public async Task GetById_ReturnsUrlDataModel_WhenExists()
     {
         // Arrange - データを作成
-        var model = new UrlDataModel
+        var model = new GameCodeModel
         {
             Url = "https://hsr.hoyoverse.com/gift?code=TESTCODE",
-            UrlType = "hsr",
+            ContentType = "hsr",
             Ttl = DateTime.UtcNow.AddDays(3)
         };
 
         var postResponse = await _client.PostAsJsonAsync("/api/UrlDataModels", model);
-        var created = await postResponse.Content.ReadFromJsonAsync<UrlDataModel>();
+        var created = await postResponse.Content.ReadFromJsonAsync<GameCodeModel>();
         Assert.NotNull(created);
 
         // Act
@@ -78,11 +78,11 @@ public class UrlDataModelsControllerTest : IClassFixture<CustomWebApplicationFac
         // Assert
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
 
-        var fetched = await getResponse.Content.ReadFromJsonAsync<UrlDataModel>();
+        var fetched = await getResponse.Content.ReadFromJsonAsync<GameCodeModel>();
         Assert.NotNull(fetched);
         Assert.Equal(created.Id, fetched.Id);
         Assert.Equal(created.Url, fetched.Url);
-        Assert.Equal(created.UrlType, fetched.UrlType);
+        Assert.Equal(created.ContentType, fetched.ContentType);
     }
 
     [Fact]
@@ -99,20 +99,20 @@ public class UrlDataModelsControllerTest : IClassFixture<CustomWebApplicationFac
     public async Task Put_UpdatesUrlDataModel()
     {
         // Arrange - データを作成
-        var original = new UrlDataModel
+        var original = new GameCodeModel
         {
             Url = "https://zenless.hoyoverse.com/redemption?code=ORIGINAL",
-            UrlType = "zzz",
+            ContentType = "zzz",
             Ttl = DateTime.UtcNow.AddDays(1)
         };
 
         var postResponse = await _client.PostAsJsonAsync("/api/UrlDataModels", original);
-        var created = await postResponse.Content.ReadFromJsonAsync<UrlDataModel>();
+        var created = await postResponse.Content.ReadFromJsonAsync<GameCodeModel>();
         Assert.NotNull(created);
 
         // 更新内容を準備
         created.Url = "https://zenless.hoyoverse.com/redemption?code=UPDATED";
-        created.UrlType = "zzz";
+        created.ContentType = "zzz";
         created.Ttl = DateTime.UtcNow.AddDays(5);
 
         // Act
@@ -123,7 +123,7 @@ public class UrlDataModelsControllerTest : IClassFixture<CustomWebApplicationFac
 
         // 更新されたことを確認
         var getResponse = await _client.GetAsync($"/api/UrlDataModels/{created.Id}");
-        var updated = await getResponse.Content.ReadFromJsonAsync<UrlDataModel>();
+        var updated = await getResponse.Content.ReadFromJsonAsync<GameCodeModel>();
 
         Assert.NotNull(updated);
         Assert.Equal("https://zenless.hoyoverse.com/redemption?code=UPDATED", updated.Url);
@@ -133,11 +133,11 @@ public class UrlDataModelsControllerTest : IClassFixture<CustomWebApplicationFac
     public async Task Put_ReturnsBadRequest_WhenIdMismatch()
     {
         // Arrange
-        var model = new UrlDataModel
+        var model = new GameCodeModel
         {
             Id = 999,
             Url = "https://example.com",
-            UrlType = "url",
+            ContentType = "url",
             Ttl = DateTime.UtcNow
         };
 
@@ -152,15 +152,15 @@ public class UrlDataModelsControllerTest : IClassFixture<CustomWebApplicationFac
     public async Task Delete_RemovesUrlDataModel()
     {
         // Arrange - データを作成
-        var model = new UrlDataModel
+        var model = new GameCodeModel
         {
             Url = "https://play.google.com/store/apps/details?id=com.YostarJP.BlueArchive",
-            UrlType = "blac",
+            ContentType = "blac",
             Ttl = DateTime.UtcNow.AddDays(2)
         };
 
         var postResponse = await _client.PostAsJsonAsync("/api/UrlDataModels", model);
-        var created = await postResponse.Content.ReadFromJsonAsync<UrlDataModel>();
+        var created = await postResponse.Content.ReadFromJsonAsync<GameCodeModel>();
         Assert.NotNull(created);
 
         // Act
@@ -180,11 +180,11 @@ public class UrlDataModelsControllerTest : IClassFixture<CustomWebApplicationFac
         // Arrange - 異なるゲームタイプのURLをテスト
         var testData = new[]
         {
-            new UrlDataModel { Url = "https://example.com", UrlType = "url", Ttl = DateTime.UtcNow },
-            new UrlDataModel { Url = "https://genshin.hoyoverse.com/ja/gift?code=ABC", UrlType = "gi", Ttl = DateTime.UtcNow },
-            new UrlDataModel { Url = "https://hsr.hoyoverse.com/gift?code=XYZ", UrlType = "hsr", Ttl = DateTime.UtcNow },
-            new UrlDataModel { Url = "https://zenless.hoyoverse.com/redemption?code=123", UrlType = "zzz", Ttl = DateTime.UtcNow },
-            new UrlDataModel { Url = "https://play.google.com/store/apps/details?id=com.kurogame.wutheringwaves.global", UrlType = "wuwa", Ttl = DateTime.UtcNow }
+            new GameCodeModel { Url = "https://example.com", ContentType = "url", Ttl = DateTime.UtcNow },
+            new GameCodeModel { Url = "https://genshin.hoyoverse.com/ja/gift?code=ABC", ContentType = "gi", Ttl = DateTime.UtcNow },
+            new GameCodeModel { Url = "https://hsr.hoyoverse.com/gift?code=XYZ", ContentType = "hsr", Ttl = DateTime.UtcNow },
+            new GameCodeModel { Url = "https://zenless.hoyoverse.com/redemption?code=123", ContentType = "zzz", Ttl = DateTime.UtcNow },
+            new GameCodeModel { Url = "https://play.google.com/store/apps/details?id=com.kurogame.wutheringwaves.global", ContentType = "wuwa", Ttl = DateTime.UtcNow }
         };
 
         // Act & Assert
@@ -193,9 +193,9 @@ public class UrlDataModelsControllerTest : IClassFixture<CustomWebApplicationFac
             var response = await _client.PostAsJsonAsync("/api/UrlDataModels", data);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-            var created = await response.Content.ReadFromJsonAsync<UrlDataModel>();
+            var created = await response.Content.ReadFromJsonAsync<GameCodeModel>();
             Assert.NotNull(created);
-            Assert.Equal(data.UrlType, created.UrlType);
+            Assert.Equal(data.ContentType, created.ContentType);
         }
     }
 }

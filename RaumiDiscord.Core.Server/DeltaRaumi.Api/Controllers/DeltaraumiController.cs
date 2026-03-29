@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.ApplicationStartup;
 using RaumiDiscord.Core.Server.DeltaRaumi.Common.Data;
 using RaumiDiscord.Core.Server.DeltaRaumi.Configuration.Models;
 using System.Diagnostics;
@@ -16,8 +17,15 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
     [ApiController]
     public class DeltaraumiController : ControllerBase
     {
-        private static readonly DateTime StartTime = new BotConfiguration().Setting.UpTime;
+        private DateTime StartTime = new BotConfiguration().Setting.UpTime;
+        private ServerStartup serverStartup = new ServerStartup();
+        private BotConfiguration _config;
 
+        //public DeltaraumiController( BotConfiguration config)
+        //{
+        //    //StartTime = DateTime.Now;
+        //    _config = config;
+        //}
         /// <summary>
         /// 
         /// </summary>
@@ -48,7 +56,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
             var sw = Stopwatch.StartNew();
 
             Process.GetCurrentProcess();
-            var uptime = DateTime.Now - StartTime;
+            TimeSpan uptime = DateTime.Now - StartTime;
 
             var cpuUsage = await GetCpuUsageAsync();
             var networkStats = GetNetworkStats();
@@ -57,10 +65,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
 
             var result = new
             {
-                serverVersion = "0.1.3.18",
+                serverStartup.ApplicationVersionString,
                 apiVersion = "1.0",
                 processCount = Process.GetProcesses().Length,
                 availableMemoryMB = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes / 1024 / 1024,
+                starttime= StartTime,
                 uptime = $"{(int)uptime.TotalDays:D2}:{uptime.Hours:D2}:{uptime.Minutes:D2}:{uptime.Seconds:D2}",
                 cpuUsagePercent = Math.Round(cpuUsage, 2),
                 network = new

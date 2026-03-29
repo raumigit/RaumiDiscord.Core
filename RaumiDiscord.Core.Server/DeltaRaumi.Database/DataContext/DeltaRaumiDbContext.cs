@@ -28,7 +28,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.DataContext
         /// <summary>
         /// URLデータモデルのデータセットを取得または設定します。
         /// </summary>
-        public DbSet<UrlDataModel> UrlDataModels { get; set; } = null!;
+        public DbSet<GameCodeModel> GameCodeModels { get; set; } = null!;
 
         /// <summary>
         /// ユーザーのベースデータモデルのデータセットを取得または設定します。
