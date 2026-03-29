@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nett;
 using RaumiDiscord.Core.Server.DeltaRaumi.Configuration.Models;
 using System;
 using System.Collections.Generic;
@@ -65,7 +66,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Configuration
             try
             {
                 var tomlText = File.ReadAllText(_configFilePath);
-                _config = Toml.ToModel<BotConfiguration>(tomlText);
+                _config = Toml.ReadFile<BotConfiguration>(_configFilePath); 
 
                 // nullチェックと初期化
                 _config.Setting ??= new GeneralSettings();
@@ -97,7 +98,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Configuration
                     _config.Setting.UpdateTime = DateTime.Now;
                 }
 
-                var tomlText = Toml.FromModel(_config);
+                
 
                 // ディレクトリが存在しない場合は作成
                 var directory = Path.GetDirectoryName(_configFilePath);
@@ -106,7 +107,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Common.Configuration
                     Directory.CreateDirectory(directory);
                 }
 
-                File.WriteAllText(_configFilePath, tomlText);
+                Toml.WriteFile(_config, _configFilePath);
             }
             catch (Exception ex)
             {
