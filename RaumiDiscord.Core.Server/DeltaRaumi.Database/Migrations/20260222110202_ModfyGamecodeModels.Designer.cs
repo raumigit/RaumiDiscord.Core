@@ -18,7 +18,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Migrations
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.11");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.5");
 
             modelBuilder.Entity("RaumiDiscord.Core.Server.DeltaRaumi.Database.Models.DiscordComponentModel", b =>
                 {

@@ -17,13 +17,13 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Configuration.Models
         public string CommandPrefix { get; set; } = "!";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public DateTime UpTime { get; set; }
+        public DateTime UpTime { get; set; } = DateTime.UtcNow;
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public DateTime UpdateTime { get; set; }
+        public DateTime UpdateTime { get; set; } = DateTime.UtcNow;
         /// <summary>
         /// 
         /// </summary>
