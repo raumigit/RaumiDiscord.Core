@@ -17,15 +17,25 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
     [ApiController]
     public class DeltaraumiController : ControllerBase
     {
-        private DateTime StartTime = new BotConfiguration().Setting.UpTime;
-        private ServerStartup serverStartup = new ServerStartup();
-        private BotConfiguration _config;
+        private DateTime StartTime;
+        private readonly ServerStartup serverStartup;
+        private readonly BotConfiguration _config;
 
-        //public DeltaraumiController( BotConfiguration config)
-        //{
-        //    //StartTime = DateTime.Now;
-        //    _config = config;
-        //}
+        public DeltaraumiController(BotConfiguration config, ServerStartup serverStartup)
+        {
+            _config = config;
+            this.serverStartup = serverStartup;
+
+            // Initialize StartTime from config or fallback to DateTime.Now
+            if (_config.Setting?.UpTime != null && _config.Setting.UpTime != DateTime.MinValue)
+            {
+                StartTime = _config.Setting.UpTime;
+            }
+            else
+            {
+                StartTime = DateTime.Now;
+            }
+        }
         /// <summary>
         /// 
         /// </summary>

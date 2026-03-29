@@ -145,11 +145,16 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
             await RespondAsync($"指定されたUrlType `{urlType}` は存在しません。", ephemeral: true);
             return;
         }
-        if (url.Length > 6)
+        if (url.Length < 6)
         {
             await RespondAsync($"URLに入力された値が不正です。\n-# もし、6文字を下回るコードの場合は管理者へ報告してください。", ephemeral: true);
+            return;
         }
-        if (!url.StartsWith("https://") && !url.StartsWith("http://"))
+        if (url.StartsWith("https://") || url.StartsWith("http://"))
+        {
+            // URL is valid, proceed with HTTP URL
+        }
+        else
         {
             if (!string.IsNullOrEmpty(gameConfig.BaseUrl) && IsAlphanumeric(url))
             {
@@ -158,12 +163,13 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
             else if (string.IsNullOrEmpty(gameConfig.BaseUrl) && IsAlphanumeric(url))
             {
                 await RespondAsync($"コードは`{url}`で保管されます。\nこの操作は正常に実行できます。", ephemeral: true);
+                // Continue with the code storage
             }
-        }
-        else
-        {
-            await RespondAsync("URLは`https://`または`http://`で始まる必要があります。", ephemeral: true);
-            return;
+            else
+            {
+                await RespondAsync("URLは`https://`または`http://`で始まる必要があります。", ephemeral: true);
+                return;
+            }
         }
 
         if (!TryParseDateTimeWithTimezone(ttl, out var parsedTtl))

@@ -5,7 +5,8 @@
     {
         public ServerStartup()
         {
-            ApplicationVersion = typeof(ServerStartup).Assembly.GetName().Version;
+            var version = typeof(ServerStartup).Assembly.GetName().Version;
+            ApplicationVersion = version ?? new Version(0, 0, 0);
             ApplicationVersionString = ApplicationVersion.ToString(3);
 
         }
