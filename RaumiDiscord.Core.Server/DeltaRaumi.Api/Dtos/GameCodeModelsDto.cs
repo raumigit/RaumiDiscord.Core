@@ -3,7 +3,7 @@
     /// <summary>
     /// URL エントリーの API 用 DTO
     /// </summary>
-    public class UrlDataModelsDto
+    public class GameCodeModelsDto
     {
         // ① 一意識別子 (必須)
         public uint Id { get; set; }

@@ -3,6 +3,8 @@ using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers;
+using RaumiDiscord.Core.Server.DeltaRaumi.Bot.ApplicationStartup;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.EventHandlers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Helpers;
 using RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services;
@@ -118,7 +120,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
             // ========================================================================
 
             services.AddSingleton<ComponentInteractionService>();
-            services.AddSingleton<SlashCommandInterationService>();
+            services.AddSingleton<SlashCommandInteractionService>();
 
             // ========================================================================
             // Core Application Services - コアアプリケーションサービス
@@ -153,6 +155,9 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot
                 };
             });
 
+            services.AddSingleton<IServerStartup, ServerStartup>();
+            //services.AddSingleton<DeltaraumiController>();
+            //services.AddSingleton<BotConfiguration>();
             return services;
         }
 

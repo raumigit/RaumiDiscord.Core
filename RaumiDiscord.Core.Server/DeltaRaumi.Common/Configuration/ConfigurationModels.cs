@@ -19,11 +19,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Configuration.Models
         /// <summary>
         /// 
         /// </summary>
-        public DateTime UpTime { get; set; } = DateTime.Now;
+        public DateTime UpTime { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public DateTime UpdateTime { get; set; } = DateTime.Now;
+        public DateTime UpdateTime { get; set; }
         /// <summary>
         /// 
         /// </summary>

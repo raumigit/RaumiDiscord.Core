@@ -81,7 +81,7 @@ public class Program
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
-
+        app.UseRateLimiter();
         app.UseAuthorization();
 
         if (app.Environment.IsDevelopment())

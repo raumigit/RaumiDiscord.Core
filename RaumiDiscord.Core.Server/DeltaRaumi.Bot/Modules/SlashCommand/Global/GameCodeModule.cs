@@ -145,18 +145,25 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
             await RespondAsync($"指定されたUrlType `{urlType}` は存在しません。", ephemeral: true);
             return;
         }
-
+        if (url.Length > 6)
+        {
+            await RespondAsync($"URLに入力された値が不正です。\n-# もし、6文字を下回るコードの場合は管理者へ報告してください。", ephemeral: true);
+        }
         if (!url.StartsWith("https://") && !url.StartsWith("http://"))
         {
             if (!string.IsNullOrEmpty(gameConfig.BaseUrl) && IsAlphanumeric(url))
             {
                 url = gameConfig.BaseUrl + url;
             }
-            else
+            else if (string.IsNullOrEmpty(gameConfig.BaseUrl) && IsAlphanumeric(url))
             {
-                await RespondAsync("URLはhttps://またはhttp://で始まる必要があります。", ephemeral: true);
-                return;
+                await RespondAsync($"コードは`{url}`で保管されます。\nこの操作は正常に実行できます。", ephemeral: true);
             }
+        }
+        else
+        {
+            await RespondAsync("URLは`https://`または`http://`で始まる必要があります。", ephemeral: true);
+            return;
         }
 
         if (!TryParseDateTimeWithTimezone(ttl, out var parsedTtl))
@@ -171,7 +178,7 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
             return;
         }
 
-        var existingCode = await _deltaRaumiDb.UrlDataModels
+        var existingCode = await _deltaRaumiDb.GameCodeModels
             .FirstOrDefaultAsync(u => u.Url == url);
 
         if (existingCode != null)
@@ -182,16 +189,16 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
 
         var shouldPublish = publish ?? (gameConfig.Name != "Url");
 
-        var newCode = new UrlDataModel
+        var newCode = new GameCodeModel
         {
             Url = url,
-            UrlType = gameConfig.Name,
+            ContentType = gameConfig.Name,
             DiscordUser = Context.User.Id.ToString(),
             Ttl = parsedTtl,
             Publish = shouldPublish
         };
 
-        _deltaRaumiDb.UrlDataModels.Add(newCode);
+        _deltaRaumiDb.GameCodeModels.Add(newCode);
         await _deltaRaumiDb.SaveChangesAsync();
 
         var unixTime = new DateTimeOffset(parsedTtl).ToUnixTimeSeconds();
@@ -214,7 +221,7 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
         var now = DateTime.UtcNow;
         var userId = Context.User.Id.ToString();
 
-        IQueryable<UrlDataModel> query = _deltaRaumiDb.UrlDataModels
+        IQueryable<GameCodeModel> query = _deltaRaumiDb.GameCodeModels
             .Where(u => u.Ttl > now);
 
         if (!string.IsNullOrEmpty(urlType))
@@ -226,7 +233,7 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
                 return;
             }
 
-            query = query.Where(u => u.UrlType == gameConfig.Name);
+            query = query.Where(u => u.ContentType == gameConfig.Name);
         }
 
         var codes = await query
@@ -242,11 +249,11 @@ public class GameCodeModule : InteractionModuleBase<SocketInteractionContext>
 
         var response = string.Join("\n\n", codes.Select(code =>
         {
-            var gameConfig = _gameMetaService.FindGame(code.UrlType);
+            var gameConfig = _gameMetaService.FindGame(code.ContentType);
             var unixTime = new DateTimeOffset(code.Ttl).ToUnixTimeSeconds();
             var storeLinks = BuildStoreLinks(gameConfig);
 
-            return $"**{code.UrlType}** - {code.Url}\n" +
+            return $"**{code.ContentType}** - {code.Url}\n" +
                    $"期限：<t:{unixTime}:R>\n" +
                    $"登録者：<@{code.DiscordUser}>" +
                    (string.IsNullOrEmpty(storeLinks) ? "" : $"\n{storeLinks}");

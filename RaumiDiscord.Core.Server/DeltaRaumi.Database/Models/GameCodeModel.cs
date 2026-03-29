@@ -5,7 +5,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
     /// <summary>
     /// URLデータモデルを表します。
     /// </summary>
-    public class UrlDataModel
+    public class GameCodeModel
     {
         /// <summary>
         /// URLエントリーの一意識別子を取得または設定します。
@@ -22,7 +22,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Models
         /// URLの種類を取得または設定します。
         /// ここはStringsからintに変更されています。
         /// </summary>
-        public string UrlType { get; set; }
+        public string ContentType { get; set; }
 
         /// <summary>
         /// URLに関連付けられたDiscordユーザーIDを取得または設定します。
