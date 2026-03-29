@@ -11,9 +11,7 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "UrlDataModels");
-
+            // Create the new table first
             migrationBuilder.CreateTable(
                 name: "GameCodeModels",
                 columns: table => new
@@ -30,14 +28,24 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Migrations
                 {
                     table.PrimaryKey("PK_GameCodeModels", x => x.Id);
                 });
+
+            // Migrate data from UrlDataModels to GameCodeModels
+            // Map UrlType to ContentType and copy other fields
+            migrationBuilder.Sql(@"
+                INSERT INTO GameCodeModels (Id, Url, ContentType, DiscordUser, Ttl, Publish)
+                SELECT Id, Url, UrlType, DiscordUser, Ttl, Publish
+                FROM UrlDataModels
+            ");
+
+            // Now drop the old table after data migration
+            migrationBuilder.DropTable(
+                name: "UrlDataModels");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "GameCodeModels");
-
+            // Create the old table first
             migrationBuilder.CreateTable(
                 name: "UrlDataModels",
                 columns: table => new
@@ -54,6 +62,18 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Database.Migrations
                 {
                     table.PrimaryKey("PK_UrlDataModels", x => x.Id);
                 });
+
+            // Migrate data back from GameCodeModels to UrlDataModels
+            // Map ContentType back to UrlType
+            migrationBuilder.Sql(@"
+                INSERT INTO UrlDataModels (Id, Url, UrlType, DiscordUser, Ttl, Publish)
+                SELECT Id, Url, ContentType, DiscordUser, Ttl, Publish
+                FROM GameCodeModels
+            ");
+
+            // Drop the new table
+            migrationBuilder.DropTable(
+                name: "GameCodeModels");
         }
     }
 }

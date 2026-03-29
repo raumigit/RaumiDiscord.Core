@@ -50,7 +50,11 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Bot.Services.old
         //インタラクションにエラーが出るため将来的に修正予定
         static string GetFileHash<T>(string filePath) where T : HashAlgorithm
         {
-            using (var hashAlgorithm = (T)Activator.CreateInstance(typeof(T)))
+            var algoObj = Activator.CreateInstance(typeof(T));
+            if (algoObj is not HashAlgorithm hashAlgorithm)
+                throw new InvalidOperationException("Failed to create hash algorithm for type " + typeof(T).FullName);
+
+            using (hashAlgorithm)
             using (var stream = File.OpenRead(filePath))
             {
                 byte[] hash = hashAlgorithm.ComputeHash(stream);

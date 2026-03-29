@@ -17,22 +17,10 @@ namespace RaumiDiscord.Core.Server.DeltaRaumi.Api.Controllers
     public class GameCodesController : ControllerBase
     {
         private readonly DeltaRaumiDbContext _context;
-        /// <summary>
-        /// GiftCodesControllerのコンストラクタ
-        /// </summary>
-        /// <param name="context"></param>
-        public class GiftCodesController : ControllerBase
-        {
-            private readonly IGameCodeService _service;
-            /// <summary>
-            /// Initializes a new instance of the GiftCodesController class with the specified game code service.
-            /// </summary>
-            /// <param name="service">The service used to manage and validate game gift codes. Cannot be null.</param>
-            public GiftCodesController(IGameCodeService service) => _service = service;
 
-            [HttpGet("public")]
-            public async Task<IActionResult> GetPublic()
-                => Ok(await _service.GetActivePublicCodesAsync());
+        public GameCodesController(DeltaRaumiDbContext context)
+        {
+            _context = context;
         }
 
         // GET: api/gameCodeModels
